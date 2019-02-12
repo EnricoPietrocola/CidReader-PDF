@@ -1,0 +1,67 @@
+-- Merging decision tree log ---
+manifest
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:2:1-38:12
+INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:2:1-38:12
+INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:2:1-38:12
+	package
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:3:3-35
+		INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+		INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+	xmlns:android
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:2:11-69
+uses-permission#android.permission.READ_EXTERNAL_STORAGE
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:4:2-77
+	android:name
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:4:19-74
+application
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:5:2-37:16
+activity#com.artifex.mupdf.mini.DocumentActivity
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:6:3-32:14
+	android:label
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:7:5-31
+	android:configChanges
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:8:5-66
+	android:name
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:6:13-45
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:mimeType:application/epub+zip+data:mimeType:application/oxps+data:mimeType:application/pdf+data:mimeType:application/vnd.ms-xpsdocument+data:mimeType:application/x-cbz+data:mimeType:text/xml
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:10:4-20:20
+action#android.intent.action.VIEW
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:11:5-57
+	android:name
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:11:13-54
+category#android.intent.category.DEFAULT
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:12:5-64
+	android:name
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:12:15-61
+category#android.intent.category.BROWSABLE
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:13:5-66
+	android:name
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:13:15-63
+data
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:14:5-48
+	android:pathPattern
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:25:11-41
+	android:mimeType
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:14:11-45
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:pathPattern:.*\\.cbz+data:pathPattern:.*\\.epub+data:pathPattern:.*\\.fb2+data:pathPattern:.*\\.oxps+data:pathPattern:.*\\.pdf+data:pathPattern:.*\\.xps
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:21:4-31:20
+activity#com.artifex.mupdf.mini.OutlineActivity
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:33:3-36:14
+	android:configChanges
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:34:5-66
+	android:name
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:33:13-44
+uses-sdk
+INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+		INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
+		INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
