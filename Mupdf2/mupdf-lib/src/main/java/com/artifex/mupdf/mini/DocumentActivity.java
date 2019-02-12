@@ -26,11 +26,14 @@ import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
+import android.view.MotionEvent;
+import java.util.Random;
 
 import java.util.ArrayList;
 import java.util.Stack;
@@ -91,6 +94,11 @@ public class DocumentActivity extends Activity
 	protected Stack<Integer> history;
 	protected boolean wentBack;
 
+	//My variables
+	private LayoutInflater inflater;
+	private View view;
+	private RelativeLayout item;
+
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -100,28 +108,12 @@ public class DocumentActivity extends Activity
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		displayDPI = metrics.densityDpi;
 
-
-		/*
-
-
-		COOL STUFF
-
-
-
-		 */
-		TextView  tv = new TextView(this);
-		tv.setText("SA SA SA PROVA");
-		tv.setBackgroundColor(32);
-		LayoutParams layoutParams=new LayoutParams(300, 500);
-		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-		//layoutParams.setMargins(int left, int top, int right, int bottom);
-		tv.setLayoutParams(layoutParams);
-		LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-		View view = inflater.inflate(R.layout.document_activity, null);
-		RelativeLayout item = (RelativeLayout ) view.findViewById(R.id.mainRelativeLayout);
-		item.addView(tv);
-		setContentView(item);
+		//printOnScreenDebug();
+		layoutSetup();
+		for (int i = 0; i <= 20; i++){
+			printOnScreen(i * 100, i * 100);
+		}
+		//printOnScreen();
 
 		//setContentView(R.layout.document_activity);
 		actionBar = findViewById(R.id.action_bar);
@@ -286,7 +278,68 @@ public class DocumentActivity extends Activity
 				layoutPopupMenu.show();
 			}
 		});
+
+
+
 	}
+
+	public void layoutSetup(){
+		inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		view = inflater.inflate(R.layout.document_activity, null);
+		item = (RelativeLayout ) view.findViewById(R.id.mainRelativeLayout);
+		setContentView(item);
+	}
+
+
+
+	public void printOnScreenDebug(){
+		TextView  tv = new TextView(this);
+		tv.setText("Test");
+		LayoutParams layoutParams=new LayoutParams(200, 300);
+		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+		tv.setLayoutParams(layoutParams);
+		item.addView(tv);
+
+	}
+
+	public void printOnScreen(int x, int y){
+		TextView  tv = new TextView(this);
+		tv.setText(Integer.toString(x) + " " + Integer.toString(y));
+		LayoutParams layoutParams = new LayoutParams(x, y);
+		//layoutParams.leftMargin = 1000;
+		//layoutParams.topMargin = 1000;
+		//layoutParams.alignWithParent = true;
+		//layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+		tv.setLayoutParams(layoutParams);
+		item.addView(tv);
+	}
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		int x =/* (int)item.getX() */+ (int)event.getRawX();
+		int  y =/* (int)item.getY()*/ + (int)event.getRawY();
+		View v = getCurrentFocus();
+		printOnScreen(x, y);
+		boolean ret = super.dispatchTouchEvent(event);
+		return ret;
+	}
+/*
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		Log.d("DEBUG","hey");
+
+		int x = (int)event.getX();
+		int y = (int)event.getY();
+		switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+			case MotionEvent.ACTION_MOVE:
+			case MotionEvent.ACTION_UP:
+		}
+		printOnScreen(x, y);
+
+		return false;
+	}*/
 
 	public void onPageViewSizeChanged(int w, int h) {
 		canvasW = w;
@@ -301,6 +354,8 @@ public class DocumentActivity extends Activity
 		} else {
 			loadPage();
 		}
+
+
 	}
 
 	protected void openDocument() {
