@@ -41,6 +41,7 @@ import android.view.MotionEvent;
 import android.widget.EditText;
 
 import java.net.UnknownHostException;
+import java.util.List;
 import java.util.Random;
 import java.net.DatagramSocket;
 import java.net.DatagramPacket;
@@ -147,10 +148,15 @@ public class DocumentActivity extends Activity
 		layoutParams1.height = 150;
 		layoutParams1.topMargin = 150;
 		layoutParams1.leftMargin = 550;
-		ipAddressButton.setText("Button");
+		ipAddressButton.setText("Connect");
 		//ipAddressButton.setId(ipAddressButton);
 		ipAddressButton.setLayoutParams(layoutParams1);
 		item.addView(ipAddressButton);
+		/*String test[] = RPCParse("Function,1,2,3,4");
+		Log.i("TAG", test[0]);
+		Log.i("TAG", test[1]);
+		Log.i("TAG", test[2]);
+		Log.i("TAG", test[3]);*/
 
 		ipAddressButton.setOnClickListener(
 				new View.OnClickListener()
@@ -355,98 +361,16 @@ public class DocumentActivity extends Activity
 		setContentView(item);
 	}
 
-	private String newString;
-
-    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-        @Override
-        public void onReceive(Context context, Intent intent) {
-            // internet lost alert dialog method call from here...
-            //Log.i("tag", "DIO");
-            //Toast.makeText(mainContext, "DIO MESSAGE", Toast.LENGTH_LONG);
-			//Intent intentReceived = getIntent();
-			Bundle messagesReceived = intent.getExtras();
-
-			if(messagesReceived == null) {
-				newString = null;
-			} else {
-				newString = messagesReceived.getString("Main.MESSAGE_STRING");
-			}
-
-			//do stuff with received message
-			//printMessageOnScreen(newString, 200, 200);
-			//Toast.makeText(context, newString, Toast.LENGTH_LONG).show();
-			switch(newString) {
-				case "goForward":
-					goForwardLocal();
-					break;
-				case "goBackward":
-					goBackwardLocal();
-					break;
-				default:
-					// code block
-			}
-        }
-    };
-
-
-
-	public void printOnScreenDebug(){
-		TextView  tv = new TextView(this);
-		tv.setText("Test");
-		LayoutParams layoutParams=new LayoutParams(200, 300);
-		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-		tv.setLayoutParams(layoutParams);
-		item.addView(tv);
-	}
-
-	public void printOnScreen(int x, int y){
-		TextView  tv = new TextView(this);
-		tv.setText(Integer.toString(x) + " " + Integer.toString(y));
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
-		//layoutParams.leftMargin = 1000;
-		layoutParams.width = x;
-		layoutParams.height = y;
-		layoutParams.topMargin = y;
-		layoutParams.leftMargin = x;
-
-		//ALL THIS STUFF MUS BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
-
-		//layoutParams.topMargin = 1000;
-		//layoutParams.alignWithParent = true;
-
-		tv.setLayoutParams(layoutParams);
-		item.addView(tv);
-	}
-
-	public void printMessageOnScreen(String message, int x, int y){
-		TextView  tv = new TextView(this);
-		tv.setText(message);
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
-		//layoutParams.leftMargin = 1000;
-		layoutParams.width = x;
-		layoutParams.height = y;
-		layoutParams.topMargin = y;
-		layoutParams.leftMargin = x;
-
-		//ALL THIS STUFF MUS BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
-
-		//layoutParams.topMargin = 1000;
-		//layoutParams.alignWithParent = true;
-
-		tv.setLayoutParams(layoutParams);
-		item.addView(tv);
-	}
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
 		int x =/* (int)item.getX() */+ (int)event.getRawX();
 		int  y =/* (int)item.getY()*/ + (int)event.getRawY();
 		View v = getCurrentFocus();
-		//printOnScreen(x, y);
-		//printOnScreen((int)layoutW, (int)layoutH);
+
+		printOnScreenLocal(x, y);
+		RPCprintOnScreen(x, y);
+
 		boolean ret = super.dispatchTouchEvent(event);
 		return ret;
 	}
@@ -851,15 +775,19 @@ public class DocumentActivity extends Activity
 	}
 
 	public void gotoPage(int p) {
+		gotoPageLocal(p);
+
+		UDP_Client udpClient = new UDP_Client();
+		udpClient.addr = ipTargetAddress;
+		udpClient.Message = "goToPage," + p;
+		udpClient.Send();
+	}
+
+	public void gotoPageLocal(int p) {
 		if (p >= 0 && p < pageCount && p != currentPage) {
 			history.push(currentPage);
 			currentPage = p;
 			loadPage();
-
-			UDP_Client udpClient = new UDP_Client();
-			udpClient.addr = ipTargetAddress;
-			udpClient.Message = "goToPage/" + currentPage;
-			udpClient.Send();
 		}
 	}
 
@@ -873,4 +801,116 @@ public class DocumentActivity extends Activity
 			Toast.makeText(DocumentActivity.this, x.getMessage(), Toast.LENGTH_SHORT).show();
 		}
 	}
+
+	public String[] RPCParse(String RPCMessage){
+		String[] splitMessage;
+		splitMessage = RPCMessage.split(",");
+		return splitMessage;
+	}
+
+	public void printMessageOnScreen(String message, int x, int y){
+		TextView  tv = new TextView(this);
+		tv.setText(message);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
+		//layoutParams.leftMargin = 1000;
+		layoutParams.width = x;
+		layoutParams.height = y;
+		layoutParams.topMargin = y;
+		layoutParams.leftMargin = x;
+
+		//ALL THIS STUFF MUS BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
+
+		//layoutParams.topMargin = 1000;
+		//layoutParams.alignWithParent = true;
+
+		tv.setLayoutParams(layoutParams);
+		item.addView(tv);
+	}
+
+	private String newString;
+
+	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+		@Override
+		public void onReceive(Context context, Intent intent) {
+			// internet lost alert dialog method call from here...
+			//Log.i("tag", "DIO");
+			//Toast.makeText(mainContext, "DIO MESSAGE", Toast.LENGTH_LONG);
+			//Intent intentReceived = getIntent();
+			Bundle messagesReceived = intent.getExtras();
+
+			if(messagesReceived == null) {
+				newString = null;
+			} else {
+				newString = messagesReceived.getString("Main.MESSAGE_STRING");
+			}
+
+
+
+			//do stuff with received message
+
+			String[] parsedMessage = RPCParse(newString);
+
+			//printMessageOnScreen(newString, 200, 200);
+			//Toast.makeText(context, newString, Toast.LENGTH_LONG).show();
+			switch(parsedMessage[0]) {
+				case "goForward":
+					goForwardLocal();
+					break;
+				case "goBackward":
+					goBackwardLocal();
+					break;
+				case "goToPage":
+					gotoPageLocal(Integer.parseInt(parsedMessage[1]));
+					break;
+				case "printOnScreen":
+					printOnScreenLocal(Integer.parseInt(parsedMessage[1]), Integer.parseInt(parsedMessage[2]));
+					break;
+				default:
+					// code block
+			}
+		}
+	};
+
+	public void printOnScreenDebug(){
+		TextView  tv = new TextView(this);
+		tv.setText("Test");
+		LayoutParams layoutParams=new LayoutParams(200, 300);
+		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+		tv.setLayoutParams(layoutParams);
+		item.addView(tv);
+	}
+
+	public void printOnScreen(int x, int y){
+		TextView  tv = new TextView(this);
+		tv.setText(Integer.toString(x) + " " + Integer.toString(y));
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
+		//layoutParams.leftMargin = 1000;
+		layoutParams.width = x;
+		layoutParams.height = y;
+		layoutParams.topMargin = y;
+		layoutParams.leftMargin = x;
+
+		//ALL THIS STUFF MUS BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
+
+		//layoutParams.topMargin = 1000;
+		//layoutParams.alignWithParent = true;
+
+		tv.setLayoutParams(layoutParams);
+		item.addView(tv);
+	}
+
+	private void printOnScreenLocal(int x, int y){
+		printOnScreen(x, y);
+	}
+
+	private void RPCprintOnScreen(int x, int y){
+		UDP_Client udpClient = new UDP_Client();
+		udpClient.addr = ipTargetAddress;
+		udpClient.Message = "printOnScreen," + x + "," + y;
+		udpClient.Send();
+	}
+
 }
