@@ -7,6 +7,7 @@
         android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
+    <uses-permission android:name="android.permission.INTERNET" />
 
     <application>
         <activity
@@ -42,8 +43,7 @@
         </activity>
         <activity
             android:name="com.artifex.mupdf.mini.OutlineActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" >
-        </activity>
+            android:configChanges="orientation|screenSize|keyboardHidden" />
     </application>
 
 </manifest>

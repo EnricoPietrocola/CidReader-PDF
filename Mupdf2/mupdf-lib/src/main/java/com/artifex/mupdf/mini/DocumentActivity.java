@@ -5,13 +5,16 @@ import com.artifex.mupdf.fitz.android.*;
 
 import android.app.Activity;
 import android.app.AlertDialog;
+import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
+import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
 import android.net.Uri;
 import android.os.Bundle;
+import android.renderscript.RenderScript;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
@@ -21,6 +24,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -31,15 +35,23 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
+import android.widget.Button;
 import android.widget.Toast;
 import android.view.MotionEvent;
+import android.widget.EditText;
+
+import java.net.UnknownHostException;
 import java.util.Random;
+import java.net.DatagramSocket;
+import java.net.DatagramPacket;
+import java.net.InetAddress;
 
 import java.util.ArrayList;
 import java.util.Stack;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.net.InetAddress;
 
 import android.widget.RelativeLayout.LayoutParams;
 
@@ -97,10 +109,19 @@ public class DocumentActivity extends Activity
 	//My variables
 	private LayoutInflater inflater;
 	private View view;
-	private RelativeLayout item;
+	public static RelativeLayout item;
+	public Context mainContext;
+	public InetAddress ipTargetAddress;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		mainContext = getApplicationContext();
+
+
+
+		registerReceiver(broadcastReceiver, new IntentFilter("Main.MESSAGE_RECEIVED"));
+
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
 		getWindow().addFlags(WindowManager.LayoutParams.FLAG_FULLSCREEN);
 
@@ -110,10 +131,55 @@ public class DocumentActivity extends Activity
 
 		//printOnScreenDebug();
 		layoutSetup();
-		for (int i = 0; i <= 20; i++){
-			printOnScreen(i * 100, i * 100);
-		}
-		//printOnScreen();
+
+		final EditText ipAddressInput = new EditText(mainContext);
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+		layoutParams.width = 400;
+		layoutParams.height = 150;
+		layoutParams.topMargin = 150;
+		layoutParams.leftMargin = 50;
+		ipAddressInput.setLayoutParams(layoutParams);
+		item.addView(ipAddressInput);
+
+		final Button ipAddressButton = new Button(mainContext);
+		RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		layoutParams1.width = 400;
+		layoutParams1.height = 150;
+		layoutParams1.topMargin = 150;
+		layoutParams1.leftMargin = 550;
+		ipAddressButton.setText("Button");
+		//ipAddressButton.setId(ipAddressButton);
+		ipAddressButton.setLayoutParams(layoutParams1);
+		item.addView(ipAddressButton);
+
+		ipAddressButton.setOnClickListener(
+				new View.OnClickListener()
+				{
+					public void onClick(View view)
+					{
+						Log.v("Ip input is ", ipAddressInput.getText().toString());
+						try {
+							//this gives a fatal exception if something that is not an IP is insert
+							ipTargetAddress = InetAddress.getByName(ipAddressInput.getText().toString());
+							ipAddressButton.setVisibility(View.GONE);
+							ipAddressInput.setVisibility(View.GONE);
+						} catch (UnknownHostException e) {
+							e.printStackTrace();
+							Log.i("TAG", "this is not a valid IP address");
+						}
+					}
+				});
+
+		UDP_Server udpServer = new UDP_Server();
+		udpServer.runUdpServer(mainContext);
+
+        registerReceiver(broadcastReceiver, new IntentFilter("Main.MESSAGE_RECEIVED"));
+
+
+		//BroadcastReceiver br;
+
+		/*UDP_Client udp = new UDP_Client();
+		udp.func();*/
 
 		//setContentView(R.layout.document_activity);
 		actionBar = findViewById(R.id.action_bar);
@@ -126,6 +192,7 @@ public class DocumentActivity extends Activity
 		Uri uri = getIntent().getData();
 		mimetype = getIntent().getType();
 		key = uri.toString();
+
 		if (uri.getScheme().equals("file")) {
 			title = uri.getLastPathSegment();
 			path = uri.getPath();
@@ -279,8 +346,6 @@ public class DocumentActivity extends Activity
 			}
 		});
 
-
-
 	}
 
 	public void layoutSetup(){
@@ -289,6 +354,39 @@ public class DocumentActivity extends Activity
 		item = (RelativeLayout ) view.findViewById(R.id.mainRelativeLayout);
 		setContentView(item);
 	}
+
+	private String newString;
+
+    BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
+        @Override
+        public void onReceive(Context context, Intent intent) {
+            // internet lost alert dialog method call from here...
+            //Log.i("tag", "DIO");
+            //Toast.makeText(mainContext, "DIO MESSAGE", Toast.LENGTH_LONG);
+			//Intent intentReceived = getIntent();
+			Bundle messagesReceived = intent.getExtras();
+
+			if(messagesReceived == null) {
+				newString = null;
+			} else {
+				newString = messagesReceived.getString("Main.MESSAGE_STRING");
+			}
+
+			//do stuff with received message
+			//printMessageOnScreen(newString, 200, 200);
+			//Toast.makeText(context, newString, Toast.LENGTH_LONG).show();
+			switch(newString) {
+				case "goForward":
+					goForwardLocal();
+					break;
+				case "goBackward":
+					goBackwardLocal();
+					break;
+				default:
+					// code block
+			}
+        }
+    };
 
 
 
@@ -300,17 +398,44 @@ public class DocumentActivity extends Activity
 		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
 		tv.setLayoutParams(layoutParams);
 		item.addView(tv);
-
 	}
 
 	public void printOnScreen(int x, int y){
 		TextView  tv = new TextView(this);
 		tv.setText(Integer.toString(x) + " " + Integer.toString(y));
-		LayoutParams layoutParams = new LayoutParams(x, y);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
 		//layoutParams.leftMargin = 1000;
+		layoutParams.width = x;
+		layoutParams.height = y;
+		layoutParams.topMargin = y;
+		layoutParams.leftMargin = x;
+
+		//ALL THIS STUFF MUS BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
+
 		//layoutParams.topMargin = 1000;
 		//layoutParams.alignWithParent = true;
-		//layoutParams.addRule(RelativeLayout.CENTER_IN_PARENT);
+
+		tv.setLayoutParams(layoutParams);
+		item.addView(tv);
+	}
+
+	public void printMessageOnScreen(String message, int x, int y){
+		TextView  tv = new TextView(this);
+		tv.setText(message);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
+		//layoutParams.leftMargin = 1000;
+		layoutParams.width = x;
+		layoutParams.height = y;
+		layoutParams.topMargin = y;
+		layoutParams.leftMargin = x;
+
+		//ALL THIS STUFF MUS BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
+
+		//layoutParams.topMargin = 1000;
+		//layoutParams.alignWithParent = true;
+
 		tv.setLayoutParams(layoutParams);
 		item.addView(tv);
 	}
@@ -320,7 +445,8 @@ public class DocumentActivity extends Activity
 		int x =/* (int)item.getX() */+ (int)event.getRawX();
 		int  y =/* (int)item.getY()*/ + (int)event.getRawY();
 		View v = getCurrentFocus();
-		printOnScreen(x, y);
+		//printOnScreen(x, y);
+		//printOnScreen((int)layoutW, (int)layoutH);
 		boolean ret = super.dispatchTouchEvent(event);
 		return ret;
 	}
@@ -684,11 +810,31 @@ public class DocumentActivity extends Activity
 		}
 	}
 
+	public void goBackwardLocal(){
+		if (currentPage > 0) {
+			wentBack = true;
+			currentPage--;
+			loadPage();
+		}
+	}
+
+	public void goForwardLocal(){
+			if (currentPage < pageCount - 1) {
+				currentPage++;
+				loadPage();
+			}
+	}
+
 	public void goBackward() {
 		if (currentPage > 0) {
 			wentBack = true;
 			currentPage --;
 			loadPage();
+
+			UDP_Client udpClient = new UDP_Client();
+			udpClient.addr = ipTargetAddress;
+			udpClient.Message = "goBackward";
+			udpClient.Send();
 		}
 	}
 
@@ -696,6 +842,11 @@ public class DocumentActivity extends Activity
 		if (currentPage < pageCount - 1) {
 			currentPage ++;
 			loadPage();
+
+			UDP_Client udpClient = new UDP_Client();
+			udpClient.addr = ipTargetAddress;
+			udpClient.Message = "goForward";
+			udpClient.Send();
 		}
 	}
 
@@ -704,6 +855,11 @@ public class DocumentActivity extends Activity
 			history.push(currentPage);
 			currentPage = p;
 			loadPage();
+
+			UDP_Client udpClient = new UDP_Client();
+			udpClient.addr = ipTargetAddress;
+			udpClient.Message = "goToPage/" + currentPage;
+			udpClient.Send();
 		}
 	}
 
