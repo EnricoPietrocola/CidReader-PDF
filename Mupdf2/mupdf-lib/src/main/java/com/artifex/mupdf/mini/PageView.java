@@ -8,6 +8,7 @@ import android.graphics.Canvas;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
+import android.util.Log;
 import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
@@ -220,6 +221,7 @@ public class PageView extends View implements
 	}
 
 	public void goForward() {
+		Log.i("TAG","PAGEVIEW");
 		scroller.forceFinished(true);
 		if (scrollY + canvasH >= bitmapH) {
 			if (scrollX + canvasW >= bitmapW) {

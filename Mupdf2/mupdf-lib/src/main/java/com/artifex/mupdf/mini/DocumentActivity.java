@@ -133,7 +133,7 @@ public class DocumentActivity extends Activity
 		//printOnScreenDebug();
 		layoutSetup();
 
-		final EditText ipAddressInput = new EditText(mainContext);
+		/*final EditText ipAddressInput = new EditText(mainContext);
 		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 		layoutParams.width = 400;
 		layoutParams.height = 150;
@@ -152,11 +152,11 @@ public class DocumentActivity extends Activity
 		//ipAddressButton.setId(ipAddressButton);
 		ipAddressButton.setLayoutParams(layoutParams1);
 		item.addView(ipAddressButton);
-		/*String test[] = RPCParse("Function,1,2,3,4");
+		/*String test[] = RPCParse("Function,1,2,3,4");*
 		Log.i("TAG", test[0]);
 		Log.i("TAG", test[1]);
 		Log.i("TAG", test[2]);
-		Log.i("TAG", test[3]);*/
+		Log.i("TAG", test[3]);
 
 		ipAddressButton.setOnClickListener(
 				new View.OnClickListener()
@@ -174,7 +174,7 @@ public class DocumentActivity extends Activity
 							Log.i("TAG", "this is not a valid IP address");
 						}
 					}
-				});
+				}); */
 
 		UDP_Server udpServer = new UDP_Server();
 		udpServer.runUdpServer(mainContext);
@@ -220,8 +220,6 @@ public class DocumentActivity extends Activity
 
 
 		}
-
-
 
 		titleLabel = (TextView)findViewById(R.id.title_label);
 		titleLabel.setText(title);
