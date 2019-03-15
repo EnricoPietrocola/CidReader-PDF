@@ -19,9 +19,13 @@ import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.LayoutInflater;
 import android.view.View;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.widget.Button;
 import android.content.Context;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.RelativeLayout;
 import android.view.LayoutInflater;
 import android.widget.TextView;
@@ -45,6 +49,7 @@ public class MainActivity extends AppCompatActivity {
         setContentView(item);
 
 
+
         /*EditText myEditText = new EditText(mainContext); // Pass it an Activity or Context
         myEditText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)); // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
         item.addView(myEditText);*/
@@ -63,19 +68,19 @@ public class MainActivity extends AppCompatActivity {
         final EditText ipText = new EditText(mainContext);
         RelativeLayout.LayoutParams ipTextLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         ipTextLayoutParams.width = 400;
-        ipTextLayoutParams.height = 150;
-        ipTextLayoutParams.topMargin = 150;
-        ipTextLayoutParams.leftMargin = 100;
+        ipTextLayoutParams.height = 100;
+        ipTextLayoutParams.topMargin = 0;
+        ipTextLayoutParams.leftMargin = 0;
         ipText.setLayoutParams(ipTextLayoutParams);
         //addContentView(ipText, ipTextLayoutParams);
         item.addView(ipText);
 
-        final Button openButton = new Button(mainContext);
+        /*final Button openButton = new Button(mainContext);
         RelativeLayout.LayoutParams openButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         openButtonLayoutParams.width = 400;
-        openButtonLayoutParams.height = 150;
-        openButtonLayoutParams.topMargin = 300;
-        openButtonLayoutParams.leftMargin = 100;
+        openButtonLayoutParams.height = 100;
+        openButtonLayoutParams.topMargin = 150;
+        openButtonLayoutParams.leftMargin = 0;
         openButton.setLayoutParams(openButtonLayoutParams);
         openButton.setText("File");
         //addContentView(openButton, openButtonLayoutParams);
@@ -84,16 +89,17 @@ public class MainActivity extends AppCompatActivity {
 
         openButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
-                performFileSearch();
+                //performFileSearch();
             }
         });
+        */
 
         final Button connectButton = new Button(mainContext);
         RelativeLayout.LayoutParams connectButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         connectButtonLayoutParams.width = 400;
-        connectButtonLayoutParams.height = 150;
-        connectButtonLayoutParams.topMargin = 450;
-        connectButtonLayoutParams.leftMargin = 100;
+        connectButtonLayoutParams.height = 100;
+        connectButtonLayoutParams.topMargin = 150;
+        connectButtonLayoutParams.leftMargin = 0;
         connectButton.setLayoutParams(connectButtonLayoutParams);
         connectButton.setText("Connect");
         //addContentView(connectButton, connectButtonLayoutParams);
@@ -104,6 +110,42 @@ public class MainActivity extends AppCompatActivity {
                 startMuPDFActivityWithExampleFile();
             }
         });
+
+        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
+
+        Log.i("Files", "Path: " + path);
+        File directory = new File(path);
+        File[] files = directory.listFiles();
+        Log.i("Files", "Size: "+ files.length);
+        String[] names = new String[files.length];
+        for (int i = 0; i < files.length; i++)
+        {
+            Log.i("Files", "FileName:" + files[i].getName());
+            names[i] = files[i].getName();
+        }
+        ListAdapter documentsListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
+
+        final ListView documentsList = new ListView(mainContext);
+        RelativeLayout.LayoutParams documentsListLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+        documentsListLayoutParams.width = 720;
+        documentsListLayoutParams.height = 1000;
+        documentsListLayoutParams.topMargin = 250;
+        documentsListLayoutParams.leftMargin = 0;
+        documentsList.setLayoutParams(documentsListLayoutParams);
+        documentsList.setAdapter(documentsListAdapter);
+        item.addView(documentsList);
+
+        documentsList.setOnItemClickListener(
+                new AdapterView.OnItemClickListener() {
+                    @Override
+                    public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+                        String itemClicked = String.valueOf(parent.getItemAtPosition(position));
+                        Toast.makeText(MainActivity.this, itemClicked, Toast.LENGTH_LONG).show();
+                        startMUPDFActivityFromDownloads(itemClicked);
+                    }
+                }
+        );
+
 
         /*startMuPDFActivityWithExampleFile();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
@@ -135,6 +177,16 @@ public class MainActivity extends AppCompatActivity {
     }
 
 
+    public void startMUPDFActivityFromDownloads(String fileName){
+        File dir = Environment.getExternalStoragePublicDirectory
+                (Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(dir, fileName);
+        Uri uri = Uri.fromFile(file);
+        startMuPDFActivity(uri);
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
+    }
+
     public void startMuPDFActivity(Uri documentUri) {
         Intent intent = new Intent(this, DocumentActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
@@ -155,7 +207,7 @@ public class MainActivity extends AppCompatActivity {
 
     private static final int READ_REQUEST_CODE = 42;
     /**
-     * Fires an intent to spin up the "file chooser" UI and select an image.
+     * Fires an intent to spin up the "file chooser" UI
      */
     public void performFileSearch() {
 
@@ -193,15 +245,15 @@ public class MainActivity extends AppCompatActivity {
             if (resultData != null) {
                 uri = resultData.getData();
                 Log.i("TAG", "Uri: " + android.net.Uri.parse(uri.toString()));
-                //showImage(uri);
 
+                File file = new File(uri.getPath());
                 try {
                     stream = getContentResolver().openInputStream(uri);
+
                 } catch (FileNotFoundException e) {
                     e.printStackTrace();
                 }
 
-                startMuPDFActivity(uri); //getting magic must not be null
             }
         }
     }
