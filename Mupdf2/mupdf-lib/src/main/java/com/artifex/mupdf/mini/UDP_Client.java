@@ -16,6 +16,7 @@ public class UDP_Client {
 
     @SuppressLint("NewApi")
     public void Send() {
+
         async_cient = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {

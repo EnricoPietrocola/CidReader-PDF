@@ -48,8 +48,6 @@ public class MainActivity extends AppCompatActivity {
         item = new RelativeLayout(mainContext);
         setContentView(item);
 
-
-
         /*EditText myEditText = new EditText(mainContext); // Pass it an Activity or Context
         myEditText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)); // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
         item.addView(myEditText);*/
@@ -107,9 +105,49 @@ public class MainActivity extends AppCompatActivity {
 
         connectButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
+
+                if (checkSelfPermission(Manifest.permission.INTERNET)
+                        != PackageManager.PERMISSION_GRANTED) {
+
+                    // Should we show an explanation?
+                    if (shouldShowRequestPermissionRationale(
+                            Manifest.permission.INTERNET)) {
+                    }
+
+                    requestPermissions(new String[]{Manifest.permission.INTERNET},
+                            3);
+
+                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+                    // app-defined int constant
+
+                    return;
+                }
+
                 startMuPDFActivityWithExampleFile();
             }
         });
+
+
+
+
+        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (shouldShowRequestPermissionRationale(
+                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
+            }
+
+            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
+                    3);
+
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant
+
+            return;
+        }
+
+
 
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
 
@@ -118,7 +156,7 @@ public class MainActivity extends AppCompatActivity {
         File[] files = directory.listFiles();
         Log.i("Files", "Size: "+ files.length);
         String[] names = new String[files.length];
-        /*for (int i = 0; i < files.length; i++)
+        for (int i = 0; i < files.length; i++)
         {
             Log.i("Files", "FileName:" + files[i].getName());
             names[i] = files[i].getName();
@@ -146,8 +184,6 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
-
-        */
 
         /*startMuPDFActivityWithExampleFile();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
