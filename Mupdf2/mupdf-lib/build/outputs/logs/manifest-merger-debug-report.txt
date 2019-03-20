@@ -1,8 +1,8 @@
 -- Merging decision tree log ---
 manifest
-ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:2:1-46:12
-INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:2:1-46:12
-INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:2:1-46:12
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:2:1-48:12
+INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:2:1-48:12
+INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:2:1-48:12
 	package
 		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:3:5-37
 		INJECTED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml
@@ -18,7 +18,7 @@ ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:6:5-67
 	android:name
 		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:6:22-64
 application
-ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:8:5-44:19
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:8:5-46:19
 activity#com.artifex.mupdf.mini.DocumentActivity
 ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:9:9-39:20
 	android:label
@@ -50,7 +50,7 @@ ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:19:17-60
 intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:pathPattern:.*\\.cbz+data:pathPattern:.*\\.epub+data:pathPattern:.*\\.fb2+data:pathPattern:.*\\.oxps+data:pathPattern:.*\\.pdf+data:pathPattern:.*\\.xps
 ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:26:13-38:29
 activity#com.artifex.mupdf.mini.OutlineActivity
-ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:40:9-42:86
+ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:40:9-44:20
 	android:configChanges
 		ADDED from D:\RepoGarr1\Mupdf2\mupdf-lib\src\main\AndroidManifest.xml:42:13-74
 	android:name
