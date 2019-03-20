@@ -113,6 +113,7 @@ public class DocumentActivity extends Activity
 	public static RelativeLayout item;
 	public Context mainContext;
 	public InetAddress ipTargetAddress;
+	public TextView pointer;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -881,23 +882,25 @@ public class DocumentActivity extends Activity
 	}
 
 	public void printOnScreen(int x, int y){
-		TextView  tv = new TextView(this);
-		tv.setText(Integer.toString(x) + " " + Integer.toString(y));
+		if (pointer == null){
+			pointer = new TextView(this);
+			pointer.setText("0");
+			item.addView(pointer);
+
+		}
+		//TextView  tv = new TextView(this);
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
 		//layoutParams.leftMargin = 1000;
-		layoutParams.width = x;
-		layoutParams.height = y;
+		//layoutParams.width = x;
+		//layoutParams.height = y;
 		layoutParams.topMargin = y;
 		layoutParams.leftMargin = x;
 
-		//ALL THIS STUFF MUS BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
+		//ALL THIS LINES MUST BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
 
-		//layoutParams.topMargin = 1000;
-		//layoutParams.alignWithParent = true;
-
-		tv.setLayoutParams(layoutParams);
-		item.addView(tv);
+		pointer.setLayoutParams(layoutParams);
+//		item.addView(pointer);
 	}
 
 	private void printOnScreenLocal(int x, int y){
