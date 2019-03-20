@@ -113,12 +113,12 @@ public class MainActivity extends AppCompatActivity {
 
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
 
-        Log.i("Files", "Path: " + path);
+        //Log.i("Files", "Path: " + path);
         File directory = new File(path);
         File[] files = directory.listFiles();
         Log.i("Files", "Size: "+ files.length);
         String[] names = new String[files.length];
-        for (int i = 0; i < files.length; i++)
+        /*for (int i = 0; i < files.length; i++)
         {
             Log.i("Files", "FileName:" + files[i].getName());
             names[i] = files[i].getName();
@@ -146,6 +146,8 @@ public class MainActivity extends AppCompatActivity {
                 }
         );
 
+
+        */
 
         /*startMuPDFActivityWithExampleFile();
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
