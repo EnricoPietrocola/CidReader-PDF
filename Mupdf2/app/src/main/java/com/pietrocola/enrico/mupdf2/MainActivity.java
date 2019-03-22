@@ -1,7 +1,4 @@
-//package com.pietrocola.enrico.mupdf2;
-
-package com.artifex.mupdf.mini;
-
+package com.pietrocola.enrico.mupdf2;
 
 import android.Manifest;
 import android.app.Activity;
@@ -34,19 +31,13 @@ import android.view.LayoutInflater;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import java.net.InetAddress;
-import java.net.UnknownHostException;
-
 
 public class MainActivity extends AppCompatActivity {
     protected final int PERMISSION_REQUEST = 42;
 
-
     public Context mainContext;
     public static RelativeLayout item;
     public Uri file;
-
-    public static InetAddress ipTargetAddress;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -56,8 +47,6 @@ public class MainActivity extends AppCompatActivity {
         mainContext = getApplicationContext();
         item = new RelativeLayout(mainContext);
         setContentView(item);
-
-
 
         /*EditText myEditText = new EditText(mainContext); // Pass it an Activity or Context
         myEditText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)); // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
@@ -134,13 +123,6 @@ public class MainActivity extends AppCompatActivity {
                     return;
                 }
 
-                try {
-
-                    ipTargetAddress = InetAddress.getByName(ipText.getText().toString());
-
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
                 startMuPDFActivityWithExampleFile();
             }
         });
@@ -246,9 +228,6 @@ public class MainActivity extends AppCompatActivity {
     public void startMuPDFActivity(Uri documentUri) {
         Intent intent = new Intent(this, DocumentActivity.class);
         intent.setAction(Intent.ACTION_VIEW);
-        /*intent.setAction("IP");
-        intent.putExtra("IP", ipTargetAddress.toString());*/
-        //context.getApplicationContext().sendBroadcast(i);
         intent.setData(documentUri);
         startActivity(intent);
     }
