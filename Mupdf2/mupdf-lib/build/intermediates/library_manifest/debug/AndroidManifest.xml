@@ -3,7 +3,7 @@
     package="com.artifex.mupdf.mini" >
 
     <uses-sdk
-        android:minSdkVersion="16"
+        android:minSdkVersion="23"
         android:targetSdkVersion="25" />
 
     <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
@@ -15,7 +15,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="MuPDF mini" >
             <intent-filter>
-                <action android:name="android.intent.action.VIEW" />
+                <action android:name="android.intent.action.MAIN" /> <!-- this was VIEW -->
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
@@ -43,8 +43,7 @@
         </activity>
         <activity
             android:name="com.artifex.mupdf.mini.OutlineActivity"
-            android:configChanges="orientation|screenSize|keyboardHidden" >
-        </activity>
+            android:configChanges="orientation|screenSize|keyboardHidden" />
     </application>
 
 </manifest>

@@ -2,22 +2,23 @@ package com.pietrocola.enrico.mupdf2;
 
 import android.Manifest;
 import android.app.Activity;
-import android.support.constraint.ConstraintLayout;
 import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import com.artifex.mupdf.mini.DocumentActivity;
+
 import android.content.Intent;
 import android.net.Uri;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.InputStream;
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.content.pm.PackageManager;
 import android.util.Log;
-import android.view.LayoutInflater;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
@@ -27,8 +28,6 @@ import android.content.Context;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
-import android.view.LayoutInflater;
-import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -43,25 +42,10 @@ public class MainActivity extends AppCompatActivity {
     protected void onCreate(Bundle savedInstanceState) {
 
         super.onCreate(savedInstanceState);
-        //setContentView(R.layout.activity_main);
+
         mainContext = getApplicationContext();
         item = new RelativeLayout(mainContext);
         setContentView(item);
-
-        /*EditText myEditText = new EditText(mainContext); // Pass it an Activity or Context
-        myEditText.setLayoutParams(new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT)); // Pass two args; must be LayoutParams.MATCH_PARENT, LayoutParams.WRAP_CONTENT, or an integer pixel value.
-        item.addView(myEditText);*/
-
-        /*//mainContext = getApplicationContext();
-        final EditText ipAddressInput = new EditText(this);
-        RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        layoutParams.width = 400;
-        layoutParams.height = 150;
-        layoutParams.topMargin = 150;
-        layoutParams.leftMargin = 50;
-        ipAddressInput.setLayoutParams(layoutParams);
-        item.addView(ipAddressInput);*/
-
 
         final EditText ipText = new EditText(mainContext);
         RelativeLayout.LayoutParams ipTextLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -72,25 +56,6 @@ public class MainActivity extends AppCompatActivity {
         ipText.setLayoutParams(ipTextLayoutParams);
         //addContentView(ipText, ipTextLayoutParams);
         item.addView(ipText);
-
-        /*final Button openButton = new Button(mainContext);
-        RelativeLayout.LayoutParams openButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        openButtonLayoutParams.width = 400;
-        openButtonLayoutParams.height = 100;
-        openButtonLayoutParams.topMargin = 150;
-        openButtonLayoutParams.leftMargin = 0;
-        openButton.setLayoutParams(openButtonLayoutParams);
-        openButton.setText("File");
-        //addContentView(openButton, openButtonLayoutParams);
-        item.addView(openButton);
-
-
-        openButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-                //performFileSearch();
-            }
-        });
-        */
 
         final Button connectButton = new Button(mainContext);
         RelativeLayout.LayoutParams connectButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -122,7 +87,11 @@ public class MainActivity extends AppCompatActivity {
 
                     return;
                 }
-
+                try {
+                    DocumentActivity.ipTargetAddress = InetAddress.getByName(ipText.getText().toString());
+                } catch (UnknownHostException e) {
+                    e.printStackTrace();
+                }
                 startMuPDFActivityWithExampleFile();
             }
         });
@@ -183,35 +152,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-
-
-        /*startMuPDFActivityWithExampleFile();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
-        setContentView(R.layout.activity_main);*/
-
-        /*TextView  tv = new TextView(this);
-        tv.setText("SA SA SA PROVA");
-        //tv.setBackgroundColor(32);
-        RelativeLayout LayoutParams layoutParams = new RelativeLayout.LayoutParams(300, 500);
-        //layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-        //layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-        //layoutParams.setMargins(int left, int top, int right, int bottom);
-        tv.setLayoutParams(layoutParams);
-        /*
-        LayoutInflater inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
-        View view = inflater.inflate(com.artifex.mupdf.mini.R.layout.document_activity, null);
-        RelativeLayout item = view.findViewById(com.artifex.mupdf.mini.R.id.mainRelativeLayout);
-        item.addView(tv);
-        //setContentView(R.layout.activity_main);
-        //setContentView(item);*/
-    }
-
-    public void testFunc(){
-        startMuPDFActivityWithExampleFile();
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
-        setContentView(R.layout.activity_main);
     }
 
 
@@ -295,5 +235,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
+
+
 
 }

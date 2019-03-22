@@ -4,7 +4,7 @@ android {
     compileSdkVersion 28
     defaultConfig {
         applicationId "com.pietrocola.enrico.mupdf2"
-        minSdkVersion 23 //this was 16
+        minSdkVersion 23 //this was 16 //was 23 at a point
         targetSdkVersion 28
         versionCode 1
         versionName "1.0"

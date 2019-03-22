@@ -112,7 +112,7 @@ public class DocumentActivity extends Activity
 	private View view;
 	public static RelativeLayout item;
 	public Context mainContext;
-	public InetAddress ipTargetAddress;
+	public static InetAddress ipTargetAddress;
 	public TextView pointer;
 
 	public void onCreate(Bundle savedInstanceState) {
