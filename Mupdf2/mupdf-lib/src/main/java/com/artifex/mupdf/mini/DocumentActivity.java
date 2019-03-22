@@ -112,16 +112,15 @@ public class DocumentActivity extends Activity
 	private View view;
 	public static RelativeLayout item;
 	public Context mainContext;
-	public InetAddress ipTargetAddress;
+	public static InetAddress ipTargetAddress;
 	public TextView pointer;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
+		Intent launchIntent = getPackageManager().getLaunchIntentForPackage("com.pietrocola.enrico.mupdf2");
+
 		mainContext = getApplicationContext();
-
-
-
 		registerReceiver(broadcastReceiver, new IntentFilter("Main.MESSAGE_RECEIVED"));
 
 		requestWindowFeature(Window.FEATURE_NO_TITLE);
@@ -310,6 +309,7 @@ public class DocumentActivity extends Activity
 				bundle.putInt("POSITION", currentPage);
 				bundle.putSerializable("OUTLINE", flatOutline);
 				intent.putExtras(bundle);
+				startActivityForResult(intent, NAVIGATE_REQUEST);
 				startActivityForResult(intent, NAVIGATE_REQUEST);
 			}
 		});
@@ -807,49 +807,29 @@ public class DocumentActivity extends Activity
 		return splitMessage;
 	}
 
-	public void printMessageOnScreen(String message, int x, int y){
-		TextView  tv = new TextView(this);
-		tv.setText(message);
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
-		//layoutParams.leftMargin = 1000;
-		layoutParams.width = x;
-		layoutParams.height = y;
-		layoutParams.topMargin = y;
-		layoutParams.leftMargin = x;
-
-		//ALL THIS STUFF MUS BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
-
-		//layoutParams.topMargin = 1000;
-		//layoutParams.alignWithParent = true;
-
-		tv.setLayoutParams(layoutParams);
-		item.addView(tv);
-	}
-
 	private String newString;
 
 	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
 		@Override
 		public void onReceive(Context context, Intent intent) {
 			// internet lost alert dialog method call from here...
-			//Log.i("tag", "DIO");
-			//Toast.makeText(mainContext, "DIO MESSAGE", Toast.LENGTH_LONG);
 			//Intent intentReceived = getIntent();
 			Bundle messagesReceived = intent.getExtras();
-
 			if(messagesReceived == null) {
 				newString = null;
-			} else {
-				newString = messagesReceived.getString("Main.MESSAGE_STRING");
 			}
+			else {
+				newString = messagesReceived.getString("Main.MESSAGE_STRING");
+				try {
 
+					ipTargetAddress =  InetAddress.getByName(messagesReceived.getString("IP"));
 
-
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}
+			}
 			//do stuff with received message
-
 			String[] parsedMessage = RPCParse(newString);
-
 			//printMessageOnScreen(newString, 200, 200);
 			//Toast.makeText(context, newString, Toast.LENGTH_LONG).show();
 			switch(parsedMessage[0]) {
@@ -871,23 +851,13 @@ public class DocumentActivity extends Activity
 		}
 	};
 
-	public void printOnScreenDebug(){
-		TextView  tv = new TextView(this);
-		tv.setText("Test");
-		LayoutParams layoutParams=new LayoutParams(200, 300);
-		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-		tv.setLayoutParams(layoutParams);
-		item.addView(tv);
-	}
-
 	public void printOnScreen(int x, int y){
 		if (pointer == null){
 			pointer = new TextView(this);
 			pointer.setText("0");
 			item.addView(pointer);
-
 		}
+
 		//TextView  tv = new TextView(this);
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
@@ -896,9 +866,7 @@ public class DocumentActivity extends Activity
 		//layoutParams.height = y;
 		layoutParams.topMargin = y;
 		layoutParams.leftMargin = x;
-
 		//ALL THIS LINES MUST BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
-
 		pointer.setLayoutParams(layoutParams);
 //		item.addView(pointer);
 	}
