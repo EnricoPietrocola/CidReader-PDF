@@ -39,14 +39,13 @@ while 1:
 	else:
 		ipaddresses.append(address[0])
 
-	for x in ipaddresses:
-		print(address)
-		
-		try:
-			UDPServerSocket.sendto(bytesToSend, address[0])
+	for x in address:
+		print("x is " + x)
 
-		except Exception as e:
-			print("		nope")
+		#	try:
+		#	UDPServerSocket.sendto(bytesToSend, (37.162.79.66, "12777"))
+		#except Exception as e:
+		#	print(Exception)
 
 
 
