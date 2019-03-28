@@ -1,13 +1,13 @@
 import socket
 import sys
 
-localIP     = socket.gethostname()
+localIP     = "0.0.0.0"
 localPort   = 12777
 bufferSize  = 4096
 
 ipaddresses = [] 
 
-msgFromServer       = "Hello UDP Client"
+msgFromServer       = "printOnScreen,128,128"
 bytesToSend         = str.encode(msgFromServer)
 
 # Create a datagram socket
@@ -27,7 +27,7 @@ while 1:
 	clientIP  = "Client IP Address:{}".format(address)
 	#print(clientMsg)
 	#print(clientIP)
-	print(address[0])
+	#print(address[0])
 
 	#STUFF FOR HOLE PUNCH 
 	# let's try making a list of IPs, adding 
@@ -39,9 +39,17 @@ while 1:
 	else:
 		ipaddresses.append(address[0])
 
-
 	for x in ipaddresses:
-		print(x)
+		print(address)
+		
+		try:
+			UDPServerSocket.sendto(bytesToSend, address[0])
+
+		except Exception as e:
+			print("		nope")
+
+
+
 
 	# Sending a reply to client
 	#UDPServerSocket.sendto(bytesToSend, address)
