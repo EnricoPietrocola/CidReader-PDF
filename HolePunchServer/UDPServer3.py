@@ -5,7 +5,7 @@ localIP     = socket.gethostname()
 localPort   = 12777
 bufferSize  = 4096
 
-#ipaddresses[] 
+ipaddresses = [] 
 
 msgFromServer       = "Hello UDP Client"
 bytesToSend         = str.encode(msgFromServer)
@@ -25,9 +25,24 @@ while 1:
 	address = bytesAddressPair[1]
 	clientMsg = "Message from Client:{}".format(message)
 	clientIP  = "Client IP Address:{}".format(address)
-	print(clientMsg)
-	print(clientIP)
-	#print(data)
+	#print(clientMsg)
+	#print(clientIP)
+	print(address[0])
+
+	#STUFF FOR HOLE PUNCH 
+	# let's try making a list of IPs, adding 
+	# them if they're not in the list and
+	# send them to the others connecting
+	if address[0] in ipaddresses:
+		#do nothing
+		print("ip already recorded")
+	else:
+		ipaddresses.append(address[0])
+
+
+	for x in ipaddresses:
+		print(x)
+
 	# Sending a reply to client
 	#UDPServerSocket.sendto(bytesToSend, address)
 
