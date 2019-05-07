@@ -33,12 +33,12 @@ public class UDP_Server
 
                 try
                 {
-                    Log.i("tag", "Launching Server " + Server_aktiv);
+                    //Log.i("tag", "Launching Server " + Server_aktiv);
 
                     ds = new DatagramSocket(12777);
 
                     //ds.getPort()
-                    Log.i("tag", "Launching Server " + ds.getPort());
+                    //Log.i("tag", "Launching Server " + ds.getPort());
                     /*TextView tv = new TextView(context.getApplicationContext());
                     tv.setText("port opened " + ds.getPort());
                     RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
@@ -53,7 +53,7 @@ public class UDP_Server
                     while(Server_aktiv)
                     {
                         ds.receive(dp);
-                        Log.i("tag", "Server Received " + new String(lMsg, "UTF-8"));
+                        //Log.i("tag", "Server Received " + new String(lMsg, "UTF-8"));
                         Intent i = new Intent();
                         i.setAction("Main.MESSAGE_RECEIVED");
                         i.putExtra("Main.MESSAGE_STRING", new String(lMsg, 0, dp.getLength()));

@@ -54,6 +54,16 @@ import java.io.ByteArrayOutputStream;
 import java.io.IOException;
 import java.net.InetAddress;
 
+
+
+//NEEDED FOR GRAPHICS
+
+import android.support.v7.app.AppCompatActivity;
+import android.util.DisplayMetrics;
+import android.view.Menu;
+import android.view.MenuInflater;
+
+
 import android.widget.RelativeLayout.LayoutParams;
 
 public class DocumentActivity extends Activity
@@ -114,6 +124,9 @@ public class DocumentActivity extends Activity
 	public Context mainContext;
 	public static InetAddress ipTargetAddress;
 	public TextView pointer;
+
+	//NEEDED FOR GRAPHICS
+	private PaintView paintView;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -182,11 +195,15 @@ public class DocumentActivity extends Activity
 
         registerReceiver(broadcastReceiver, new IntentFilter("Main.MESSAGE_RECEIVED"));
 
+		//setContentView(R.layout.activity_main);
 
-		//BroadcastReceiver br;
-
-		/*UDP_Client udp = new UDP_Client();
-		udp.func();*/
+		paintView =  new PaintView(mainContext); //(PaintView) findViewById(R.id.paintView);
+		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		/*DisplayMetrics*/ metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		paintView.setLayoutParams(paintViewLayoutParams);
+		paintView.init(metrics);
+		item.addView(paintView);
 
 		//setContentView(R.layout.document_activity);
 		actionBar = findViewById(R.id.action_bar);
@@ -361,14 +378,33 @@ public class DocumentActivity extends Activity
 	}
 
 
+	//this is where you detect touch on page
+
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
 		int x =/* (int)item.getX() */+ (int)event.getRawX();
 		int  y =/* (int)item.getY()*/ + (int)event.getRawY();
 		View v = getCurrentFocus();
 
+		switch(event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				paintView.touchStart(x, y);
+				paintView.invalidate();
+				break;
+			case MotionEvent.ACTION_MOVE:
+				paintView.touchMove(x, y);
+				paintView.invalidate();
+				break;
+			case MotionEvent.ACTION_UP:
+				paintView.touchUp();
+				paintView.invalidate();
+				break;
+		}
+
 		printOnScreenLocal(x, y);
 		RPCprintOnScreen(x, y);
+
+
 
 		boolean ret = super.dispatchTouchEvent(event);
 		return ret;
@@ -912,4 +948,31 @@ public class DocumentActivity extends Activity
 		udpClient.Send();
 	}
 
+	//NEEDED FOR GRAPHICS
+	@Override
+	public boolean onCreateOptionsMenu(Menu menu) {
+		MenuInflater menuInflater = getMenuInflater();
+		menuInflater.inflate(R.menu.layout_menu, menu);
+		return super.onCreateOptionsMenu(menu);
+	}
+
+	/*@Override
+	public boolean onOptionsItemSelected(MenuItem item) {
+		switch(item.getItemId()) {
+			case R.id.normal:
+				paintView.normal();
+				return true;
+			case R.id.emboss:
+				paintView.emboss();
+				return true;
+			case R.id.blur:
+				paintView.blur();
+				return true;
+			case R.id.clear:
+				paintView.clear();
+				return true;
+		}
+
+		return super.onOptionsItemSelected(item);
+	}*/
 }

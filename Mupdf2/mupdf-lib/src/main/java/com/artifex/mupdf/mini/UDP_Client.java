@@ -31,7 +31,7 @@ public class UDP_Client {
                     dp = new DatagramPacket(Message.getBytes(), Message.length(), addr, 12777 );
                     ds.setBroadcast(true);
                     ds.send(dp);
-                    Log.i("tag", "sending data " + Message);
+                    //Log.i("tag", "sending data " + Message);
                 } catch (Exception e) {
                     e.printStackTrace();
                 } finally {
