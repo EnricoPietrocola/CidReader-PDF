@@ -47,6 +47,7 @@ public class MainActivity extends AppCompatActivity {
         item = new RelativeLayout(mainContext);
         setContentView(item);
 
+        //IP TEXT EDIT FIELD
         final EditText ipText = new EditText(mainContext);
         RelativeLayout.LayoutParams ipTextLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         ipTextLayoutParams.width = 400;
@@ -57,6 +58,8 @@ public class MainActivity extends AppCompatActivity {
         //addContentView(ipText, ipTextLayoutParams);
         item.addView(ipText);
 
+        /*
+        //CONNECT BUTTON
         final Button connectButton = new Button(mainContext);
         RelativeLayout.LayoutParams connectButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         connectButtonLayoutParams.width = 400;
@@ -68,6 +71,7 @@ public class MainActivity extends AppCompatActivity {
         //addContentView(connectButton, connectButtonLayoutParams);
         item.addView(connectButton);
 
+        //CONNECT BUTTON EXEC
         connectButton.setOnClickListener(new View.OnClickListener() {
             public void onClick(View v) {
 
@@ -92,12 +96,12 @@ public class MainActivity extends AppCompatActivity {
                 } catch (UnknownHostException e) {
                     e.printStackTrace();
                 }
-                startMuPDFActivityWithExampleFile();
+                //Start process
+                    //startMuPDFActivityWithExampleFile();
             }
         });
 
-
-
+*/
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -116,18 +120,16 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-
-
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
 
         //Log.i("Files", "Path: " + path);
         File directory = new File(path);
         File[] files = directory.listFiles();
-        Log.i("Files", "Size: "+ files.length);
+        //Log.i("Files", "Size: "+ files.length);
         String[] names = new String[files.length];
         for (int i = 0; i < files.length; i++)
         {
-            Log.i("Files", "FileName:" + files[i].getName());
+            //Log.i("Files", "FileName:" + files[i].getName());
             names[i] = files[i].getName();
         }
         ListAdapter documentsListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
@@ -148,12 +150,38 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String itemClicked = String.valueOf(parent.getItemAtPosition(position));
                         Toast.makeText(MainActivity.this, itemClicked, Toast.LENGTH_LONG).show();
+
+                        ConnectAndOpenPDF(ipText);
+
                         startMUPDFActivityFromDownloads(itemClicked);
                     }
                 }
         );
     }
 
+    public void ConnectAndOpenPDF(EditText ipText){
+        if (checkSelfPermission(Manifest.permission.INTERNET)
+                != PackageManager.PERMISSION_GRANTED) {
+
+            // Should we show an explanation?
+            if (shouldShowRequestPermissionRationale(
+                    Manifest.permission.INTERNET)) {
+            }
+
+            requestPermissions(new String[]{Manifest.permission.INTERNET},
+                    3);
+
+            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+            // app-defined int constant
+
+            return;
+        }
+        try {
+            DocumentActivity.ipTargetAddress = InetAddress.getByName(ipText.getText().toString());
+        } catch (UnknownHostException e) {
+            e.printStackTrace();
+        }
+    }
 
     public void startMUPDFActivityFromDownloads(String fileName){
         File dir = Environment.getExternalStoragePublicDirectory

@@ -818,10 +818,8 @@ public class DocumentActivity extends Activity
 		layoutParams.topMargin = y;
 		layoutParams.leftMargin = x;
 
-		//ALL THIS STUFF MUS BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
+		//ALL THIS STUFF MUST BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
 
-		//layoutParams.topMargin = 1000;
-		//layoutParams.alignWithParent = true;
 
 		tv.setLayoutParams(layoutParams);
 		item.addView(tv);
