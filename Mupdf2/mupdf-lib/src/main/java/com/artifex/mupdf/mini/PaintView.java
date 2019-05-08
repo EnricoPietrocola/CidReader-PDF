@@ -46,7 +46,6 @@ public class PaintView extends View {
     //added for multipage support
     public ArrayList<ArrayList<FingerPath>> page = new ArrayList<>();
 
-
     public PaintView(Context context) {
         this(context, null);
     }
@@ -163,29 +162,21 @@ public class PaintView extends View {
     }
 
     public void saveCurrentPage(int currentPage){
-        page.set(currentPage, paths);
+        //page.set(currentPage, paths);
+        page.set(currentPage, new ArrayList<>(paths)); //_paths
+        //page.set(currentPage, _paths);
         Log.i("PaintView", "Saved page " + String.valueOf(currentPage));
     }
 
     public void changePage(int pageNumber){
 
         if(page.get(pageNumber) != null){
-            clear();
 
-            for (int i = 0; i < page.get(pageNumber).size(); i++){
-                //for (int j = 0; j < page.get(pageNumber).; j++){
-                    paths.set(i, page.get(pageNumber));
-                    paths.get(i).color = page.get(pageNumber).get(i).color;
-                    paths.get(i).emboss = page.get(pageNumber).get(i).emboss;
-                    paths.get(i).blur = page.get(pageNumber).get(i).blur;
-                    paths.get(i).strokeWidth = page.get(pageNumber).get(i).strokeWidth;
-                    paths.get(i).path = page.get(pageNumber).get(i).path; //DOESN'T LOAD BECAUSE OF THIS OR BECAUSE THERE IS SOMETHING NOT DRAWING THIS
-               // }
-            }
+            clear();  //This clears pages for turning page effect
+
+            paths = new ArrayList<FingerPath>(page.get(pageNumber)); // _paths;
+
             invalidate();
-            Log.i("PaintView", "Loaded page " + String.valueOf(pageNumber));
-            //Log.i("PaintView", "Loaded path is " + String.valueOf( paths.get(0).path.isEmpty()));
-
         }
         else {
             Log.i("PaintView","Page is null");
