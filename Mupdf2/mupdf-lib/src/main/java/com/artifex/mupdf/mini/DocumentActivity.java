@@ -127,6 +127,7 @@ public class DocumentActivity extends Activity
 
 	//NEEDED FOR GRAPHICS
 	private PaintView paintView; //single page created for annotation
+	private boolean annotationsVisible = true;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -283,6 +284,7 @@ public class DocumentActivity extends Activity
 		zoomButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				fitPage = !fitPage;
+				switchAnnotations(); //TEMPORARY
 				loadPage();
 			}
 		});
@@ -336,16 +338,22 @@ public class DocumentActivity extends Activity
 
 		switch(event.getAction()) {
 			case MotionEvent.ACTION_DOWN:
-				paintView.touchStart(x, y);
-				paintView.invalidate();
+				if (annotationsVisible) {
+					paintView.touchStart(x, y);
+					paintView.invalidate();
+				}
 				break;
 			case MotionEvent.ACTION_MOVE:
-				paintView.touchMove(x, y);
-				paintView.invalidate();
+				if (annotationsVisible) {
+					paintView.touchMove(x, y);
+					paintView.invalidate();
+				}
 				break;
 			case MotionEvent.ACTION_UP:
-				paintView.touchUp();
-				paintView.invalidate();
+				if (annotationsVisible) {
+					paintView.touchUp();
+					paintView.invalidate();
+				}
 				break;
 		}
 
@@ -894,6 +902,18 @@ public class DocumentActivity extends Activity
 		paintView.init(metrics, pageCount);
 		item.addView(paintView);
 	}
+
+	public void switchAnnotations(){
+		if (!annotationsVisible){
+			paintView.setVisibility(View.VISIBLE);
+		}
+		else{
+			paintView.setVisibility(View.GONE);
+		}
+		annotationsVisible = !annotationsVisible;
+
+	}
+
 }
 
 
