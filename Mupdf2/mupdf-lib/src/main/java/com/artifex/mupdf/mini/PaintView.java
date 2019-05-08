@@ -9,20 +9,24 @@ import android.graphics.EmbossMaskFilter;
 import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
+import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
 import android.view.MotionEvent;
 import android.view.View;
 
+import org.w3c.dom.Document;
+
 import java.util.ArrayList;
+import java.util.Collections;
 
 
 public class PaintView extends View {
 
-    public static int BRUSH_SIZE = 20;
+    public static int BRUSH_SIZE = 5;
     public static final int DEFAULT_COLOR = Color.RED;
-    public static final int DEFAULT_BG_COLOR = Color.WHITE;
+    public static final int DEFAULT_BG_COLOR = Color.TRANSPARENT;
     private static final float TOUCH_TOLERANCE = 4;
     private float mX, mY;
     private Path mPath;
@@ -38,6 +42,10 @@ public class PaintView extends View {
     private Bitmap mBitmap;
     private Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+
+    //added for multipage support
+    public ArrayList<ArrayList<FingerPath>> page = new ArrayList<>();
+
 
     public PaintView(Context context) {
         this(context, null);
@@ -59,7 +67,7 @@ public class PaintView extends View {
         mBlur = new BlurMaskFilter(5, BlurMaskFilter.Blur.NORMAL);
     }
 
-    public void init(DisplayMetrics metrics) {
+    public void init(DisplayMetrics metrics, int pageCount) {
         int height = metrics.heightPixels;
         int width = metrics.widthPixels;
 
@@ -70,6 +78,17 @@ public class PaintView extends View {
         strokeWidth = BRUSH_SIZE;
         normal(); //added here to bypass options
         Log.i("TAG", "INIT");
+
+        //edit for multipage
+        for (int i = 0; i < pageCount; i++){
+            page.add(new ArrayList<FingerPath>());
+        }
+
+        Log.i("PaintView", "pages = " + String.valueOf(page.size()));
+        Log.i("PaintView", "pageCount = " + String.valueOf(pageCount));
+
+
+        //initialize, sync with pages from pagecount = 0
     }
 
     public void normal() {
@@ -88,7 +107,7 @@ public class PaintView extends View {
     }
 
     public void clear() {
-        backgroundColor = DEFAULT_BG_COLOR;
+        mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
         paths.clear();
         normal();
         invalidate();
@@ -97,9 +116,9 @@ public class PaintView extends View {
     @Override
     protected void onDraw(Canvas canvas) {
         canvas.save();
-        //mCanvas.drawColor(backgroundColor);
+        mCanvas.drawColor(backgroundColor);
 
-        for (FingerPath fp : paths) {
+        for (FingerPath fp : paths) { // paths is the fingerpath array
             mPaint.setColor(fp.color);
             mPaint.setStrokeWidth(fp.strokeWidth);
             mPaint.setMaskFilter(null);
@@ -141,6 +160,37 @@ public class PaintView extends View {
 
     public void touchUp() {
         mPath.lineTo(mX, mY);
+    }
+
+    public void saveCurrentPage(int currentPage){
+        page.set(currentPage, paths);
+        Log.i("PaintView", "Saved page " + String.valueOf(currentPage));
+    }
+
+    public void changePage(int pageNumber){
+
+        if(page.get(pageNumber) != null){
+            clear();
+
+            for (int i = 0; i < page.get(pageNumber).size(); i++){
+                //for (int j = 0; j < page.get(pageNumber).; j++){
+                    paths.set(i, page.get(pageNumber));
+                    paths.get(i).color = page.get(pageNumber).get(i).color;
+                    paths.get(i).emboss = page.get(pageNumber).get(i).emboss;
+                    paths.get(i).blur = page.get(pageNumber).get(i).blur;
+                    paths.get(i).strokeWidth = page.get(pageNumber).get(i).strokeWidth;
+                    paths.get(i).path = page.get(pageNumber).get(i).path; //DOESN'T LOAD BECAUSE OF THIS OR BECAUSE THERE IS SOMETHING NOT DRAWING THIS
+               // }
+            }
+            invalidate();
+            Log.i("PaintView", "Loaded page " + String.valueOf(pageNumber));
+            //Log.i("PaintView", "Loaded path is " + String.valueOf( paths.get(0).path.isEmpty()));
+
+        }
+        else {
+            Log.i("PaintView","Page is null");
+        }
+
     }
 
    /* @Override

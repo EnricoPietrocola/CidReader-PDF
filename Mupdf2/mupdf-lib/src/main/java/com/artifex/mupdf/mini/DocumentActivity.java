@@ -126,14 +126,12 @@ public class DocumentActivity extends Activity
 	public TextView pointer;
 
 	//NEEDED FOR GRAPHICS
-	private PaintView paintView;
+	private PaintView paintView; //single page created for annotation
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
 		mainContext = getApplicationContext();
-
-
 
 		registerReceiver(broadcastReceiver, new IntentFilter("Main.MESSAGE_RECEIVED"));
 
@@ -147,49 +145,6 @@ public class DocumentActivity extends Activity
 		//printOnScreenDebug();
 		layoutSetup();
 
-		/*final EditText ipAddressInput = new EditText(mainContext);
-		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-		layoutParams.width = 400;
-		layoutParams.height = 150;
-		layoutParams.topMargin = 150;
-		layoutParams.leftMargin = 50;
-		ipAddressInput.setLayoutParams(layoutParams);
-		item.addView(ipAddressInput);
-
-		final Button ipAddressButton = new Button(mainContext);
-		RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		layoutParams1.width = 400;
-		layoutParams1.height = 150;
-		layoutParams1.topMargin = 150;
-		layoutParams1.leftMargin = 550;
-		ipAddressButton.setText("Connect");
-		//ipAddressButton.setId(ipAddressButton);
-		ipAddressButton.setLayoutParams(layoutParams1);
-		item.addView(ipAddressButton);
-		/*String test[] = RPCParse("Function,1,2,3,4");*
-		Log.i("TAG", test[0]);
-		Log.i("TAG", test[1]);
-		Log.i("TAG", test[2]);
-		Log.i("TAG", test[3]);
-
-		ipAddressButton.setOnClickListener(
-				new View.OnClickListener()
-				{
-					public void onClick(View view)
-					{
-						Log.v("Ip input is ", ipAddressInput.getText().toString());
-						try {
-							//this gives a fatal exception if something that is not an IP is insert
-							ipTargetAddress = InetAddress.getByName(ipAddressInput.getText().toString());
-							ipAddressButton.setVisibility(View.GONE);
-							ipAddressInput.setVisibility(View.GONE);
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-							Log.i("TAG", "this is not a valid IP address");
-						}
-					}
-				}); */
-
 		UDP_Server udpServer = new UDP_Server();
 		udpServer.runUdpServer(mainContext);
 
@@ -197,13 +152,6 @@ public class DocumentActivity extends Activity
 
 		//setContentView(R.layout.activity_main);
 
-		paintView =  new PaintView(mainContext); //(PaintView) findViewById(R.id.paintView);
-		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		/*DisplayMetrics*/ metrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		paintView.setLayoutParams(paintViewLayoutParams);
-		paintView.init(metrics);
-		item.addView(paintView);
 
 		//setContentView(R.layout.document_activity);
 		actionBar = findViewById(R.id.action_bar);
@@ -409,22 +357,7 @@ public class DocumentActivity extends Activity
 		boolean ret = super.dispatchTouchEvent(event);
 		return ret;
 	}
-/*
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		Log.d("DEBUG","hey");
 
-		int x = (int)event.getX();
-		int y = (int)event.getY();
-		switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-			case MotionEvent.ACTION_MOVE:
-			case MotionEvent.ACTION_UP:
-		}
-		printOnScreen(x, y);
-
-		return false;
-	}*/
 
 	public void onPageViewSizeChanged(int w, int h) {
 		canvasW = w;
@@ -590,6 +523,7 @@ public class DocumentActivity extends Activity
 				}
 			}
 		});
+
 	}
 
 	protected void search(int direction) {
@@ -622,6 +556,7 @@ public class DocumentActivity extends Activity
 						doc.layout(layoutW, layoutH, layoutEm);
 					}
 					pageCount = doc.countPages();
+
 				} catch (Throwable x) {
 					doc = null;
 					pageCount = 1;
@@ -639,6 +574,9 @@ public class DocumentActivity extends Activity
 					zoomButton.setVisibility(View.VISIBLE);
 				loadPage();
 				loadOutline();
+
+				//creates graphics and initializes them (must be here in order to initialize with a known page count
+				createGraphics();
 			}
 		});
 	}
@@ -786,9 +724,16 @@ public class DocumentActivity extends Activity
 
 	public void goBackward() {
 		if (currentPage > 0) {
+
+			paintView.saveCurrentPage(currentPage);
+
+
 			wentBack = true;
 			currentPage --;
 			loadPage();
+
+			paintView.changePage(currentPage);
+
 
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.addr = ipTargetAddress;
@@ -799,8 +744,14 @@ public class DocumentActivity extends Activity
 
 	public void goForward() {
 		if (currentPage < pageCount - 1) {
+
+			paintView.saveCurrentPage(currentPage);
+
+
 			currentPage ++;
 			loadPage();
+			paintView.changePage(currentPage);
+
 
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.addr = ipTargetAddress;
@@ -810,7 +761,12 @@ public class DocumentActivity extends Activity
 	}
 
 	public void gotoPage(int p) {
+
+		paintView.saveCurrentPage(currentPage);
+
 		gotoPageLocal(p);
+
+		paintView.changePage(currentPage);
 
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
@@ -843,24 +799,8 @@ public class DocumentActivity extends Activity
 		return splitMessage;
 	}
 
-	public void printMessageOnScreen(String message, int x, int y){
-		TextView  tv = new TextView(this);
-		tv.setText(message);
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
-		//layoutParams.leftMargin = 1000;
-		layoutParams.width = x;
-		layoutParams.height = y;
-		layoutParams.topMargin = y;
-		layoutParams.leftMargin = x;
 
-		//ALL THIS STUFF MUST BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
-
-
-		tv.setLayoutParams(layoutParams);
-		item.addView(tv);
-	}
-
+	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	private String newString;
 
 	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
@@ -877,8 +817,6 @@ public class DocumentActivity extends Activity
 			} else {
 				newString = messagesReceived.getString("Main.MESSAGE_STRING");
 			}
-
-
 
 			//do stuff with received message
 
@@ -904,16 +842,6 @@ public class DocumentActivity extends Activity
 			}
 		}
 	};
-
-	public void printOnScreenDebug(){
-		TextView  tv = new TextView(this);
-		tv.setText("Test");
-		LayoutParams layoutParams=new LayoutParams(200, 300);
-		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-		tv.setLayoutParams(layoutParams);
-		item.addView(tv);
-	}
 
 	public void printOnScreen(int x, int y){
 		if (pointer == null){
@@ -956,6 +884,21 @@ public class DocumentActivity extends Activity
 		return super.onCreateOptionsMenu(menu);
 	}
 
+	public void createGraphics(){
+		paintView =  new PaintView(mainContext); //(PaintView) findViewById(R.id.paintView);
+		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		paintView.setLayoutParams(paintViewLayoutParams);
+		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
+		paintView.init(metrics, pageCount);
+		item.addView(paintView);
+	}
+}
+
+
+/*Backup Removed Code*/
+
 	/*@Override
 	public boolean onOptionsItemSelected(MenuItem item) {
 		switch(item.getItemId()) {
@@ -975,4 +918,93 @@ public class DocumentActivity extends Activity
 
 		return super.onOptionsItemSelected(item);
 	}*/
-}
+
+	/*
+	@Override
+	public boolean onTouchEvent(MotionEvent event) {
+		Log.d("DEBUG","hey");
+
+		int x = (int)event.getX();
+		int y = (int)event.getY();
+		switch (event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+			case MotionEvent.ACTION_MOVE:
+			case MotionEvent.ACTION_UP:
+		}
+		printOnScreen(x, y);
+
+		return false;
+	}*/
+
+	/*final EditText ipAddressInput = new EditText(mainContext);
+		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+		layoutParams.width = 400;
+		layoutParams.height = 150;
+		layoutParams.topMargin = 150;
+		layoutParams.leftMargin = 50;
+		ipAddressInput.setLayoutParams(layoutParams);
+		item.addView(ipAddressInput);
+
+		final Button ipAddressButton = new Button(mainContext);
+		RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		layoutParams1.width = 400;
+		layoutParams1.height = 150;
+		layoutParams1.topMargin = 150;
+		layoutParams1.leftMargin = 550;
+		ipAddressButton.setText("Connect");
+		//ipAddressButton.setId(ipAddressButton);
+		ipAddressButton.setLayoutParams(layoutParams1);
+		item.addView(ipAddressButton);
+		/*String test[] = RPCParse("Function,1,2,3,4");*
+		Log.i("TAG", test[0]);
+		Log.i("TAG", test[1]);
+		Log.i("TAG", test[2]);
+		Log.i("TAG", test[3]);
+
+		ipAddressButton.setOnClickListener(
+				new View.OnClickListener()
+				{
+					public void onClick(View view)
+					{
+						Log.v("Ip input is ", ipAddressInput.getText().toString());
+						try {
+							//this gives a fatal exception if something that is not an IP is insert
+							ipTargetAddress = InetAddress.getByName(ipAddressInput.getText().toString());
+							ipAddressButton.setVisibility(View.GONE);
+							ipAddressInput.setVisibility(View.GONE);
+						} catch (UnknownHostException e) {
+							e.printStackTrace();
+							Log.i("TAG", "this is not a valid IP address");
+						}
+					}
+				}); */
+
+	/*
+	public void printMessageOnScreen(String message, int x, int y){
+		TextView  tv = new TextView(this);
+		tv.setText(message);
+		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
+		//layoutParams.leftMargin = 1000;
+		layoutParams.width = x;
+		layoutParams.height = y;
+		layoutParams.topMargin = y;
+		layoutParams.leftMargin = x;
+
+		//ALL THIS STUFF MUST BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
+
+
+		tv.setLayoutParams(layoutParams);
+		item.addView(tv);
+	}*/
+	/*
+	public void printOnScreenDebug(){
+		TextView  tv = new TextView(this);
+		tv.setText("Test");
+		LayoutParams layoutParams=new LayoutParams(200, 300);
+		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
+		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
+		tv.setLayoutParams(layoutParams);
+		item.addView(tv);
+	}
+	*/

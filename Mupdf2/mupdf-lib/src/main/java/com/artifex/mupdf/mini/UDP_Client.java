@@ -23,7 +23,7 @@ public class UDP_Client {
                 DatagramSocket ds = null;
 
                 try {
-                    Log.i("tag", "preparing udp");
+                    //Log.i("tag", "preparing udp");
                     //Message = "asd";
                     //addr = InetAddress.getByName("192.168.1.153");
                     ds = new DatagramSocket();
