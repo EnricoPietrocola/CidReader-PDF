@@ -328,44 +328,6 @@ public class DocumentActivity extends Activity
 	}
 
 
-	//this is where you detect touch on page
-
-	@Override
-	public boolean dispatchTouchEvent(MotionEvent event) {
-		int x =/* (int)item.getX() */+ (int)event.getRawX();
-		int  y =/* (int)item.getY()*/ + (int)event.getRawY();
-		View v = getCurrentFocus();
-
-		switch(event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				if (annotationsVisible) {
-					paintView.touchStart(x, y);
-					paintView.invalidate();
-				}
-				break;
-			case MotionEvent.ACTION_MOVE:
-				if (annotationsVisible) {
-					paintView.touchMove(x, y);
-					paintView.invalidate();
-				}
-				break;
-			case MotionEvent.ACTION_UP:
-				if (annotationsVisible) {
-					paintView.touchUp();
-					paintView.invalidate();
-				}
-				break;
-		}
-
-		printOnScreenLocal(x, y);
-		RPCprintOnScreen(x, y);
-
-
-
-		boolean ret = super.dispatchTouchEvent(event);
-		return ret;
-	}
-
 
 	public void onPageViewSizeChanged(int w, int h) {
 		canvasW = w;
@@ -717,78 +679,88 @@ public class DocumentActivity extends Activity
 
 	public void goBackwardLocal(){
 		if (currentPage > 0) {
+			paintView.saveCurrentPage(currentPage);
+
 			wentBack = true;
 			currentPage--;
 			loadPage();
-		}
+
+            changePageDrawingLocal();
+
+        }
 	}
 
 	public void goForwardLocal(){
 			if (currentPage < pageCount - 1) {
+				paintView.saveCurrentPage(currentPage);
+
+
 				currentPage++;
 				loadPage();
+
+                changePageDrawingLocal();
+
 			}
 	}
+
+	public void gotoPageLocal(int p) {
+		if (p >= 0 && p < pageCount && p != currentPage) {
+			paintView.saveCurrentPage(currentPage);
+
+
+			history.push(currentPage);
+			currentPage = p;
+			loadPage();
+
+			changePageDrawingLocal();
+		}
+	}
+
+	public void changePageDrawingLocal(){
+		paintView.changePage(currentPage);
+    }
 
 	public void goBackward() {
 		if (currentPage > 0) {
 
-			paintView.saveCurrentPage(currentPage);
-
-
-			wentBack = true;
+			/*wentBack = true;
 			currentPage --;
-			loadPage();
-
-			paintView.changePage(currentPage);
-
+			loadPage();*/
+			goBackwardLocal();
 
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.addr = ipTargetAddress;
 			udpClient.Message = "goBackward";
 			udpClient.Send();
+
 		}
 	}
 
 	public void goForward() {
 		if (currentPage < pageCount - 1) {
-
-			paintView.saveCurrentPage(currentPage);
-
-
-			currentPage ++;
-			loadPage();
-			paintView.changePage(currentPage);
-
+			/*currentPage ++;
+			loadPage();*/
+			goForwardLocal();
 
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.addr = ipTargetAddress;
 			udpClient.Message = "goForward";
 			udpClient.Send();
+
 		}
 	}
 
 	public void gotoPage(int p) {
-
-		paintView.saveCurrentPage(currentPage);
-
 		gotoPageLocal(p);
-
-		paintView.changePage(currentPage);
 
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
 		udpClient.Message = "goToPage," + p;
 		udpClient.Send();
+
 	}
 
-	public void gotoPageLocal(int p) {
-		if (p >= 0 && p < pageCount && p != currentPage) {
-			history.push(currentPage);
-			currentPage = p;
-			loadPage();
-		}
-	}
+
 
 	public void gotoURI(String uri) {
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
@@ -811,64 +783,64 @@ public class DocumentActivity extends Activity
 	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	private String newString;
 
-	BroadcastReceiver broadcastReceiver = new BroadcastReceiver() {
-		@Override
-		public void onReceive(Context context, Intent intent) {
-			// internet lost alert dialog method call from here...
-			//Log.i("tag", "DIO");
-			//Toast.makeText(mainContext, "DIO MESSAGE", Toast.LENGTH_LONG);
-			//Intent intentReceived = getIntent();
-			Bundle messagesReceived = intent.getExtras();
+	BroadcastReceiver broadcastReceiver;
 
-			if(messagesReceived == null) {
-				newString = null;
-			} else {
-				newString = messagesReceived.getString("Main.MESSAGE_STRING");
+	{
+		broadcastReceiver = new BroadcastReceiver() {
+			@Override
+			public void onReceive(Context context, Intent intent) {
+				// internet lost alert dialog method call from here...
+
+				//Intent intentReceived = getIntent();
+				Bundle messagesReceived = intent.getExtras();
+
+				if (messagesReceived == null) {
+					newString = null;
+				} else {
+					newString = messagesReceived.getString("Main.MESSAGE_STRING");
+				}
+
+				//do stuff with received message
+
+				String[] parsedMessage = RPCParse(newString);
+
+				//printMessageOnScreen(newString, 200, 200);
+				//Toast.makeText(context, newString, Toast.LENGTH_LONG).show();
+				switch (parsedMessage[0]) {
+					case "goForward":
+						goForwardLocal();
+						break;
+					case "goBackward":
+						goBackwardLocal();
+						break;
+					case "goToPage":
+						gotoPageLocal(Integer.parseInt(parsedMessage[1]));
+						break;
+					case "printOnScreen":
+						printOnScreenLocal(Integer.parseInt(parsedMessage[1]), Integer.parseInt(parsedMessage[2]));
+						break;
+
+					case "drawOnScreen":
+						drawOnScreenLocal(parsedMessage[1], Integer.parseInt(parsedMessage[2]), Integer.parseInt(parsedMessage[3]));
+
+					default:
+						// code block
+				}
 			}
-
-			//do stuff with received message
-
-			String[] parsedMessage = RPCParse(newString);
-
-			//printMessageOnScreen(newString, 200, 200);
-			//Toast.makeText(context, newString, Toast.LENGTH_LONG).show();
-			switch(parsedMessage[0]) {
-				case "goForward":
-					goForwardLocal();
-					break;
-				case "goBackward":
-					goBackwardLocal();
-					break;
-				case "goToPage":
-					gotoPageLocal(Integer.parseInt(parsedMessage[1]));
-					break;
-				case "printOnScreen":
-					printOnScreenLocal(Integer.parseInt(parsedMessage[1]), Integer.parseInt(parsedMessage[2]));
-					break;
-				default:
-					// code block
-			}
-		}
-	};
+		};
+	}
 
 	public void printOnScreen(int x, int y){
 		if (pointer == null){
 			pointer = new TextView(this);
 			pointer.setText("0");
 			item.addView(pointer);
-
 		}
 		//TextView  tv = new TextView(this);
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
-		//layoutParams.leftMargin = 1000;
-		//layoutParams.width = x;
-		//layoutParams.height = y;
 		layoutParams.topMargin = y;
 		layoutParams.leftMargin = x;
-
 		//ALL THIS LINES MUST BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
-
 		pointer.setLayoutParams(layoutParams);
 //		item.addView(pointer);
 	}
@@ -877,10 +849,86 @@ public class DocumentActivity extends Activity
 		printOnScreen(x, y);
 	}
 
+	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Cool kids edit here /////////////////////////
+
+	//this is where you detect touch on page
+
+	@Override
+	public boolean dispatchTouchEvent(MotionEvent event) {
+		int x =/* (int)item.getX() */+ (int)event.getRawX();
+		int  y =/* (int)item.getY()*/ + (int)event.getRawY();
+		View v = getCurrentFocus();
+
+
+		switch(event.getAction()) {
+			case MotionEvent.ACTION_DOWN:
+				if (annotationsVisible) {
+					drawOnScreenLocal("ACTION_DOWN", x, y);
+					RPCDrawOnScren("ACTION_DOWN" , x, y);
+				}
+				break;
+			case MotionEvent.ACTION_MOVE:
+				if (annotationsVisible) {
+					drawOnScreenLocal("ACTION_MOVE", x, y);
+					RPCDrawOnScren("ACTION_MOVE", x, y);
+				}
+				break;
+			case MotionEvent.ACTION_UP:
+				if (annotationsVisible) {
+					drawOnScreenLocal("ACTION_UP", x, y);
+					RPCDrawOnScren("ACTION_UP", x, y);
+				}
+				break;
+		}
+
+
+
+		printOnScreenLocal(x, y);
+		RPCprintOnScreen(x, y);
+
+
+
+		boolean ret = super.dispatchTouchEvent(event);
+		return ret;
+	}
+
+	public void drawOnScreenLocal(String action, int x, int y){
+		switch(action) {
+			case "ACTION_DOWN":
+				if (annotationsVisible) {
+					paintView.touchStart(x, y);
+					paintView.invalidate();
+				}
+				break;
+			case "ACTION_MOVE":
+				if (annotationsVisible) {
+					paintView.touchMove(x, y);
+					paintView.invalidate();
+				}
+				break;
+			case "ACTION_UP":
+				if (annotationsVisible) {
+					paintView.touchUp();
+					paintView.invalidate();
+				}
+				break;
+		}
+	}
+
+
+	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
+	//this is the online part
 	private void RPCprintOnScreen(int x, int y){
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
 		udpClient.Message = "printOnScreen," + x + "," + y;
+		udpClient.Send();
+	}
+
+	private void RPCDrawOnScren(String event, int x, int y){
+		UDP_Client udpClient = new UDP_Client();
+		udpClient.addr = ipTargetAddress;
+		udpClient.Message = "drawOnScreen," + event + "," + x + "," + y;
 		udpClient.Send();
 	}
 
@@ -903,6 +951,8 @@ public class DocumentActivity extends Activity
 		item.addView(paintView);
 	}
 
+
+	//this is only local at the moment
 	public void switchAnnotations(){
 		if (!annotationsVisible){
 			paintView.setVisibility(View.VISIBLE);
