@@ -1,5 +1,5 @@
 <resources>
-    <string name="app_name">Link</string>
+    <string name="app_name">Cid Reader</string>
     <string name="title_activity_document_list">DocumentListActivity</string>
     <string name="large_text">
         "Material is the metaphor.\n\n"

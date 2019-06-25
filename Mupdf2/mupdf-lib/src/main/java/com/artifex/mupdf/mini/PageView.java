@@ -94,6 +94,7 @@ public class PageView extends View implements
 		bitmap = b;
 		bitmapW = (int)(bitmap.getWidth() * viewScale);
 		bitmapH = (int)(bitmap.getHeight() * viewScale);
+		//Log.e("CID", bitmapW + " " + bitmapH);
 		scroller.forceFinished(true);
 		scrollX = wentBack ? bitmapW - canvasW : 0;
 		scrollY = wentBack ? bitmapH - canvasH : 0;

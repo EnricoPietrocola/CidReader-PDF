@@ -55,6 +55,7 @@ public class MainActivity extends AppCompatActivity {
         ipTextLayoutParams.topMargin = 0;
         ipTextLayoutParams.leftMargin = 0;
         ipText.setLayoutParams(ipTextLayoutParams);
+        ipText.setText("192.168.1.1");
         //addContentView(ipText, ipTextLayoutParams);
         item.addView(ipText);
 

@@ -334,6 +334,7 @@ public class DocumentActivity extends Activity
 		canvasH = h;
 		layoutW = canvasW * 72 / displayDPI;
 		layoutH = canvasH * 72 / displayDPI;
+
 		if (!hasLoaded) {
 			hasLoaded = true;
 			openDocument();
@@ -821,7 +822,7 @@ public class DocumentActivity extends Activity
 						break;
 
 					case "drawOnScreen":
-						drawOnScreenLocal(parsedMessage[1], Integer.parseInt(parsedMessage[2]), Integer.parseInt(parsedMessage[3]));
+						drawOnScreenRemote(parsedMessage[1], Float.parseFloat(parsedMessage[2]), Float.parseFloat(parsedMessage[3]));
 
 					default:
 						// code block
@@ -855,44 +856,91 @@ public class DocumentActivity extends Activity
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
-		int x =/* (int)item.getX() */+ (int)event.getRawX();
-		int  y =/* (int)item.getY()*/ + (int)event.getRawY();
+		float x = event.getRawX();
+		float y = event.getRawY();
 		View v = getCurrentFocus();
 
+		//Log.e("CID", "Doc Size" + pageView.bitmapW + " " + pageView.bitmapH);
 
-		switch(event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-				if (annotationsVisible) {
-					drawOnScreenLocal("ACTION_DOWN", x, y);
-					RPCDrawOnScren("ACTION_DOWN" , x, y);
-				}
-				break;
-			case MotionEvent.ACTION_MOVE:
-				if (annotationsVisible) {
-					drawOnScreenLocal("ACTION_MOVE", x, y);
-					RPCDrawOnScren("ACTION_MOVE", x, y);
-				}
-				break;
-			case MotionEvent.ACTION_UP:
-				if (annotationsVisible) {
-					drawOnScreenLocal("ACTION_UP", x, y);
-					RPCDrawOnScren("ACTION_UP", x, y);
-				}
-				break;
+		if (y >= (canvasH - pageView.bitmapH) / 2 && y <= ((canvasH - pageView.bitmapH) / 2) + pageView.bitmapH) {
+
+			float percX;
+			float percY;
+
+			//qui sto sbagliando lo scaling
+
+			float verticalOffset = (canvasH - pageView.bitmapH) / 2;
+
+			percX = x / pageView.bitmapW;
+			percY = (y - verticalOffset) / pageView.bitmapH;
+
+			Log.e("CID", "Touching: " + percX + " " + percY);
+
+			switch (event.getAction()) {
+				case MotionEvent.ACTION_DOWN:
+					if (annotationsVisible) {
+						drawOnScreenLocal("ACTION_DOWN", x, y);
+						RPCDrawOnScren("ACTION_DOWN", percX, percY);
+					}
+					break;
+				case MotionEvent.ACTION_MOVE:
+					if (annotationsVisible) {
+						drawOnScreenLocal("ACTION_MOVE", x, y);
+						RPCDrawOnScren("ACTION_MOVE", percX, percY);
+					}
+					break;
+				case MotionEvent.ACTION_UP:
+					if (annotationsVisible) {
+						drawOnScreenLocal("ACTION_UP", x, y);
+						RPCDrawOnScren("ACTION_UP", percX, percY);
+					}
+					break;
+			}
+			//printOnScreenLocal(x, y);
+			//RPCprintOnScreen(x, y);
 		}
-
-
-
-		printOnScreenLocal(x, y);
-		RPCprintOnScreen(x, y);
-
-
 
 		boolean ret = super.dispatchTouchEvent(event);
 		return ret;
+
 	}
 
-	public void drawOnScreenLocal(String action, int x, int y){
+	public void drawOnScreenRemote(String action, float x, float y){
+
+		float percX;
+		float percY;
+
+		Log.e("CID", "Receiving: " + y);
+
+		float verticalOffset = (canvasH - pageView.bitmapH) / 2;
+
+		percX = x * pageView.bitmapW;
+		percY = (y * pageView.bitmapH) + verticalOffset;
+
+		switch(action) {
+			case "ACTION_DOWN":
+				if (annotationsVisible) {
+					paintView.touchStart(percX, percY);
+					paintView.invalidate();
+				}
+				break;
+			case "ACTION_MOVE":
+				if (annotationsVisible) {
+					paintView.touchMove(percX, percY);
+					paintView.invalidate();
+				}
+				break;
+			case "ACTION_UP":
+				if (annotationsVisible) {
+					paintView.touchUp();
+					paintView.invalidate();
+				}
+				break;
+		}
+	}
+
+	public void drawOnScreenLocal(String action, float x, float y){
+
 		switch(action) {
 			case "ACTION_DOWN":
 				if (annotationsVisible) {
@@ -916,6 +964,8 @@ public class DocumentActivity extends Activity
 	}
 
 
+
+
 	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//this is the online part
 	private void RPCprintOnScreen(int x, int y){
@@ -925,7 +975,19 @@ public class DocumentActivity extends Activity
 		udpClient.Send();
 	}
 
-	private void RPCDrawOnScren(String event, int x, int y){
+	private void RPCDrawOnScren(String event, float x, float y){
+		/*float percX;
+		float percY;
+
+		DisplayMetrics displayMetrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
+		int height = displayMetrics.heightPixels;
+		int width = displayMetrics.widthPixels;
+
+		percX = x / (float)width;
+		percY = y / (float)height;*/
+
+		//Log.e("RPC",  "Sending: " + percX + " " + percY);
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
 		udpClient.Message = "drawOnScreen," + event + "," + x + "," + y;

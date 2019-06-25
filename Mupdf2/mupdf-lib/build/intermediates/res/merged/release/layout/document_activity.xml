@@ -1,0 +1,161 @@
+<?xml version="1.0" encoding="utf-8"?>
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+	xmlns:app="http://schemas.android.com/apk/res-auto"
+	xmlns:tools="http://schemas.android.com/tools"
+	android:id="@+id/mainRelativeLayout"
+	android:layout_width="match_parent"
+	android:layout_height="match_parent">
+
+	<com.artifex.mupdf.mini.PageView
+		android:id="@+id/page_view"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:layout_alignParentStart="true"
+		android:layout_alignParentTop="true"
+		android:layout_marginStart="0dp"
+		android:layout_marginTop="0dp"
+		android:background="#505050"
+		android:keepScreenOn="true"
+		android:visibility="visible" />
+
+	<LinearLayout
+		android:id="@+id/action_bar"
+		android:layout_width="match_parent"
+		android:layout_height="48dp"
+		android:layout_alignParentTop="true"
+		android:background="#303030"
+		android:orientation="horizontal"
+		android:visibility="gone">
+
+		<TextView
+			android:id="@+id/title_label"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginStart="12dp"
+			android:layout_weight="1"
+			android:ellipsize="end"
+			android:singleLine="true"
+			android:textColor="#FFFFFF"
+			android:textSize="16dp" />
+
+		<ImageButton
+			android:id="@+id/search_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:background="@drawable/button"
+			android:src="@drawable/ic_search_white_24dp" />
+
+		<ImageButton
+			android:id="@+id/zoom_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:background="@drawable/button"
+			android:src="@drawable/ic_zoom_out_map_white_24dp"
+			android:visibility="gone" />
+
+		<ImageButton
+			android:id="@+id/layout_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:background="@drawable/button"
+			android:src="@drawable/ic_format_size_white_24dp"
+			android:visibility="gone" />
+
+		<ImageButton
+			android:id="@+id/outline_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:background="@drawable/button"
+			android:src="@drawable/ic_toc_white_24dp"
+			android:visibility="gone" />
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/search_bar"
+		android:layout_width="match_parent"
+		android:layout_height="48dp"
+		android:layout_alignParentTop="true"
+		android:background="#303030"
+		android:orientation="horizontal"
+		android:visibility="gone">
+
+		<ImageButton
+			android:id="@+id/search_close_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:background="@drawable/button"
+			android:src="@drawable/ic_close_white_24dp" />
+
+		<EditText
+			android:id="@+id/search_text"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_marginStart="8dp"
+			android:layout_weight="1"
+			android:background="@android:color/transparent"
+			android:hint="@string/text_search_hint"
+			android:imeOptions="actionSearch"
+			android:inputType="text"
+			android:singleLine="true"
+			android:textColor="#FFFFFF"
+			android:textColorHint="#a0a0a0"
+			android:textSize="16dp" />
+
+		<ImageButton
+			android:id="@+id/search_backward_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:background="@drawable/button"
+			android:src="@drawable/ic_chevron_left_white_24dp" />
+
+		<ImageButton
+			android:id="@+id/search_forward_button"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:background="@drawable/button"
+			android:src="@drawable/ic_chevron_right_white_24dp" />
+	</LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/navigation_bar"
+		android:layout_width="match_parent"
+		android:layout_height="48dp"
+		android:layout_alignParentBottom="true"
+		android:background="#303030"
+		android:orientation="horizontal"
+		android:visibility="gone">
+
+		<SeekBar
+			android:id="@+id/page_seekbar"
+			android:layout_width="0dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:layout_weight="1"
+			android:max="0"
+			android:progressDrawable="@drawable/seek_line"
+			android:thumb="@drawable/seek_thumb" />
+
+		<TextView
+			android:id="@+id/page_label"
+			android:layout_width="110dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="center"
+			android:ellipsize="end"
+			android:gravity="end"
+			android:padding="8dp"
+			android:singleLine="true"
+			android:text="- / -"
+			android:textColor="#FFFFFF"
+			android:textSize="16dp" />
+	</LinearLayout>
+
+</RelativeLayout>
