@@ -2,6 +2,8 @@ package com.artifex.mupdf.mini;
 
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
+import java.net.InetAddress;
+
 import android.annotation.SuppressLint;
 import android.content.Context;
 import android.content.Intent;
@@ -53,10 +55,10 @@ public class UDP_Server
                     while(Server_aktiv)
                     {
                         ds.receive(dp);
-                        //Log.i("tag", "Server Received " + new String(lMsg, "UTF-8"));
+                        Log.i("myServer", "Server Received " + dp.getAddress().toString() + new String(lMsg, "UTF-8"));
                         Intent i = new Intent();
                         i.setAction("Main.MESSAGE_RECEIVED");
-                        i.putExtra("Main.MESSAGE_STRING", new String(lMsg, 0, dp.getLength()));
+                        i.putExtra("Main.MESSAGE_STRING", dp.getAddress().toString() + "," + new String(lMsg, 0, dp.getLength()));
                         context.getApplicationContext().sendBroadcast(i);
                     }
                 }

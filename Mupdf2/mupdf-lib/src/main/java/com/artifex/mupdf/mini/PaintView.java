@@ -18,6 +18,7 @@ import android.view.View;
 
 import org.w3c.dom.Document;
 
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 
@@ -27,6 +28,7 @@ public class PaintView extends View {
     public static int BRUSH_SIZE = 5;
     public static final int DEFAULT_COLOR = Color.RED;
     public static final int DEFAULT_BG_COLOR = Color.TRANSPARENT;
+    public InetAddress ipAddress;
     private static final float TOUCH_TOLERANCE = 4;
     private float mX, mY;
     private Path mPath;

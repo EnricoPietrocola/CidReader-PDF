@@ -12,8 +12,10 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Debug;
 import android.renderscript.RenderScript;
 import android.text.Editable;
 import android.text.TextWatcher;
@@ -124,13 +126,25 @@ public class DocumentActivity extends Activity
 	public Context mainContext;
 	public static InetAddress ipTargetAddress;
 	public TextView pointer;
+	public ArrayList<InetAddress> connectedAddresses = new ArrayList<>();
+
 
 	//NEEDED FOR GRAPHICS
-	private PaintView paintView; //single page created for annotation
+	private ArrayList<PaintView> paintViews = new ArrayList<>();
 	private boolean annotationsVisible = true;
 
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
+
+		try {
+			byte[] ipAddr = new byte[]{127, 0, 0, 1};
+			InetAddress addr = InetAddress.getByAddress(ipAddr);
+			connectedAddresses.add(addr);
+		}
+		catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+
 
 		mainContext = getApplicationContext();
 
@@ -546,8 +560,14 @@ public class DocumentActivity extends Activity
 				loadPage();
 				loadOutline();
 
-				//creates graphics and initializes them (must be here in order to initialize with a known page count
-				createGraphics();
+				//creates local graphics and initializes them (must be here in order to initialize with a known page count
+				byte[] ipAddr = new byte[]{127, 0, 0, 1};
+				try {
+					InetAddress addr = InetAddress.getByAddress(ipAddr);
+					createGraphics(addr);
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}
 			}
 		});
 	}
@@ -680,7 +700,7 @@ public class DocumentActivity extends Activity
 
 	public void goBackwardLocal(){
 		if (currentPage > 0) {
-			paintView.saveCurrentPage(currentPage);
+			paintViews.get(0).saveCurrentPage(currentPage);
 
 			wentBack = true;
 			currentPage--;
@@ -693,7 +713,7 @@ public class DocumentActivity extends Activity
 
 	public void goForwardLocal(){
 			if (currentPage < pageCount - 1) {
-				paintView.saveCurrentPage(currentPage);
+				paintViews.get(0).saveCurrentPage(currentPage);
 
 
 				currentPage++;
@@ -706,7 +726,7 @@ public class DocumentActivity extends Activity
 
 	public void gotoPageLocal(int p) {
 		if (p >= 0 && p < pageCount && p != currentPage) {
-			paintView.saveCurrentPage(currentPage);
+			paintViews.get(0).saveCurrentPage(currentPage);
 
 
 			history.push(currentPage);
@@ -718,7 +738,7 @@ public class DocumentActivity extends Activity
 	}
 
 	public void changePageDrawingLocal(){
-		paintView.changePage(currentPage);
+		paintViews.get(0).changePage(currentPage);
     }
 
 	public void goBackward() {
@@ -777,6 +797,30 @@ public class DocumentActivity extends Activity
 	public String[] RPCParse(String RPCMessage){
 		String[] splitMessage;
 		splitMessage = RPCMessage.split(",");
+		String _temp = "";
+
+		for (int i = 0; i < splitMessage.length; i++){
+			_temp += splitMessage[i] + " ";
+		}
+
+		//check if remote command comes from new ip
+		try {
+			if (!connectedAddresses.contains(InetAddress.getByName(splitMessage[0].substring(1)))) {
+				connectedAddresses.add(InetAddress.getByName(splitMessage[0].substring(1)));
+			}
+		} catch (UnknownHostException e) {
+			e.printStackTrace();
+		}
+
+		Log.i("annotation",_temp);
+
+		Log.i("ips", Integer.toString(connectedAddresses.size()));
+
+		for (int i = 0; i < connectedAddresses.size(); i++){
+			Log.i("ips", connectedAddresses.get(i).toString());
+		}
+
+		//Log.i("annotation", connectedAddresses.size())
 		return splitMessage;
 	}
 
@@ -805,9 +849,17 @@ public class DocumentActivity extends Activity
 
 				String[] parsedMessage = RPCParse(newString);
 
+				////////////////////////////////////////////////////////////////////////////////////////////
+
+				//parsedMessage[0] is the remote user's ip
+				//parsedMessage[1] is the command
+				//the others are the command's parameters
+
+				///////////////////////////////////////////////////////////////////////////////////////////
+
 				//printMessageOnScreen(newString, 200, 200);
 				//Toast.makeText(context, newString, Toast.LENGTH_LONG).show();
-				switch (parsedMessage[0]) {
+				switch (parsedMessage[1]) {
 					case "goForward":
 						goForwardLocal();
 						break;
@@ -815,14 +867,13 @@ public class DocumentActivity extends Activity
 						goBackwardLocal();
 						break;
 					case "goToPage":
-						gotoPageLocal(Integer.parseInt(parsedMessage[1]));
+						gotoPageLocal(Integer.parseInt(parsedMessage[2]));
 						break;
 					case "printOnScreen":
-						printOnScreenLocal(Integer.parseInt(parsedMessage[1]), Integer.parseInt(parsedMessage[2]));
+						printOnScreenLocal(Integer.parseInt(parsedMessage[2]), Integer.parseInt(parsedMessage[3]));
 						break;
-
 					case "drawOnScreen":
-						drawOnScreenRemote(parsedMessage[1], Float.parseFloat(parsedMessage[2]), Float.parseFloat(parsedMessage[3]));
+						drawOnScreenRemote(parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]));
 
 					default:
 						// code block
@@ -867,8 +918,6 @@ public class DocumentActivity extends Activity
 			float percX;
 			float percY;
 
-			//qui sto sbagliando lo scaling
-
 			float verticalOffset = (canvasH - pageView.bitmapH) / 2;
 
 			percX = x / pageView.bitmapW;
@@ -881,6 +930,8 @@ public class DocumentActivity extends Activity
 					if (annotationsVisible) {
 						drawOnScreenLocal("ACTION_DOWN", x, y);
 						RPCDrawOnScren("ACTION_DOWN", percX, percY);
+
+
 					}
 					break;
 				case MotionEvent.ACTION_MOVE:
@@ -920,20 +971,20 @@ public class DocumentActivity extends Activity
 		switch(action) {
 			case "ACTION_DOWN":
 				if (annotationsVisible) {
-					paintView.touchStart(percX, percY);
-					paintView.invalidate();
+					paintViews.get(0).touchStart(percX, percY);
+					paintViews.get(0).invalidate();
 				}
 				break;
 			case "ACTION_MOVE":
 				if (annotationsVisible) {
-					paintView.touchMove(percX, percY);
-					paintView.invalidate();
+					paintViews.get(0).touchMove(percX, percY);
+					paintViews.get(0).invalidate();
 				}
 				break;
 			case "ACTION_UP":
 				if (annotationsVisible) {
-					paintView.touchUp();
-					paintView.invalidate();
+					paintViews.get(0).touchUp();
+					paintViews.get(0).invalidate();
 				}
 				break;
 		}
@@ -944,20 +995,20 @@ public class DocumentActivity extends Activity
 		switch(action) {
 			case "ACTION_DOWN":
 				if (annotationsVisible) {
-					paintView.touchStart(x, y);
-					paintView.invalidate();
+					paintViews.get(0).touchStart(x, y);
+					paintViews.get(0).invalidate();
 				}
 				break;
 			case "ACTION_MOVE":
 				if (annotationsVisible) {
-					paintView.touchMove(x, y);
-					paintView.invalidate();
+					paintViews.get(0).touchMove(x, y);
+					paintViews.get(0).invalidate();
 				}
 				break;
 			case "ACTION_UP":
 				if (annotationsVisible) {
-					paintView.touchUp();
-					paintView.invalidate();
+					paintViews.get(0).touchUp();
+					paintViews.get(0).invalidate();
 				}
 				break;
 		}
@@ -1002,25 +1053,28 @@ public class DocumentActivity extends Activity
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	public void createGraphics(){
-		paintView =  new PaintView(mainContext); //(PaintView) findViewById(R.id.paintView);
+	public void createGraphics(InetAddress ip){
+		PaintView pv = new PaintView(mainContext);
+		paintViews.add(pv); //(PaintView) findViewById(R.id.paintView);
+		paintViews.get(0).ipAddress = ip;
+
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		paintView.setLayoutParams(paintViewLayoutParams);
+		paintViews.get(0).setLayoutParams(paintViewLayoutParams);
 		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
-		paintView.init(metrics, pageCount);
-		item.addView(paintView);
+		paintViews.get(0).init(metrics, pageCount);
+		item.addView(paintViews.get(0));
 	}
 
 
 	//this is only local at the moment
 	public void switchAnnotations(){
 		if (!annotationsVisible){
-			paintView.setVisibility(View.VISIBLE);
+			paintViews.get(0).setVisibility(View.VISIBLE);
 		}
 		else{
-			paintView.setVisibility(View.GONE);
+			paintViews.get(0).setVisibility(View.GONE);
 		}
 		annotationsVisible = !annotationsVisible;
 
