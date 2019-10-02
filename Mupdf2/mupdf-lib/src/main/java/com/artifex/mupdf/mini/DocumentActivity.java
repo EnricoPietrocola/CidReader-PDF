@@ -564,7 +564,7 @@ public class DocumentActivity extends Activity
 				byte[] ipAddr = new byte[]{127, 0, 0, 1};
 				try {
 					InetAddress addr = InetAddress.getByAddress(ipAddr);
-					createGraphics(addr);
+					createLocalGraphics(addr);
 				} catch (UnknownHostException e) {
 					e.printStackTrace();
 				}
@@ -700,45 +700,50 @@ public class DocumentActivity extends Activity
 
 	public void goBackwardLocal(){
 		if (currentPage > 0) {
-			paintViews.get(0).saveCurrentPage(currentPage);
-
+			for (int i = 0; i < paintViews.size(); i++) {
+				paintViews.get(i).saveCurrentPage(currentPage);
+			}
 			wentBack = true;
 			currentPage--;
 			loadPage();
 
-            changePageDrawingLocal();
+            changePageDrawing();
 
         }
 	}
 
 	public void goForwardLocal(){
 			if (currentPage < pageCount - 1) {
-				paintViews.get(0).saveCurrentPage(currentPage);
-
+				for (int i = 0; i < paintViews.size(); i++) {
+					paintViews.get(i).saveCurrentPage(currentPage);
+				}
 
 				currentPage++;
 				loadPage();
 
-                changePageDrawingLocal();
+                changePageDrawing();
 
 			}
 	}
 
 	public void gotoPageLocal(int p) {
 		if (p >= 0 && p < pageCount && p != currentPage) {
-			paintViews.get(0).saveCurrentPage(currentPage);
-
+			for (int i = 0; i < paintViews.size(); i++) {
+				paintViews.get(i).saveCurrentPage(currentPage);
+			}
 
 			history.push(currentPage);
 			currentPage = p;
 			loadPage();
 
-			changePageDrawingLocal();
+			changePageDrawing();
 		}
 	}
 
-	public void changePageDrawingLocal(){
-		paintViews.get(0).changePage(currentPage);
+	public void changePageDrawing(){
+		for (int i = 0; i < paintViews.size(); i++) {
+			paintViews.get(i).changePage(currentPage);
+		}
     }
 
 	public void goBackward() {
@@ -753,7 +758,6 @@ public class DocumentActivity extends Activity
 			udpClient.addr = ipTargetAddress;
 			udpClient.Message = "goBackward";
 			udpClient.Send();
-
 		}
 	}
 
@@ -767,7 +771,6 @@ public class DocumentActivity extends Activity
 			udpClient.addr = ipTargetAddress;
 			udpClient.Message = "goForward";
 			udpClient.Send();
-
 		}
 	}
 
@@ -780,8 +783,6 @@ public class DocumentActivity extends Activity
 		udpClient.Send();
 
 	}
-
-
 
 	public void gotoURI(String uri) {
 		Intent intent = new Intent(Intent.ACTION_VIEW, Uri.parse(uri));
@@ -803,22 +804,29 @@ public class DocumentActivity extends Activity
 			_temp += splitMessage[i] + " ";
 		}
 
+		Log.i("annotation",_temp);
+
 		//check if remote command comes from new ip
+
+		InetAddress ip = null;
 		try {
-			if (!connectedAddresses.contains(InetAddress.getByName(splitMessage[0].substring(1)))) {
-				connectedAddresses.add(InetAddress.getByName(splitMessage[0].substring(1)));
-			}
+			ip = InetAddress.getByName(splitMessage[0].substring(1));
 		} catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
 
-		Log.i("annotation",_temp);
+		if (!connectedAddresses.contains(ip)) {
+			connectedAddresses.add(ip);
+			//create a new paintview with new connected IP as ID
+			createRemoteGraphics(ip);
+		}
 
-		Log.i("ips", Integer.toString(connectedAddresses.size()));
+
+		/*Log.i("ips", Integer.toString(connectedAddresses.size()));
 
 		for (int i = 0; i < connectedAddresses.size(); i++){
 			Log.i("ips", connectedAddresses.get(i).toString());
-		}
+		}*/
 
 		//Log.i("annotation", connectedAddresses.size())
 		return splitMessage;
@@ -849,6 +857,13 @@ public class DocumentActivity extends Activity
 
 				String[] parsedMessage = RPCParse(newString);
 
+				InetAddress ip = null;
+				try {
+					ip = InetAddress.getByName(parsedMessage[0].substring(1));
+				} catch (UnknownHostException e) {
+					e.printStackTrace();
+				}
+
 				////////////////////////////////////////////////////////////////////////////////////////////
 
 				//parsedMessage[0] is the remote user's ip
@@ -856,6 +871,7 @@ public class DocumentActivity extends Activity
 				//the others are the command's parameters
 
 				///////////////////////////////////////////////////////////////////////////////////////////
+
 
 				//printMessageOnScreen(newString, 200, 200);
 				//Toast.makeText(context, newString, Toast.LENGTH_LONG).show();
@@ -873,7 +889,7 @@ public class DocumentActivity extends Activity
 						printOnScreenLocal(Integer.parseInt(parsedMessage[2]), Integer.parseInt(parsedMessage[3]));
 						break;
 					case "drawOnScreen":
-						drawOnScreenRemote(parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]));
+						drawOnScreenRemote(ip, parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]));
 
 					default:
 						// code block
@@ -930,8 +946,6 @@ public class DocumentActivity extends Activity
 					if (annotationsVisible) {
 						drawOnScreenLocal("ACTION_DOWN", x, y);
 						RPCDrawOnScren("ACTION_DOWN", percX, percY);
-
-
 					}
 					break;
 				case MotionEvent.ACTION_MOVE:
@@ -956,12 +970,12 @@ public class DocumentActivity extends Activity
 
 	}
 
-	public void drawOnScreenRemote(String action, float x, float y){
+	public void drawOnScreenRemote(InetAddress ip,String action, float x, float y){
 
 		float percX;
 		float percY;
 
-		Log.e("CID", "Receiving: " + y);
+		Log.e("CID", "Receiving: " + y + " from " + ip.toString());
 
 		float verticalOffset = (canvasH - pageView.bitmapH) / 2;
 
@@ -971,23 +985,39 @@ public class DocumentActivity extends Activity
 		switch(action) {
 			case "ACTION_DOWN":
 				if (annotationsVisible) {
-					paintViews.get(0).touchStart(percX, percY);
-					paintViews.get(0).invalidate();
+					findPaintViewByIpAddress(ip).touchStart(percX, percY);
+					findPaintViewByIpAddress(ip).invalidate();
 				}
 				break;
 			case "ACTION_MOVE":
 				if (annotationsVisible) {
-					paintViews.get(0).touchMove(percX, percY);
-					paintViews.get(0).invalidate();
+					findPaintViewByIpAddress(ip).touchMove(percX, percY);
+					findPaintViewByIpAddress(ip).invalidate();
 				}
 				break;
 			case "ACTION_UP":
 				if (annotationsVisible) {
-					paintViews.get(0).touchUp();
-					paintViews.get(0).invalidate();
+					findPaintViewByIpAddress(ip).touchUp();
+					findPaintViewByIpAddress(ip).invalidate();
 				}
 				break;
 		}
+
+	}
+
+	PaintView findPaintViewByIpAddress(InetAddress ip){
+		PaintView paintView = null;
+		//Log.i("CID", "ip is: " + ip.toString());
+		for (int i = 0; i < paintViews.size(); i++){
+			//Log.i("CID", "checking " + paintViews.get(i).ipAddress);
+			if(paintViews.get(i).ipAddress.equals(ip)){
+				//Log.i("CID", "found paintview");
+				paintView = paintViews.get(i);
+				return paintView;
+			}
+		}
+		Log.i("CID", "could not find paintview");
+		return paintView;
 	}
 
 	public void drawOnScreenLocal(String action, float x, float y){
@@ -1053,7 +1083,7 @@ public class DocumentActivity extends Activity
 		return super.onCreateOptionsMenu(menu);
 	}
 
-	public void createGraphics(InetAddress ip){
+	public void createLocalGraphics(InetAddress ip){
 		PaintView pv = new PaintView(mainContext);
 		paintViews.add(pv); //(PaintView) findViewById(R.id.paintView);
 		paintViews.get(0).ipAddress = ip;
@@ -1067,14 +1097,32 @@ public class DocumentActivity extends Activity
 		item.addView(paintViews.get(0));
 	}
 
+	public void createRemoteGraphics(InetAddress ip){
+		PaintView pv = new PaintView(mainContext);
+		paintViews.add(pv); //(PaintView) findViewById(R.id.paintView);
+		paintViews.get(paintViews.size() - 1).ipAddress = ip;
+
+		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		DisplayMetrics metrics = new DisplayMetrics();
+		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		paintViews.get(paintViews.size() - 1).setLayoutParams(paintViewLayoutParams);
+		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
+		paintViews.get(paintViews.size() - 1).init(metrics, pageCount);
+		item.addView(paintViews.get(paintViews.size() - 1));
+	}
 
 	//this is only local at the moment
 	public void switchAnnotations(){
 		if (!annotationsVisible){
-			paintViews.get(0).setVisibility(View.VISIBLE);
+			for (int i = 0; i < paintViews.size(); i++){
+				paintViews.get(i).setVisibility(View.VISIBLE);
+			}
+
 		}
 		else{
-			paintViews.get(0).setVisibility(View.GONE);
+			for (int i = 0; i < paintViews.size(); i++) {
+				paintViews.get(i).setVisibility(View.GONE);
+			}
 		}
 		annotationsVisible = !annotationsVisible;
 
