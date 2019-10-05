@@ -1,6 +1,7 @@
 package com.artifex.mupdf.mini;
 
 import android.graphics.Path;
+import android.util.Log;
 
 public class FingerPath {
 
@@ -16,5 +17,6 @@ public class FingerPath {
         this.blur = blur;
         this.strokeWidth = strokeWidth;
         this.path = path;
+        Log.i("PaintView", "FingerPath " + color);
     }
 }

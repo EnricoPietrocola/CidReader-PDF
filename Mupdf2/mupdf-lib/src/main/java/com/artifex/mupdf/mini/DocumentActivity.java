@@ -12,11 +12,9 @@ import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
 import android.graphics.Bitmap;
-import android.graphics.Paint;
+import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
-import android.os.Debug;
-import android.renderscript.RenderScript;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
@@ -26,27 +24,19 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
 import android.widget.EditText;
-import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.TextView;
-import android.widget.Button;
 import android.widget.Toast;
 import android.view.MotionEvent;
-import android.widget.EditText;
 
 import java.net.UnknownHostException;
-import java.util.List;
-import java.util.Random;
-import java.net.DatagramSocket;
-import java.net.DatagramPacket;
 import java.net.InetAddress;
 
 import java.util.ArrayList;
@@ -54,14 +44,10 @@ import java.util.Stack;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-import java.net.InetAddress;
-
 
 
 //NEEDED FOR GRAPHICS
 
-import android.support.v7.app.AppCompatActivity;
-import android.util.DisplayMetrics;
 import android.view.Menu;
 import android.view.MenuInflater;
 
@@ -127,6 +113,9 @@ public class DocumentActivity extends Activity
 	public static InetAddress ipTargetAddress;
 	public TextView pointer;
 	public ArrayList<InetAddress> connectedAddresses = new ArrayList<>();
+	protected View hideAllButton;
+	protected int color = Color.BLUE;
+	protected int strokeWidth = 10;
 
 
 	//NEEDED FOR GRAPHICS
@@ -298,8 +287,16 @@ public class DocumentActivity extends Activity
 		zoomButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				fitPage = !fitPage;
-				switchAnnotations(); //TEMPORARY
 				loadPage();
+			}
+		});
+
+		hideAllButton = findViewById(R.id.HideAllButton);
+		hideAllButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Log.i("annotation", "clicked");
+				switchAnnotations(); //TEMPORARY
+				//paintViews.get(paintViews.size() - 1).clear();
 			}
 		});
 
@@ -682,7 +679,9 @@ public class DocumentActivity extends Activity
 		resetSearch();
 	}
 
+	//menu interaction trigger
 	public void toggleUI() {
+		Log.i("annotation", "toggleUI");
 		if (navigationBar.getVisibility() == View.VISIBLE) {
 			currentBar.setVisibility(View.GONE);
 			navigationBar.setVisibility(View.GONE);
@@ -889,7 +888,7 @@ public class DocumentActivity extends Activity
 						printOnScreenLocal(Integer.parseInt(parsedMessage[2]), Integer.parseInt(parsedMessage[3]));
 						break;
 					case "drawOnScreen":
-						drawOnScreenRemote(ip, parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]));
+						drawOnScreenRemote(ip, parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]), Integer.parseInt(parsedMessage[5]), Integer.parseInt(parsedMessage[6]));
 
 					default:
 						// code block
@@ -925,7 +924,12 @@ public class DocumentActivity extends Activity
 	public boolean dispatchTouchEvent(MotionEvent event) {
 		float x = event.getRawX();
 		float y = event.getRawY();
+
+		//int color = Color.BLUE;
+		//int strokeWidth = 10;
+
 		View v = getCurrentFocus();
+
 
 		//Log.e("CID", "Doc Size" + pageView.bitmapW + " " + pageView.bitmapH);
 
@@ -945,19 +949,19 @@ public class DocumentActivity extends Activity
 				case MotionEvent.ACTION_DOWN:
 					if (annotationsVisible) {
 						drawOnScreenLocal("ACTION_DOWN", x, y);
-						RPCDrawOnScren("ACTION_DOWN", percX, percY);
+						RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color);
 					}
 					break;
 				case MotionEvent.ACTION_MOVE:
 					if (annotationsVisible) {
 						drawOnScreenLocal("ACTION_MOVE", x, y);
-						RPCDrawOnScren("ACTION_MOVE", percX, percY);
+						RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color );
 					}
 					break;
 				case MotionEvent.ACTION_UP:
 					if (annotationsVisible) {
 						drawOnScreenLocal("ACTION_UP", x, y);
-						RPCDrawOnScren("ACTION_UP", percX, percY);
+						RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color);
 					}
 					break;
 			}
@@ -970,23 +974,25 @@ public class DocumentActivity extends Activity
 
 	}
 
-	public void drawOnScreenRemote(InetAddress ip,String action, float x, float y){
+	public void drawOnScreenRemote(InetAddress ip, String action, float x, float y, int strokeWidth, int color){
 
 		float percX;
 		float percY;
-
-		Log.e("CID", "Receiving: " + y + " from " + ip.toString());
 
 		float verticalOffset = (canvasH - pageView.bitmapH) / 2;
 
 		percX = x * pageView.bitmapW;
 		percY = (y * pageView.bitmapH) + verticalOffset;
 
+		PaintView pv = findPaintViewByIpAddress(ip);
+
 		switch(action) {
 			case "ACTION_DOWN":
 				if (annotationsVisible) {
-					findPaintViewByIpAddress(ip).touchStart(percX, percY);
-					findPaintViewByIpAddress(ip).invalidate();
+					pv.touchStart(percX, percY);
+					pv.invalidate();
+					pv.currentColor = color;
+					pv.strokeWidth = strokeWidth;
 				}
 				break;
 			case "ACTION_MOVE":
@@ -1056,7 +1062,7 @@ public class DocumentActivity extends Activity
 		udpClient.Send();
 	}
 
-	private void RPCDrawOnScren(String event, float x, float y){
+	private void RPCDrawOnScren(String event, float x, float y, int strokeWidth, int color){
 		/*float percX;
 		float percY;
 
@@ -1071,7 +1077,7 @@ public class DocumentActivity extends Activity
 		//Log.e("RPC",  "Sending: " + percX + " " + percY);
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
-		udpClient.Message = "drawOnScreen," + event + "," + x + "," + y;
+		udpClient.Message = "drawOnScreen," + event + "," + x + "," + y + "," + strokeWidth + "," + color;
 		udpClient.Send();
 	}
 
@@ -1099,15 +1105,22 @@ public class DocumentActivity extends Activity
 
 	public void createRemoteGraphics(InetAddress ip){
 		PaintView pv = new PaintView(mainContext);
+		//pv.currentColor = Color.BLUE;
 		paintViews.add(pv); //(PaintView) findViewById(R.id.paintView);
 		paintViews.get(paintViews.size() - 1).ipAddress = ip;
-
+		//paintViews.get(paintViews.size() - 1).mPaint
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		paintViews.get(paintViews.size() - 1).setLayoutParams(paintViewLayoutParams);
 		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
 		paintViews.get(paintViews.size() - 1).init(metrics, pageCount);
+
+		//edit brush settings after init
+		paintViews.get(paintViews.size() - 1).currentColor = Color.RED;
+		//aintViews.get(paintViews.size() - 1).blur();
+
+
 		item.addView(paintViews.get(paintViews.size() - 1));
 	}
 

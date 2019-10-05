@@ -587,6 +587,7 @@ drawable notification_tile_bg
 drawable notify_panel_notification_icon_bg
 drawable seek_line
 drawable seek_thumb
+id HideAllButton
 id action0
 id action_bar
 id action_bar_activity_content
@@ -627,6 +628,7 @@ id buttonPanel
 id cancel_action
 id checkbox
 id chronometer
+id clearButton
 id collapseActionView
 id contentPanel
 id custom

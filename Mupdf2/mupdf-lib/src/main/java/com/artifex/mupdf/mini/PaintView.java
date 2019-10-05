@@ -32,11 +32,11 @@ public class PaintView extends View {
     private static final float TOUCH_TOLERANCE = 4;
     private float mX, mY;
     private Path mPath;
-    private Paint mPaint;
+    public Paint mPaint;
     private ArrayList<FingerPath> paths = new ArrayList<>();
-    private int currentColor;
+    public int currentColor;
     private int backgroundColor = DEFAULT_BG_COLOR;
-    private int strokeWidth;
+    public int strokeWidth;
     private boolean emboss;
     private boolean blur;
     private MaskFilter mEmboss;
@@ -44,6 +44,7 @@ public class PaintView extends View {
     private Bitmap mBitmap;
     private Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
+
 
     //added for multipage support
     public ArrayList<ArrayList<FingerPath>> page = new ArrayList<>();
@@ -66,6 +67,7 @@ public class PaintView extends View {
 
         mEmboss = new EmbossMaskFilter(new float[] {1, 1, 1}, 0.4f, 6, 3.5f);
         mBlur = new BlurMaskFilter(5, BlurMaskFilter.Blur.NORMAL);
+        Log.e("PaintView", "Constructor" + String.valueOf(currentColor));
     }
 
     public void init(DisplayMetrics metrics, int pageCount) {
@@ -80,15 +82,15 @@ public class PaintView extends View {
         normal(); //added here to bypass options
         Log.i("TAG", "INIT");
 
-        //edit for multipage
+        //multipage system
         for (int i = 0; i < pageCount; i++){
             page.add(new ArrayList<FingerPath>());
         }
 
-        Log.i("PaintView", "pages = " + String.valueOf(page.size()));
-        Log.i("PaintView", "pageCount = " + String.valueOf(pageCount));
+        //Log.i("PaintView", "pages = " + String.valueOf(page.size()));
+        //Log.i("PaintView", "pageCount = " + String.valueOf(pageCount));
 
-
+        Log.i("PaintView", "init" + String.valueOf(currentColor));
         //initialize, sync with pages from pagecount = 0
     }
 
@@ -131,6 +133,8 @@ public class PaintView extends View {
 
             mCanvas.drawPath(fp.path, mPaint);
         }
+
+        //Log.e("PaintView", "OnDraw" + String.valueOf(currentColor));
 
         //canvas.drawCircle(100, 100, 100, mPaint);
         canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
