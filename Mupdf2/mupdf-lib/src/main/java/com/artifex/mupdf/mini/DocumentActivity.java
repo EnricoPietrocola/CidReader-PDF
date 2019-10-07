@@ -115,7 +115,9 @@ public class DocumentActivity extends Activity
 	public ArrayList<InetAddress> connectedAddresses = new ArrayList<>();
 	protected View hideAllButton;
 	protected int color = Color.BLUE;
-	protected int strokeWidth = 10;
+	protected int strokeWidth = 5;
+	protected View blackColorButton;
+	protected View redColorButton;
 
 
 	//NEEDED FOR GRAPHICS
@@ -296,6 +298,22 @@ public class DocumentActivity extends Activity
 			public void onClick(View v) {
 				Log.i("annotation", "clicked");
 				switchAnnotations(); //TEMPORARY
+				//paintViews.get(paintViews.size() - 1).clear();
+			}
+		});
+
+		blackColorButton = findViewById(R.id.blackColorButton);
+		blackColorButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				color = Color.BLACK;
+				//paintViews.get(paintViews.size() - 1).clear();
+			}
+		});
+
+		redColorButton = findViewById(R.id.redColorButton);
+		redColorButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				color = Color.RED;
 				//paintViews.get(paintViews.size() - 1).clear();
 			}
 		});
@@ -974,7 +992,7 @@ public class DocumentActivity extends Activity
 
 	}
 
-	public void drawOnScreenRemote(InetAddress ip, String action, float x, float y, int strokeWidth, int color){
+	public void drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor){
 
 		float percX;
 		float percY;
@@ -989,22 +1007,22 @@ public class DocumentActivity extends Activity
 		switch(action) {
 			case "ACTION_DOWN":
 				if (annotationsVisible) {
+					pv.currentColor = recvColor;
+					pv.strokeWidth = recvStrokeWidth;
 					pv.touchStart(percX, percY);
 					pv.invalidate();
-					pv.currentColor = color;
-					pv.strokeWidth = strokeWidth;
 				}
 				break;
 			case "ACTION_MOVE":
 				if (annotationsVisible) {
-					findPaintViewByIpAddress(ip).touchMove(percX, percY);
-					findPaintViewByIpAddress(ip).invalidate();
+					pv.touchMove(percX, percY);
+					pv.invalidate();
 				}
 				break;
 			case "ACTION_UP":
 				if (annotationsVisible) {
-					findPaintViewByIpAddress(ip).touchUp();
-					findPaintViewByIpAddress(ip).invalidate();
+					pv.touchUp();
+					pv.invalidate();
 				}
 				break;
 		}
@@ -1031,6 +1049,8 @@ public class DocumentActivity extends Activity
 		switch(action) {
 			case "ACTION_DOWN":
 				if (annotationsVisible) {
+					paintViews.get(0).strokeWidth = strokeWidth;
+					paintViews.get(0).currentColor = color;
 					paintViews.get(0).touchStart(x, y);
 					paintViews.get(0).invalidate();
 				}
@@ -1100,28 +1120,24 @@ public class DocumentActivity extends Activity
 		paintViews.get(0).setLayoutParams(paintViewLayoutParams);
 		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
 		paintViews.get(0).init(metrics, pageCount);
+		pv.currentColor = color;
+		pv.strokeWidth = strokeWidth;
 		item.addView(paintViews.get(0));
 	}
 
 	public void createRemoteGraphics(InetAddress ip){
 		PaintView pv = new PaintView(mainContext);
-		//pv.currentColor = Color.BLUE;
-		paintViews.add(pv); //(PaintView) findViewById(R.id.paintView);
-		paintViews.get(paintViews.size() - 1).ipAddress = ip;
-		//paintViews.get(paintViews.size() - 1).mPaint
+		pv.ipAddress = ip;
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		paintViews.get(paintViews.size() - 1).setLayoutParams(paintViewLayoutParams);
+		pv.setLayoutParams(paintViewLayoutParams);
 		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
 		paintViews.get(paintViews.size() - 1).init(metrics, pageCount);
-
+		pv.init(metrics, pageCount);
 		//edit brush settings after init
-		paintViews.get(paintViews.size() - 1).currentColor = Color.RED;
-		//aintViews.get(paintViews.size() - 1).blur();
-
-
-		item.addView(paintViews.get(paintViews.size() - 1));
+		item.addView(pv);
+		paintViews.add(pv); //(PaintView) findViewById(R.id.paintView);
 	}
 
 	//this is only local at the moment

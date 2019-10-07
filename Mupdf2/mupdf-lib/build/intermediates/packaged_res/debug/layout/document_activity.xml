@@ -87,7 +87,21 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="1"
 			android:text="TEST" />
-	</LinearLayout>
+
+        <Button
+            android:id="@+id/blackColorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Black" />
+
+        <Button
+            android:id="@+id/redColorButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_weight="1"
+            android:text="Red" />
+    </LinearLayout>
 
 	<LinearLayout
 		android:id="@+id/search_bar"
