@@ -5,6 +5,7 @@ import com.artifex.mupdf.fitz.*;
 import android.content.Context;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
+import android.graphics.Color;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.util.AttributeSet;
@@ -40,6 +41,9 @@ public class PageView extends View implements
 	protected Paint linkPaint;
 	protected Paint hitPaint;
 
+	//my variables
+	protected int offsetX, offsetY;
+
 	public PageView(Context ctx, AttributeSet atts) {
 		super(ctx, atts);
 
@@ -74,6 +78,8 @@ public class PageView extends View implements
 	public void setActionListener(DocumentActivity l) {
 		actionListener = l;
 	}
+
+
 
 	public void setError() {
 		if (bitmap != null)
@@ -115,6 +121,7 @@ public class PageView extends View implements
 	public boolean onTouchEvent(MotionEvent event) {
 		detector.onTouchEvent(event);
 		scaleDetector.onTouchEvent(event);
+		//Log.i("PageView", event.getPointerCount();
 		return true;
 	}
 
@@ -271,6 +278,9 @@ public class PageView extends View implements
 			y = -scrollY;
 		}
 
+		//bitmap.eraseColor(Color.GREEN);
+		offsetX = x;
+		offsetY = y;
 		canvas.translate(x, y);
 		canvas.scale(viewScale, viewScale);
 		canvas.drawBitmap(bitmap, 0, 0, null);

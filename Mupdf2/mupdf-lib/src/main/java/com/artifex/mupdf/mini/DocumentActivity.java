@@ -203,7 +203,7 @@ public class DocumentActivity extends Activity
 
 		prefs = getPreferences(Context.MODE_PRIVATE);
 		layoutEm = prefs.getFloat("layoutEm", 8);
-		fitPage = prefs.getBoolean("fitPage", false);
+		fitPage = prefs.getBoolean("fitPage", true);
 		currentPage = prefs.getInt(key, 0);
 		searchHitPage = -1;
 		hasLoaded = false;
@@ -369,8 +369,11 @@ public class DocumentActivity extends Activity
 			openDocument();
 		} else if (isReflowable) {
 			relayoutDocument();
+			//fitPaintViews();
 		} else {
 			loadPage();
+			//fitPaintViews();
+
 		}
 
 
@@ -390,8 +393,10 @@ public class DocumentActivity extends Activity
 			public void run() {
 				if (needsPassword)
 					askPassword(R.string.dlog_password_message);
-				else
+				else {
 					loadDocument();
+					//fitPaintViews();
+				}
 			}
 		});
 	}
@@ -574,6 +579,7 @@ public class DocumentActivity extends Activity
 					zoomButton.setVisibility(View.VISIBLE);
 				loadPage();
 				loadOutline();
+				//fitPaintViews();
 
 				//creates local graphics and initializes them (must be here in order to initialize with a known page count
 				byte[] ipAddr = new byte[]{127, 0, 0, 1};
@@ -588,6 +594,7 @@ public class DocumentActivity extends Activity
 	}
 
 	protected void relayoutDocument() {
+
 		worker.add(new Worker.Task() {
 			public void work() {
 				try {
@@ -596,6 +603,7 @@ public class DocumentActivity extends Activity
 					doc.layout(layoutW, layoutH, layoutEm);
 					pageCount = doc.countPages();
 					currentPage = doc.findBookmark(mark);
+
 				} catch (Throwable x) {
 					pageCount = 1;
 					currentPage = 0;
@@ -649,11 +657,14 @@ public class DocumentActivity extends Activity
 					Page page = doc.loadPage(pageNumber);
 					Log.i(APP, "draw page " + pageNumber);
 					Matrix ctm;
-					if (fitPage)
+					if (fitPage) {
 						ctm = AndroidDrawDevice.fitPage(page, canvasW, canvasH);
-					else
+					}
+					else {
 						ctm = AndroidDrawDevice.fitPageWidth(page, canvasW);
+					}
 					bitmap = AndroidDrawDevice.drawPage(page, ctm);
+
 					links = page.getLinks();
 					if (links != null)
 						for (Link link : links)
@@ -669,17 +680,23 @@ public class DocumentActivity extends Activity
 				}
 			}
 			public void run() {
-				if (bitmap != null)
+				if (bitmap != null) {
 					pageView.setBitmap(bitmap, wentBack, links, hits);
+					//fitPaintViews();
+
+				}
 				else
 					pageView.setError();
+
 				pageLabel.setText((currentPage+1) + " / " + pageCount);
 				pageSeekbar.setMax(pageCount - 1);
 				pageSeekbar.setProgress(pageNumber);
 				wentBack = false;
+
 			}
 		});
 	}
+
 
 	protected void showSearch() {
 		currentBar = searchBar;
@@ -937,20 +954,16 @@ public class DocumentActivity extends Activity
 	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Cool kids edit here /////////////////////////
 
 	//this is where you detect touch on page
+	long startTime;
 
 	@Override
 	public boolean dispatchTouchEvent(MotionEvent event) {
 		float x = event.getRawX();
 		float y = event.getRawY();
 
-		//int color = Color.BLUE;
-		//int strokeWidth = 10;
-
 		View v = getCurrentFocus();
 
-
 		//Log.e("CID", "Doc Size" + pageView.bitmapW + " " + pageView.bitmapH);
-
 		if (y >= (canvasH - pageView.bitmapH) / 2 && y <= ((canvasH - pageView.bitmapH) / 2) + pageView.bitmapH) {
 
 			float percX;
@@ -961,30 +974,39 @@ public class DocumentActivity extends Activity
 			percX = x / pageView.bitmapW;
 			percY = (y - verticalOffset) / pageView.bitmapH;
 
-			Log.e("CID", "Touching: " + percX + " " + percY);
+			//Log.i("CID", "Touching: " + percX + " " + percY);
+			Log.i("CID", String.valueOf(event.getPointerCount()) + " " + (System.currentTimeMillis() - startTime));
 
-			switch (event.getAction()) {
-				case MotionEvent.ACTION_DOWN:
-					if (annotationsVisible) {
-						drawOnScreenLocal("ACTION_DOWN", x, y);
-						RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color);
-					}
-					break;
-				case MotionEvent.ACTION_MOVE:
-					if (annotationsVisible) {
-						drawOnScreenLocal("ACTION_MOVE", x, y);
-						RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color );
-					}
-					break;
-				case MotionEvent.ACTION_UP:
-					if (annotationsVisible) {
-						drawOnScreenLocal("ACTION_UP", x, y);
-						RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color);
-					}
-					break;
+			if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100){
+				switch (event.getAction()){
+					case MotionEvent.ACTION_DOWN:
+						if (annotationsVisible) {
+
+							drawOnScreenLocal("ACTION_DOWN", x, y);
+							RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color);
+						}
+						break;
+					case MotionEvent.ACTION_MOVE:
+						if (annotationsVisible) {
+							drawOnScreenLocal("ACTION_MOVE", x, y);
+							RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color );
+						}
+						break;
+					case MotionEvent.ACTION_UP:
+
+						if (annotationsVisible) {
+							drawOnScreenLocal("ACTION_UP", x, y);
+							RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color);
+						}
+						startTime = System.currentTimeMillis();
+
+						break;
+				}
 			}
-			//printOnScreenLocal(x, y);
-			//RPCprintOnScreen(x, y);
+			else if (event.getPointerCount() == 2){
+				//fitPaintViews();
+				startTime = System.currentTimeMillis();
+			}
 		}
 
 		boolean ret = super.dispatchTouchEvent(event);
@@ -1115,11 +1137,13 @@ public class DocumentActivity extends Activity
 		paintViews.get(0).ipAddress = ip;
 
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		paintViewLayoutParams.addRule(RelativeLayout.BELOW, R.id.action_bar);
+
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		paintViews.get(0).setLayoutParams(paintViewLayoutParams);
 		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
-		paintViews.get(0).init(metrics, pageCount);
+		pv.init(metrics, pageCount);
 		pv.currentColor = color;
 		pv.strokeWidth = strokeWidth;
 		item.addView(paintViews.get(0));
@@ -1129,8 +1153,14 @@ public class DocumentActivity extends Activity
 		PaintView pv = new PaintView(mainContext);
 		pv.ipAddress = ip;
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+
+		paintViewLayoutParams.addRule(RelativeLayout.BELOW, R.id.action_bar);
+
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
+		//paintViewLayoutParams.height = (int)layoutH;
+		//paintViewLayoutParams.width = (int) layoutW;
+
 		pv.setLayoutParams(paintViewLayoutParams);
 		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
 		paintViews.get(paintViews.size() - 1).init(metrics, pageCount);
@@ -1155,6 +1185,13 @@ public class DocumentActivity extends Activity
 		}
 		annotationsVisible = !annotationsVisible;
 
+	}
+
+	protected void fitPaintViews() {
+		for (int i = 0; i < paintViews.size(); i++) {
+			PaintView pv = paintViews.get(i);
+			pv.pageViewTransform(pageView);
+		}
 	}
 
 }
