@@ -367,6 +367,7 @@ public class DocumentActivity extends Activity
 		if (!hasLoaded) {
 			hasLoaded = true;
 			openDocument();
+
 		} else if (isReflowable) {
 			relayoutDocument();
 			//fitPaintViews();
@@ -395,7 +396,7 @@ public class DocumentActivity extends Activity
 					askPassword(R.string.dlog_password_message);
 				else {
 					loadDocument();
-					//fitPaintViews();
+					fitPaintViews();
 				}
 			}
 		});
@@ -581,14 +582,7 @@ public class DocumentActivity extends Activity
 				loadOutline();
 				//fitPaintViews();
 
-				//creates local graphics and initializes them (must be here in order to initialize with a known page count
-				byte[] ipAddr = new byte[]{127, 0, 0, 1};
-				try {
-					InetAddress addr = InetAddress.getByAddress(ipAddr);
-					createLocalGraphics(addr);
-				} catch (UnknownHostException e) {
-					e.printStackTrace();
-				}
+
 			}
 		});
 	}
@@ -1004,7 +998,7 @@ public class DocumentActivity extends Activity
 				}
 			}
 			else if (event.getPointerCount() == 2){
-				//fitPaintViews();
+				fitPaintViews();
 				startTime = System.currentTimeMillis();
 			}
 		}
@@ -1143,7 +1137,9 @@ public class DocumentActivity extends Activity
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		paintViews.get(0).setLayoutParams(paintViewLayoutParams);
 		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
-		pv.init(metrics, pageCount);
+		Log.i("PageView", "pv bitmap size: " + pageView.bitmapW + " " + pageView.bitmapH);
+
+		pv.init(pageView.bitmapW, pageView.bitmapH, pageCount);
 		pv.currentColor = color;
 		pv.strokeWidth = strokeWidth;
 		item.addView(paintViews.get(0));
@@ -1163,8 +1159,8 @@ public class DocumentActivity extends Activity
 
 		pv.setLayoutParams(paintViewLayoutParams);
 		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
-		paintViews.get(paintViews.size() - 1).init(metrics, pageCount);
-		pv.init(metrics, pageCount);
+		//paintViews.get(paintViews.size() - 1).init(metrics, pageCount);
+		pv.init(pageView.bitmapW, pageView.bitmapH, pageCount);
 		//edit brush settings after init
 		item.addView(pv);
 		paintViews.add(pv); //(PaintView) findViewById(R.id.paintView);
@@ -1193,6 +1189,21 @@ public class DocumentActivity extends Activity
 			pv.pageViewTransform(pageView);
 		}
 	}
+
+	protected boolean localInitialized = false;
+	public void initializeLocalGraphics(){
+		if(!localInitialized){
+			//creates local graphics and initializes them (must be here in order to initialize with a known page count
+			byte[] ipAddr = new byte[]{127, 0, 0, 1};
+			try {
+				InetAddress addr = InetAddress.getByAddress(ipAddr);
+				createLocalGraphics(addr);
+			} catch (UnknownHostException e) {
+				e.printStackTrace();
+			}
+			localInitialized = true;
+		}
+}
 
 }
 

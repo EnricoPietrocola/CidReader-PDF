@@ -13,6 +13,7 @@ import android.graphics.PorterDuff;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.view.GestureDetector;
 import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
@@ -54,6 +55,8 @@ public class PaintView extends View {
     protected int canvasW, canvasH;
     protected int scrollX, scrollY;
     protected Scroller scroller;
+    protected GestureDetector detector;
+    protected ScaleGestureDetector scaleDetector;
     protected float viewScale, minScale, maxScale;
     protected float annotationOffsetX, annotationOffsetY;
     protected int annotationWidth, annotationHeight;
@@ -86,9 +89,9 @@ public class PaintView extends View {
         //Log.i("PaintView", "WOAH " + offsetX);
     }
 
-    public void init(DisplayMetrics metrics, int pageCount) {
-        int height = metrics.heightPixels;
-        int width = metrics.widthPixels;
+    public void init(int width, int height /*DisplayMetrics metrics*/, int pageCount) {
+        //int height = metrics.heightPixels;
+        //int width = metrics.widthPixels;
 
         mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
@@ -148,7 +151,9 @@ public class PaintView extends View {
         //mCanvas.drawColor(Color.RED);
 
         canvas.save();
-        //mBitmap.eraseColor(Color.BLUE);
+        mBitmap.setHasAlpha(true);
+        mBitmap.eraseColor(Color.argb(120, 255, 255, 120));
+
 
         for (FingerPath fp : paths) { // paths is the fingerpath array
             mPaint.setColor(fp.color);
@@ -165,10 +170,15 @@ public class PaintView extends View {
 
         //canvas.drawColor(Color.RED);
         if(pageView != null){
-            canvas.translate(pageView.offsetX, pageView.offsetY);
-            canvas.scale(pageView.viewScale, pageView.viewScale);
+            canvas.translate(annotationOffsetX, annotationOffsetY);
+            canvas.scale(pageView.viewScale, pageView.viewScale /*, annotationWidth / 2f, annotationHeight /2f*/);
         }
-        canvas.drawBitmap(mBitmap, -annotationOffsetX, -annotationOffsetY, mBitmapPaint);
+        Log.i("sizes", "Paintview bmp " + annotationWidth + " " + annotationHeight);
+        Log.i("sizes", "Paintview canvas " + mCanvas.getWidth() + " " + mCanvas.getHeight());
+
+
+
+        canvas.drawBitmap(mBitmap,0/*-annotationOffsetX*/, 0 /*-annotationOffsetY*/, mBitmapPaint);
         canvas.restore();
     }
 

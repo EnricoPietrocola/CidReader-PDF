@@ -104,6 +104,8 @@ public class PageView extends View implements
 		scroller.forceFinished(true);
 		scrollX = wentBack ? bitmapW - canvasW : 0;
 		scrollY = wentBack ? bitmapH - canvasH : 0;
+
+		actionListener.initializeLocalGraphics();
 		invalidate();
 	}
 
@@ -170,12 +172,12 @@ public class PageView extends View implements
 	}
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-		if (bitmap != null) {
+		/*if (bitmap != null) {
 			scrollX += (int)dx;
 			scrollY += (int)dy;
 			scroller.forceFinished(true);
 			invalidate();
-		}
+		}*/
 		return true;
 	}
 
@@ -278,12 +280,17 @@ public class PageView extends View implements
 			y = -scrollY;
 		}
 
-		//bitmap.eraseColor(Color.GREEN);
+		//bitmap.setHasAlpha(true);
+		//bitmap.eraseColor(Color.argb(120, 255, 120, 255));
+
 		offsetX = x;
 		offsetY = y;
 		canvas.translate(x, y);
 		canvas.scale(viewScale, viewScale);
 		canvas.drawBitmap(bitmap, 0, 0, null);
+
+		Log.i("sizes", "Pageview bmp " + bitmapW + " " + bitmapH);
+		Log.i("sizes", "Pageview canvas " + canvasW + " " + canvasH);
 
 		if (showLinks && links != null && links.length > 0) {
 			for (Link link : links) {
