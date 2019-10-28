@@ -1131,7 +1131,7 @@ public class DocumentActivity extends Activity
 		paintViews.get(0).ipAddress = ip;
 
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		paintViewLayoutParams.addRule(RelativeLayout.BELOW, R.id.action_bar);
+		//paintViewLayoutParams.addRule(RelativeLayout.BELOW, R.id.action_bar);
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -1150,7 +1150,7 @@ public class DocumentActivity extends Activity
 		pv.ipAddress = ip;
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
-		paintViewLayoutParams.addRule(RelativeLayout.BELOW, R.id.action_bar);
+		//paintViewLayoutParams.addRule(RelativeLayout.BELOW, R.id.action_bar);
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
