@@ -1029,13 +1029,13 @@ public class DocumentActivity extends Activity
 				if (annotationsVisible) {
 					pv.currentColor = recvColor;
 					pv.strokeWidth = recvStrokeWidth;
-					pv.touchStart(percX, percY);
+					pv.touchStart(percX - pageView.offsetX, percY - pageView.offsetY);
 					pv.invalidate();
 				}
 				break;
 			case "ACTION_MOVE":
 				if (annotationsVisible) {
-					pv.touchMove(percX, percY);
+					pv.touchMove(percX - pageView.offsetX, percY - pageView.offsetY);
 					pv.invalidate();
 				}
 				break;
@@ -1071,13 +1071,13 @@ public class DocumentActivity extends Activity
 				if (annotationsVisible) {
 					paintViews.get(0).strokeWidth = strokeWidth;
 					paintViews.get(0).currentColor = color;
-					paintViews.get(0).touchStart(x, y);
+					paintViews.get(0).touchStart(x - pageView.offsetX, y - pageView.offsetY);
 					paintViews.get(0).invalidate();
 				}
 				break;
 			case "ACTION_MOVE":
 				if (annotationsVisible) {
-					paintViews.get(0).touchMove(x, y);
+					paintViews.get(0).touchMove(x - pageView.offsetX, y - pageView.offsetY);
 					paintViews.get(0).invalidate();
 				}
 				break;
