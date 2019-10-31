@@ -150,7 +150,9 @@ public class PaintView extends View {
         //mCanvas.drawColor(Color.RED);
         canvas.save();
         mBitmap.setHasAlpha(true);
-        mBitmap.eraseColor(Color.argb(120, 255, 255, 120));
+
+        //semi-transparent debug color
+        //mBitmap.eraseColor(Color.argb(120, 255, 255, 120));
 
 
         for (FingerPath fp : paths) { // paths is the fingerpath array
