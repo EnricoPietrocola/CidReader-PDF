@@ -347,6 +347,7 @@ public class DocumentActivity extends Activity
 			}
 		});
 
+		//fitPaintViews();
 	}
 
 	public void layoutSetup(){
@@ -385,8 +386,9 @@ public class DocumentActivity extends Activity
 			boolean needsPassword;
 			public void work() {
 				Log.i(APP, "open document");
-				if (path != null)
+				if (path != null) {
 					doc = Document.openDocument(path);
+				}
 				else
 					doc = Document.openDocument(buffer, mimetype);
 				needsPassword = doc.needsPassword();
@@ -396,7 +398,6 @@ public class DocumentActivity extends Activity
 					askPassword(R.string.dlog_password_message);
 				else {
 					loadDocument();
-					fitPaintViews();
 				}
 			}
 		});
@@ -571,16 +572,19 @@ public class DocumentActivity extends Activity
 				}
 			}
 			public void run() {
-				if (currentPage < 0 || currentPage >= pageCount)
+				if (currentPage < 0 || currentPage >= pageCount) {
 					currentPage = 0;
+				}
 				titleLabel.setText(title);
-				if (isReflowable)
+				if (isReflowable) {
 					layoutButton.setVisibility(View.VISIBLE);
-				else
+				}
+				else{
 					zoomButton.setVisibility(View.VISIBLE);
+				}
 				loadPage();
 				loadOutline();
-				//fitPaintViews();
+				//
 
 
 			}
@@ -597,7 +601,6 @@ public class DocumentActivity extends Activity
 					doc.layout(layoutW, layoutH, layoutEm);
 					pageCount = doc.countPages();
 					currentPage = doc.findBookmark(mark);
-
 				} catch (Throwable x) {
 					pageCount = 1;
 					currentPage = 0;
@@ -632,8 +635,9 @@ public class DocumentActivity extends Activity
 				}
 			}
 			public void run() {
-				if (flatOutline != null)
+				if (flatOutline != null) {
 					outlineButton.setVisibility(View.VISIBLE);
+				}
 			}
 		});
 	}
@@ -659,6 +663,7 @@ public class DocumentActivity extends Activity
 					}
 					bitmap = AndroidDrawDevice.drawPage(page, ctm);
 
+
 					links = page.getLinks();
 					if (links != null)
 						for (Link link : links)
@@ -676,7 +681,6 @@ public class DocumentActivity extends Activity
 			public void run() {
 				if (bitmap != null) {
 					pageView.setBitmap(bitmap, wentBack, links, hits);
-					//fitPaintViews();
 
 				}
 				else
@@ -686,7 +690,7 @@ public class DocumentActivity extends Activity
 				pageSeekbar.setMax(pageCount - 1);
 				pageSeekbar.setProgress(pageNumber);
 				wentBack = false;
-
+				fitPaintViews();
 			}
 		});
 	}
@@ -1143,6 +1147,9 @@ public class DocumentActivity extends Activity
 		pv.currentColor = color;
 		pv.strokeWidth = strokeWidth;
 		item.addView(paintViews.get(0));
+		fitPaintViews();
+
+
 	}
 
 	public void createRemoteGraphics(InetAddress ip){
@@ -1162,8 +1169,10 @@ public class DocumentActivity extends Activity
 		//paintViews.get(paintViews.size() - 1).init(metrics, pageCount);
 		pv.init(pageView.bitmapW, pageView.bitmapH, pageCount);
 		//edit brush settings after init
+
 		item.addView(pv);
 		paintViews.add(pv); //(PaintView) findViewById(R.id.paintView);
+		fitPaintViews();
 	}
 
 	//this is only local at the moment

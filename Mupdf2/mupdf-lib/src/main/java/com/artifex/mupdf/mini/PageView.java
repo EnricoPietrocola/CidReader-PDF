@@ -248,13 +248,23 @@ public class PageView extends View implements
 	public void onDraw(Canvas canvas) {
 		int x, y;
 
+
+		//offsetX = (canvasW - bitmapW) / 2;
+		//offsetY = (canvasH - bitmapH) / 2;
+		Log.i("offset",  "Pageview " + offsetX + " " + offsetY + " " + bitmapW + " " + bitmapH + " " + canvasW + " " + canvasH);
+
 		if (bitmap == null) {
+
 			if (error) {
 				canvas.translate(canvasW / 2, canvasH / 2);
 				canvas.drawPath(errorPath, errorPaint);
+				invalidate(); //maybe this need to be removed ////////////////////////////////////////////////////////////////////////////////////////////////
 			}
+
 			return;
 		}
+
+
 
 		if (scroller.computeScrollOffset()) {
 			scrollX = scroller.getCurrX();
@@ -282,6 +292,7 @@ public class PageView extends View implements
 
 		//bitmap.setHasAlpha(true);
 		//bitmap.eraseColor(Color.argb(120, 255, 120, 255));
+		Log.i("offset",  "Pageview " + offsetX + " " + offsetY + " " + bitmapW + " " + bitmapH + " " + canvasW + " " + canvasH);
 
 		offsetX = x;
 		offsetY = y;
