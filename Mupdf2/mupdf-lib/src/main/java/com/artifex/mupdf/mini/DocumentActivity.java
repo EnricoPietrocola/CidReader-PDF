@@ -371,10 +371,10 @@ public class DocumentActivity extends Activity
 
 		} else if (isReflowable) {
 			relayoutDocument();
-			//fitPaintViews();
+			fitPaintViews();
 		} else {
 			loadPage();
-			//fitPaintViews();
+			fitPaintViews();
 
 		}
 
@@ -961,50 +961,50 @@ public class DocumentActivity extends Activity
 
 		View v = getCurrentFocus();
 
-		//Log.e("CID", "Doc Size" + pageView.bitmapW + " " + pageView.bitmapH);
-		if (y >= (canvasH - pageView.bitmapH) / 2 && y <= ((canvasH - pageView.bitmapH) / 2) + pageView.bitmapH) {
+			//Log.e("CID", "Doc Size" + pageView.bitmapW + " " + pageView.bitmapH);
+			if (y >= (canvasH - pageView.bitmapH) / 2 && y <= ((canvasH - pageView.bitmapH) / 2) + pageView.bitmapH) {
 
-			float percX;
-			float percY;
+				float percX;
+				float percY;
 
-			float verticalOffset = (canvasH - pageView.bitmapH) / 2;
+				float verticalOffset = (canvasH - pageView.bitmapH) / 2;
 
-			percX = x / pageView.bitmapW;
-			percY = (y - verticalOffset) / pageView.bitmapH;
+				percX = x / pageView.bitmapW;
+				percY = (y - verticalOffset) / pageView.bitmapH;
 
-			//Log.i("CID", "Touching: " + percX + " " + percY);
-			Log.i("CID", String.valueOf(event.getPointerCount()) + " " + (System.currentTimeMillis() - startTime));
+				//Log.i("CID", "Touching: " + percX + " " + percY);
+				Log.i("CID", String.valueOf(event.getPointerCount()) + " " + (System.currentTimeMillis() - startTime));
 
-			if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100){
-				switch (event.getAction()){
-					case MotionEvent.ACTION_DOWN:
-						if (annotationsVisible) {
+				if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
+					switch (event.getAction()) {
+						case MotionEvent.ACTION_DOWN:
+							if (annotationsVisible) {
 
-							drawOnScreenLocal("ACTION_DOWN", x, y);
-							RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color);
-						}
-						break;
-					case MotionEvent.ACTION_MOVE:
-						if (annotationsVisible) {
-							drawOnScreenLocal("ACTION_MOVE", x, y);
-							RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color );
-						}
-						break;
-					case MotionEvent.ACTION_UP:
+								drawOnScreenLocal("ACTION_DOWN", x, y);
+								RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color);
+							}
+							break;
+						case MotionEvent.ACTION_MOVE:
+							if (annotationsVisible) {
+								drawOnScreenLocal("ACTION_MOVE", x, y);
+								RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color);
+							}
+							break;
+						case MotionEvent.ACTION_UP:
 
-						if (annotationsVisible) {
-							drawOnScreenLocal("ACTION_UP", x, y);
-							RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color);
-						}
-						startTime = System.currentTimeMillis();
+							if (annotationsVisible) {
+								drawOnScreenLocal("ACTION_UP", x, y);
+								RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color);
+							}
+							startTime = System.currentTimeMillis();
 
-						break;
+							break;
+					}
+				} else if (event.getPointerCount() == 2) {
+					fitPaintViews();
+					startTime = System.currentTimeMillis();
 				}
-			}
-			else if (event.getPointerCount() == 2){
-				fitPaintViews();
-				startTime = System.currentTimeMillis();
-			}
+
 		}
 
 		boolean ret = super.dispatchTouchEvent(event);

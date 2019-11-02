@@ -83,7 +83,7 @@ public class PaintView extends View {
 
         mEmboss = new EmbossMaskFilter(new float[] {1, 1, 1}, 0.4f, 6, 3.5f);
         mBlur = new BlurMaskFilter(5, BlurMaskFilter.Blur.NORMAL);
-        Log.e("PaintView", "Constructor" + String.valueOf(currentColor));
+        //Log.e("PaintView", "Constructor" + String.valueOf(currentColor));
         scroller = new Scroller(context);
 
         //Log.i("PaintView", "WOAH " + offsetX);
@@ -99,7 +99,7 @@ public class PaintView extends View {
         currentColor = DEFAULT_COLOR;
         strokeWidth = BRUSH_SIZE;
         normal(); //added here to bypass options
-        Log.i("TAG", "INIT");
+        //Log.i("TAG", "INIT");
 
         //multipage system
         for (int i = 0; i < pageCount; i++){
@@ -107,7 +107,7 @@ public class PaintView extends View {
         }
         //Log.i("PaintView"Of(pageCount));, "pages = " + String.valueOf(page.size()));
         //Log.i("PaintView", "pageCount = " + String.value
-        Log.i("PaintView", "init" + String.valueOf(currentColor));
+        //Log.i("PaintView", "init" + String.valueOf(currentColor));
         //initialize, sync with pages from pagecount = 0
 
     }
@@ -150,10 +150,8 @@ public class PaintView extends View {
         //mCanvas.drawColor(Color.RED);
         canvas.save();
         mBitmap.setHasAlpha(true);
-
         //semi-transparent debug color
         //mBitmap.eraseColor(Color.argb(120, 255, 255, 120));
-
 
         for (FingerPath fp : paths) { // paths is the fingerpath array
             mPaint.setColor(fp.color);
@@ -171,12 +169,8 @@ public class PaintView extends View {
         //canvas.drawColor(Color.RED);
         if(pageView != null){
             canvas.translate(annotationOffsetX, annotationOffsetY);
-            canvas.scale(pageView.viewScale, pageView.viewScale /*, annotationWidth / 2f, annotationHeight /2f*/);
+            canvas.scale(viewScale, viewScale);
         }
-        Log.i("sizes", "Paintview bmp " + annotationWidth + " " + annotationHeight);
-        Log.i("sizes", "Paintview canvas " + mCanvas.getWidth() + " " + mCanvas.getHeight());
-
-
 
         canvas.drawBitmap(mBitmap,0/*-annotationOffsetX*/, 0 /*-annotationOffsetY*/, mBitmapPaint);
         canvas.restore();
@@ -212,7 +206,7 @@ public class PaintView extends View {
 
     public void saveCurrentPage(int currentPage){
         page.set(currentPage, new ArrayList<>(paths)); //_paths
-        Log.i("PaintView", "Saved page " + String.valueOf(currentPage));
+        //Log.i("PaintView", "Saved page " + String.valueOf(currentPage));
     }
 
     public void changePage(int pageNumber){
@@ -222,7 +216,7 @@ public class PaintView extends View {
             invalidate();
         }
         else {
-            Log.i("PaintView","Page is null");
+            //Log.i("PaintView","Page is null");
         }
 
     }
@@ -231,9 +225,13 @@ public class PaintView extends View {
         pageView = pv;
         annotationHeight = pv.bitmapH;
         annotationWidth = pv.bitmapW;
-        Log.i("offset", pv.offsetX + " " + pv.offsetY);
-        annotationOffsetX = (pv.canvasW - pv.bitmapW) / 2;
-        annotationOffsetY = (pv.canvasH - pv.bitmapH) / 2;
+        //Log.i("offset", pv.offsetX + " " + pv.offsetY);
+        //Log.i("offset",  "Paintview " + pv.offsetX + " " + pv.offsetY + " " + bitmapW + " " + bitmapH + " " + canvasW + " " + canvasH + " " + pv.viewScale);
+        //annotationOffsetX = (pv.canvasW - pv.bitmapW) / 2;
+        //annotationOffsetY = (pv.canvasH - pv.bitmapH) / 2;
+        annotationOffsetX = pv.offsetX;
+        annotationOffsetY = pv.offsetY;
+        viewScale = pv.viewScale;
         //annotationOffsetX = pv.offsetX;
         //annotationOffsetY = pv.offsetY;
         //mCanvas.restore();

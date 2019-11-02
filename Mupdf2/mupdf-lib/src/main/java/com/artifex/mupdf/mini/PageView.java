@@ -43,6 +43,8 @@ public class PageView extends View implements
 
 	//my variables
 	protected int offsetX, offsetY;
+	public boolean isZoomedX = false;
+	public boolean isZoomedY = false;
 
 	public PageView(Context ctx, AttributeSet atts) {
 		super(ctx, atts);
@@ -172,12 +174,12 @@ public class PageView extends View implements
 	}
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-		/*if (bitmap != null) {
+		if (bitmap != null) {
 			scrollX += (int)dx;
 			scrollY += (int)dy;
 			scroller.forceFinished(true);
 			invalidate();
-		}*/
+		}
 		return true;
 	}
 
@@ -231,7 +233,7 @@ public class PageView extends View implements
 	}
 
 	public void goForward() {
-		Log.i("TAG","PAGEVIEW");
+		//Log.i("TAG","PAGEVIEW");
 		scroller.forceFinished(true);
 		if (scrollY + canvasH >= bitmapH) {
 			if (scrollX + canvasW >= bitmapW) {
@@ -251,20 +253,18 @@ public class PageView extends View implements
 
 		//offsetX = (canvasW - bitmapW) / 2;
 		//offsetY = (canvasH - bitmapH) / 2;
-		Log.i("offset",  "Pageview " + offsetX + " " + offsetY + " " + bitmapW + " " + bitmapH + " " + canvasW + " " + canvasH);
+		//Log.i("offset",  "Pageview " + offsetX + " " + offsetY + " " + bitmapW + " " + bitmapH + " " + canvasW + " " + canvasH);
 
 		if (bitmap == null) {
 
 			if (error) {
 				canvas.translate(canvasW / 2, canvasH / 2);
 				canvas.drawPath(errorPath, errorPaint);
-				invalidate(); //maybe this need to be removed ////////////////////////////////////////////////////////////////////////////////////////////////
+				invalidate();
 			}
 
 			return;
 		}
-
-
 
 		if (scroller.computeScrollOffset()) {
 			scrollX = scroller.getCurrX();
@@ -274,8 +274,11 @@ public class PageView extends View implements
 
 		if (bitmapW <= canvasW) {
 			scrollX = 0;
+			isZoomedX = false;
+
 			x = (canvasW - bitmapW) / 2;
 		} else {
+			isZoomedX = true;
 			if (scrollX < 0) scrollX = 0;
 			if (scrollX > bitmapW - canvasW) scrollX = bitmapW - canvasW;
 			x = -scrollX;
@@ -283,8 +286,11 @@ public class PageView extends View implements
 
 		if (bitmapH <= canvasH) {
 			scrollY = 0;
+			isZoomedY = false;
+
 			y = (canvasH - bitmapH) / 2;
 		} else {
+			isZoomedY = true;
 			if (scrollY < 0) scrollY = 0;
 			if (scrollY > bitmapH - canvasH) scrollY = bitmapH - canvasH;
 			y = -scrollY;
@@ -292,16 +298,15 @@ public class PageView extends View implements
 
 		//bitmap.setHasAlpha(true);
 		//bitmap.eraseColor(Color.argb(120, 255, 120, 255));
-		Log.i("offset",  "Pageview " + offsetX + " " + offsetY + " " + bitmapW + " " + bitmapH + " " + canvasW + " " + canvasH);
+		//Log.i("offset",  "Pageview " + offsetX + " " + offsetY + " " + bitmapW + " " + bitmapH + " " + canvasW + " " + canvasH);
 
 		offsetX = x;
 		offsetY = y;
+		actionListener.fitPaintViews();
+
 		canvas.translate(x, y);
 		canvas.scale(viewScale, viewScale);
 		canvas.drawBitmap(bitmap, 0, 0, null);
-
-		Log.i("sizes", "Pageview bmp " + bitmapW + " " + bitmapH);
-		Log.i("sizes", "Pageview canvas " + canvasW + " " + canvasH);
 
 		if (showLinks && links != null && links.length > 0) {
 			for (Link link : links) {
