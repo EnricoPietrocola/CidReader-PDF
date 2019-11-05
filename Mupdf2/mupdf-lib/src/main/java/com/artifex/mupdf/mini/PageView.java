@@ -102,7 +102,6 @@ public class PageView extends View implements
 		bitmap = b;
 		bitmapW = (int)(bitmap.getWidth() * viewScale);
 		bitmapH = (int)(bitmap.getHeight() * viewScale);
-		//Log.e("CID", bitmapW + " " + bitmapH);
 		scroller.forceFinished(true);
 		scrollX = wentBack ? bitmapW - canvasW : 0;
 		scrollY = wentBack ? bitmapH - canvasH : 0;
@@ -125,7 +124,6 @@ public class PageView extends View implements
 	public boolean onTouchEvent(MotionEvent event) {
 		detector.onTouchEvent(event);
 		scaleDetector.onTouchEvent(event);
-		//Log.i("PageView", event.getPointerCount();
 		return true;
 	}
 
@@ -153,10 +151,13 @@ public class PageView extends View implements
 			for (Link link : links) {
 				Rect b = link.bounds;
 				if (mx >= b.x0 && mx <= b.x1 && my >= b.y0 && my <= b.y1) {
-					if (link.uri != null)
+					if (link.uri != null) {
 						actionListener.gotoURI(link.uri);
-					else if (link.page >= 0)
+					}
+					else if (link.page >= 0) {
 						actionListener.gotoPage(link.page);
+					}
+
 					foundLink = true;
 					break;
 				}
@@ -165,8 +166,12 @@ public class PageView extends View implements
 		if (!foundLink) {
 			float a = canvasW / 3;
 			float b = a * 2;
-			if (x <= a) goBackward();
-			if (x >= b) goForward();
+			if (x <= a){
+				goBackward();
+			}
+			if (x >= b){
+				goForward();
+			}
 			if (x > a && x < b) actionListener.toggleUI();
 		}
 		invalidate();
@@ -174,23 +179,23 @@ public class PageView extends View implements
 	}
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-		if (bitmap != null) {
+		/*if (bitmap != null) {
 			scrollX += (int)dx;
 			scrollY += (int)dy;
 			scroller.forceFinished(true);
 			invalidate();
-		}
+		}*/
 		return true;
 	}
 
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-		if (bitmap != null) {
+		/*if (bitmap != null) {
 			int maxX = bitmapW > canvasW ? bitmapW - canvasW : 0;
 			int maxY = bitmapH > canvasH ? bitmapH - canvasH : 0;
 			scroller.forceFinished(true);
 			scroller.fling(scrollX, scrollY, (int)-dx, (int)-dy, 0, maxX, 0, maxY);
 			invalidate();
-		}
+		}*/
 		return true;
 	}
 

@@ -967,13 +967,29 @@ public class DocumentActivity extends Activity
 				float percX;
 				float percY;
 
-				float verticalOffset = (canvasH - pageView.bitmapH) / 2;
+				//float horizontalOffset = (canvasW - pageView.bitmapW) / 2;
+				//float verticalOffset = (canvasH - pageView.bitmapH) / 2;
 
-				percX = x / pageView.bitmapW;
-				percY = (y - verticalOffset) / pageView.bitmapH;
+				float horizontalOffset = pageView.bitmapW > pageView.canvasW ? pageView.bitmapW - pageView.canvasW : 0;
+				float verticalOffset = pageView.bitmapH > pageView.canvasH ? pageView.bitmapH - pageView.canvasH : 0;
 
-				//Log.i("CID", "Touching: " + percX + " " + percY);
-				Log.i("CID", String.valueOf(event.getPointerCount()) + " " + (System.currentTimeMillis() - startTime));
+				percX = x * pageView.bitmapW /*pageView.viewScale*/;
+				percY = (y * pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset;
+				Log.i("CID", "Touching: x = " + x + " y = " + y);
+				//x = (x - horizontalOffset) / pageView.viewScale; //- horizontalOffset;
+				//y = (y - verticalOffset) / pageView.viewScale; //- verticalOffset;
+				//x = (x + (horizontalOffset / 2f) / pageView.viewScale); //+ (horizontalOffset / 2f); // pageView.viewScale); //- horizontalOffset;
+				//y = (y + (verticalOffset / 2f) / pageView.viewScale); //+ (verticalOffset / 2f); // pageView.viewScale); //- verticalOffset;
+				x = (x - (pageView.scrollX)) / pageView.viewScale;
+				y = (y - (pageView.scrollY)) / pageView.viewScale;
+
+				/*percX = x / pageView.bitmapW;
+				percY = (y - verticalOffset) / pageView.bitmapH;*/
+
+				//Log.i("CID", "Touching: " + percX + "% " + percY + "%");
+				Log.i("CID", "Touching: x = " + x + " y = " + y + " viewscale = " + pageView.viewScale + " H scroll = " + pageView.scrollX + " V scroll = " + pageView.scrollX /*+ " canvas W " + pageView.canvasW + " bitmap W " + pageView.bitmapW*/);
+
+				//Log.i("CID", String.valueOf(event.getPointerCount()) + " " + (System.currentTimeMillis() - startTime));
 
 				if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
 					switch (event.getAction()) {
@@ -1012,6 +1028,32 @@ public class DocumentActivity extends Activity
 
 	}
 
+	public void drawOnScreenLocal(String action, float x, float y){
+
+		switch(action) {
+			case "ACTION_DOWN":
+				if (annotationsVisible) {
+					paintViews.get(0).strokeWidth = strokeWidth;
+					paintViews.get(0).currentColor = color;
+					paintViews.get(0).touchStart(x - pageView.offsetX, y - pageView.offsetY);
+					paintViews.get(0).invalidate();
+				}
+				break;
+			case "ACTION_MOVE":
+				if (annotationsVisible) {
+					paintViews.get(0).touchMove(x - pageView.offsetX, y - pageView.offsetY);
+					paintViews.get(0).invalidate();
+				}
+				break;
+			case "ACTION_UP":
+				if (annotationsVisible) {
+					paintViews.get(0).touchUp();
+					paintViews.get(0).invalidate();
+				}
+				break;
+		}
+	}
+
 	public void drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor){
 
 		float percX;
@@ -1019,8 +1061,8 @@ public class DocumentActivity extends Activity
 
 		float verticalOffset = (canvasH - pageView.bitmapH) / 2;
 
-		percX = x * pageView.bitmapW;
-		percY = (y * pageView.bitmapH) + verticalOffset;
+		percX = x * pageView.bitmapW /*pageView.viewScale*/;
+		percY = (y * pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset;
 
 		PaintView pv = findPaintViewByIpAddress(ip);
 
@@ -1064,31 +1106,7 @@ public class DocumentActivity extends Activity
 		return paintView;
 	}
 
-	public void drawOnScreenLocal(String action, float x, float y){
 
-		switch(action) {
-			case "ACTION_DOWN":
-				if (annotationsVisible) {
-					paintViews.get(0).strokeWidth = strokeWidth;
-					paintViews.get(0).currentColor = color;
-					paintViews.get(0).touchStart(x - pageView.offsetX, y - pageView.offsetY);
-					paintViews.get(0).invalidate();
-				}
-				break;
-			case "ACTION_MOVE":
-				if (annotationsVisible) {
-					paintViews.get(0).touchMove(x - pageView.offsetX, y - pageView.offsetY);
-					paintViews.get(0).invalidate();
-				}
-				break;
-			case "ACTION_UP":
-				if (annotationsVisible) {
-					paintViews.get(0).touchUp();
-					paintViews.get(0).invalidate();
-				}
-				break;
-		}
-	}
 
 
 
