@@ -35,6 +35,8 @@ import android.widget.SeekBar;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MotionEvent;
+import android.view.Menu;
+import android.view.MenuInflater;
 
 import java.net.UnknownHostException;
 import java.net.InetAddress;
@@ -44,12 +46,6 @@ import java.util.Stack;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
-
-
-//NEEDED FOR GRAPHICS
-
-import android.view.Menu;
-import android.view.MenuInflater;
 
 
 import android.widget.RelativeLayout.LayoutParams;
@@ -105,7 +101,7 @@ public class DocumentActivity extends Activity
 	protected Stack<Integer> history;
 	protected boolean wentBack;
 
-	//My variables
+	//CID Variables
 	private LayoutInflater inflater;
 	private View view;
 	public static RelativeLayout item;
@@ -120,7 +116,7 @@ public class DocumentActivity extends Activity
 	protected View redColorButton;
 
 
-	//NEEDED FOR GRAPHICS
+	//Needed for graphics
 	private ArrayList<PaintView> paintViews = new ArrayList<>();
 	private boolean annotationsVisible = true;
 
@@ -135,7 +131,6 @@ public class DocumentActivity extends Activity
 		catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-
 
 		mainContext = getApplicationContext();
 
@@ -156,16 +151,11 @@ public class DocumentActivity extends Activity
 
         registerReceiver(broadcastReceiver, new IntentFilter("Main.MESSAGE_RECEIVED"));
 
-		//setContentView(R.layout.activity_main);
-
-
-		//setContentView(R.layout.document_activity);
 		actionBar = findViewById(R.id.action_bar);
 		searchBar = findViewById(R.id.search_bar);
 		navigationBar = findViewById(R.id.navigation_bar);
 
 		currentBar = actionBar;
-
 
 		Uri uri = getIntent().getData();
 		mimetype = getIntent().getType();
@@ -189,8 +179,6 @@ public class DocumentActivity extends Activity
 				Log.e(APP, x.toString());
 				Toast.makeText(this, x.getMessage(), Toast.LENGTH_SHORT).show();
 			}
-
-
 		}
 
 		titleLabel = (TextView)findViewById(R.id.title_label);
@@ -296,9 +284,7 @@ public class DocumentActivity extends Activity
 		hideAllButton = findViewById(R.id.HideAllButton);
 		hideAllButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Log.i("annotation", "clicked");
-				switchAnnotations(); //TEMPORARY
-				//paintViews.get(paintViews.size() - 1).clear();
+				switchAnnotations();
 			}
 		});
 
@@ -306,7 +292,6 @@ public class DocumentActivity extends Activity
 		blackColorButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				color = Color.BLACK;
-				//paintViews.get(paintViews.size() - 1).clear();
 			}
 		});
 
@@ -314,7 +299,6 @@ public class DocumentActivity extends Activity
 		redColorButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				color = Color.RED;
-				//paintViews.get(paintViews.size() - 1).clear();
 			}
 		});
 
@@ -346,8 +330,6 @@ public class DocumentActivity extends Activity
 				layoutPopupMenu.show();
 			}
 		});
-
-		//fitPaintViews();
 	}
 
 	public void layoutSetup(){
@@ -375,10 +357,7 @@ public class DocumentActivity extends Activity
 		} else {
 			loadPage();
 			fitPaintViews();
-
 		}
-
-
 	}
 
 	protected void openDocument() {
@@ -584,9 +563,6 @@ public class DocumentActivity extends Activity
 				}
 				loadPage();
 				loadOutline();
-				//
-
-
 			}
 		});
 	}
@@ -662,8 +638,6 @@ public class DocumentActivity extends Activity
 						ctm = AndroidDrawDevice.fitPageWidth(page, canvasW);
 					}
 					bitmap = AndroidDrawDevice.drawPage(page, ctm);
-
-
 					links = page.getLinks();
 					if (links != null)
 						for (Link link : links)
@@ -714,7 +688,6 @@ public class DocumentActivity extends Activity
 
 	//menu interaction trigger
 	public void toggleUI() {
-		Log.i("annotation", "toggleUI");
 		if (navigationBar.getVisibility() == View.VISIBLE) {
 			currentBar.setVisibility(View.GONE);
 			navigationBar.setVisibility(View.GONE);
@@ -749,12 +722,10 @@ public class DocumentActivity extends Activity
 				for (int i = 0; i < paintViews.size(); i++) {
 					paintViews.get(i).saveCurrentPage(currentPage);
 				}
-
 				currentPage++;
 				loadPage();
 
                 changePageDrawing();
-
 			}
 	}
 
@@ -763,7 +734,6 @@ public class DocumentActivity extends Activity
 			for (int i = 0; i < paintViews.size(); i++) {
 				paintViews.get(i).saveCurrentPage(currentPage);
 			}
-
 			history.push(currentPage);
 			currentPage = p;
 			loadPage();
@@ -780,10 +750,6 @@ public class DocumentActivity extends Activity
 
 	public void goBackward() {
 		if (currentPage > 0) {
-
-			/*wentBack = true;
-			currentPage --;
-			loadPage();*/
 			goBackwardLocal();
 
 			UDP_Client udpClient = new UDP_Client();
@@ -795,8 +761,6 @@ public class DocumentActivity extends Activity
 
 	public void goForward() {
 		if (currentPage < pageCount - 1) {
-			/*currentPage ++;
-			loadPage();*/
 			goForwardLocal();
 
 			UDP_Client udpClient = new UDP_Client();
@@ -836,8 +800,6 @@ public class DocumentActivity extends Activity
 			_temp += splitMessage[i] + " ";
 		}
 
-		Log.i("annotation",_temp);
-
 		//check if remote command comes from new ip
 
 		InetAddress ip = null;
@@ -852,15 +814,6 @@ public class DocumentActivity extends Activity
 			//create a new paintview with new connected IP as ID
 			createRemoteGraphics(ip);
 		}
-
-
-		/*Log.i("ips", Integer.toString(connectedAddresses.size()));
-
-		for (int i = 0; i < connectedAddresses.size(); i++){
-			Log.i("ips", connectedAddresses.get(i).toString());
-		}*/
-
-		//Log.i("annotation", connectedAddresses.size())
 		return splitMessage;
 	}
 
@@ -875,8 +828,6 @@ public class DocumentActivity extends Activity
 			@Override
 			public void onReceive(Context context, Intent intent) {
 				// internet lost alert dialog method call from here...
-
-				//Intent intentReceived = getIntent();
 				Bundle messagesReceived = intent.getExtras();
 
 				if (messagesReceived == null) {
@@ -885,8 +836,7 @@ public class DocumentActivity extends Activity
 					newString = messagesReceived.getString("Main.MESSAGE_STRING");
 				}
 
-				//do stuff with received message
-
+				//do operations with received message
 				String[] parsedMessage = RPCParse(newString);
 
 				InetAddress ip = null;
@@ -897,16 +847,11 @@ public class DocumentActivity extends Activity
 				}
 
 				////////////////////////////////////////////////////////////////////////////////////////////
-
 				//parsedMessage[0] is the remote user's ip
 				//parsedMessage[1] is the command
 				//the others are the command's parameters
-
 				///////////////////////////////////////////////////////////////////////////////////////////
 
-
-				//printMessageOnScreen(newString, 200, 200);
-				//Toast.makeText(context, newString, Toast.LENGTH_LONG).show();
 				switch (parsedMessage[1]) {
 					case "goForward":
 						goForwardLocal();
@@ -924,7 +869,7 @@ public class DocumentActivity extends Activity
 						drawOnScreenRemote(ip, parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]), Integer.parseInt(parsedMessage[5]), Integer.parseInt(parsedMessage[6]));
 
 					default:
-						// code block
+						//default
 				}
 			}
 		};
@@ -936,20 +881,15 @@ public class DocumentActivity extends Activity
 			pointer.setText("0");
 			item.addView(pointer);
 		}
-		//TextView  tv = new TextView(this);
 		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		layoutParams.topMargin = y;
 		layoutParams.leftMargin = x;
-		//ALL THIS LINES MUST BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
 		pointer.setLayoutParams(layoutParams);
-//		item.addView(pointer);
 	}
 
 	private void printOnScreenLocal(int x, int y){
 		printOnScreen(x, y);
 	}
-
-	////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////// Cool kids edit here /////////////////////////
 
 	//this is where you detect touch on page
 	long startTime;
@@ -960,8 +900,6 @@ public class DocumentActivity extends Activity
 		float y = event.getRawY();
 
 		View v = getCurrentFocus();
-
-			//Log.e("CID", "Doc Size" + pageView.bitmapW + " " + pageView.bitmapH);
 			if (y >= (canvasH - pageView.bitmapH) / 2 && y <= ((canvasH - pageView.bitmapH) / 2) + pageView.bitmapH) {
 
 				float percX;
@@ -975,21 +913,10 @@ public class DocumentActivity extends Activity
 
 				percX = x * pageView.bitmapW /*pageView.viewScale*/;
 				percY = (y * pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset;
-				Log.i("CID", "Touching: x = " + x + " y = " + y);
-				//x = (x - horizontalOffset) / pageView.viewScale; //- horizontalOffset;
-				//y = (y - verticalOffset) / pageView.viewScale; //- verticalOffset;
-				//x = (x + (horizontalOffset / 2f) / pageView.viewScale); //+ (horizontalOffset / 2f); // pageView.viewScale); //- horizontalOffset;
-				//y = (y + (verticalOffset / 2f) / pageView.viewScale); //+ (verticalOffset / 2f); // pageView.viewScale); //- verticalOffset;
 				x = (x - (pageView.scrollX)) / pageView.viewScale;
 				y = (y - (pageView.scrollY)) / pageView.viewScale;
 
-				/*percX = x / pageView.bitmapW;
-				percY = (y - verticalOffset) / pageView.bitmapH;*/
-
-				//Log.i("CID", "Touching: " + percX + "% " + percY + "%");
-				Log.i("CID", "Touching: x = " + x + " y = " + y + " viewscale = " + pageView.viewScale + " H scroll = " + pageView.scrollX + " V scroll = " + pageView.scrollX /*+ " canvas W " + pageView.canvasW + " bitmap W " + pageView.bitmapW*/);
-
-				//Log.i("CID", String.valueOf(event.getPointerCount()) + " " + (System.currentTimeMillis() - startTime));
+				//Log.i("CID", "Touching: x = " + x + " y = " + y + " viewscale = " + pageView.viewScale + " H scroll = " + pageView.scrollX + " V scroll = " + pageView.scrollX /*+ " canvas W " + pageView.canvasW + " bitmap W " + pageView.bitmapW*/);
 
 				if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
 					switch (event.getAction()) {
@@ -1020,9 +947,7 @@ public class DocumentActivity extends Activity
 					fitPaintViews();
 					startTime = System.currentTimeMillis();
 				}
-
 		}
-
 		boolean ret = super.dispatchTouchEvent(event);
 		return ret;
 
@@ -1088,16 +1013,12 @@ public class DocumentActivity extends Activity
 				}
 				break;
 		}
-
 	}
 
 	PaintView findPaintViewByIpAddress(InetAddress ip){
 		PaintView paintView = null;
-		//Log.i("CID", "ip is: " + ip.toString());
 		for (int i = 0; i < paintViews.size(); i++){
-			//Log.i("CID", "checking " + paintViews.get(i).ipAddress);
 			if(paintViews.get(i).ipAddress.equals(ip)){
-				//Log.i("CID", "found paintview");
 				paintView = paintViews.get(i);
 				return paintView;
 			}
@@ -1106,12 +1027,6 @@ public class DocumentActivity extends Activity
 		return paintView;
 	}
 
-
-
-
-
-
-	//////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 	//this is the online part
 	private void RPCprintOnScreen(int x, int y){
 		UDP_Client udpClient = new UDP_Client();
@@ -1121,25 +1036,12 @@ public class DocumentActivity extends Activity
 	}
 
 	private void RPCDrawOnScren(String event, float x, float y, int strokeWidth, int color){
-		/*float percX;
-		float percY;
-
-		DisplayMetrics displayMetrics = new DisplayMetrics();
-		getWindowManager().getDefaultDisplay().getMetrics(displayMetrics);
-		int height = displayMetrics.heightPixels;
-		int width = displayMetrics.widthPixels;
-
-		percX = x / (float)width;
-		percY = y / (float)height;*/
-
-		//Log.e("RPC",  "Sending: " + percX + " " + percY);
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
 		udpClient.Message = "drawOnScreen," + event + "," + x + "," + y + "," + strokeWidth + "," + color;
 		udpClient.Send();
 	}
 
-	//NEEDED FOR GRAPHICS
 	@Override
 	public boolean onCreateOptionsMenu(Menu menu) {
 		MenuInflater menuInflater = getMenuInflater();
@@ -1149,57 +1051,42 @@ public class DocumentActivity extends Activity
 
 	public void createLocalGraphics(InetAddress ip){
 		PaintView pv = new PaintView(mainContext);
-		paintViews.add(pv); //(PaintView) findViewById(R.id.paintView);
+		paintViews.add(pv);
 		paintViews.get(0).ipAddress = ip;
 
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		//paintViewLayoutParams.addRule(RelativeLayout.BELOW, R.id.action_bar);
 
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		paintViews.get(0).setLayoutParams(paintViewLayoutParams);
-		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
-		Log.i("PageView", "pv bitmap size: " + pageView.bitmapW + " " + pageView.bitmapH);
-
 		pv.init(pageView.bitmapW, pageView.bitmapH, pageCount);
 		pv.currentColor = color;
 		pv.strokeWidth = strokeWidth;
 		item.addView(paintViews.get(0));
 		fitPaintViews();
-
-
 	}
 
 	public void createRemoteGraphics(InetAddress ip){
 		PaintView pv = new PaintView(mainContext);
 		pv.ipAddress = ip;
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-
-		//paintViewLayoutParams.addRule(RelativeLayout.BELOW, R.id.action_bar);
-
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
-		//paintViewLayoutParams.height = (int)layoutH;
-		//paintViewLayoutParams.width = (int) layoutW;
-
 		pv.setLayoutParams(paintViewLayoutParams);
 		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
-		//paintViews.get(paintViews.size() - 1).init(metrics, pageCount);
 		pv.init(pageView.bitmapW, pageView.bitmapH, pageCount);
-		//edit brush settings after init
 
+		//edit brush settings after init
 		item.addView(pv);
-		paintViews.add(pv); //(PaintView) findViewById(R.id.paintView);
+		paintViews.add(pv);
 		fitPaintViews();
 	}
 
-	//this is only local at the moment
 	public void switchAnnotations(){
 		if (!annotationsVisible){
 			for (int i = 0; i < paintViews.size(); i++){
 				paintViews.get(i).setVisibility(View.VISIBLE);
 			}
-
 		}
 		else{
 			for (int i = 0; i < paintViews.size(); i++) {
@@ -1207,7 +1094,6 @@ public class DocumentActivity extends Activity
 			}
 		}
 		annotationsVisible = !annotationsVisible;
-
 	}
 
 	protected void fitPaintViews() {
@@ -1230,119 +1116,5 @@ public class DocumentActivity extends Activity
 			}
 			localInitialized = true;
 		}
-}
-
-}
-
-
-/*Backup Removed Code*/
-
-	/*@Override
-	public boolean onOptionsItemSelected(MenuItem item) {
-		switch(item.getItemId()) {
-			case R.id.normal:
-				paintView.normal();
-				return true;
-			case R.id.emboss:
-				paintView.emboss();
-				return true;
-			case R.id.blur:
-				paintView.blur();
-				return true;
-			case R.id.clear:
-				paintView.clear();
-				return true;
-		}
-
-		return super.onOptionsItemSelected(item);
-	}*/
-
-	/*
-	@Override
-	public boolean onTouchEvent(MotionEvent event) {
-		Log.d("DEBUG","hey");
-
-		int x = (int)event.getX();
-		int y = (int)event.getY();
-		switch (event.getAction()) {
-			case MotionEvent.ACTION_DOWN:
-			case MotionEvent.ACTION_MOVE:
-			case MotionEvent.ACTION_UP:
-		}
-		printOnScreen(x, y);
-
-		return false;
-	}*/
-
-	/*final EditText ipAddressInput = new EditText(mainContext);
-		RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-		layoutParams.width = 400;
-		layoutParams.height = 150;
-		layoutParams.topMargin = 150;
-		layoutParams.leftMargin = 50;
-		ipAddressInput.setLayoutParams(layoutParams);
-		item.addView(ipAddressInput);
-
-		final Button ipAddressButton = new Button(mainContext);
-		RelativeLayout.LayoutParams layoutParams1 = new RelativeLayout.LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
-		layoutParams1.width = 400;
-		layoutParams1.height = 150;
-		layoutParams1.topMargin = 150;
-		layoutParams1.leftMargin = 550;
-		ipAddressButton.setText("Connect");
-		//ipAddressButton.setId(ipAddressButton);
-		ipAddressButton.setLayoutParams(layoutParams1);
-		item.addView(ipAddressButton);
-		/*String test[] = RPCParse("Function,1,2,3,4");*
-		Log.i("TAG", test[0]);
-		Log.i("TAG", test[1]);
-		Log.i("TAG", test[2]);
-		Log.i("TAG", test[3]);
-
-		ipAddressButton.setOnClickListener(
-				new View.OnClickListener()
-				{
-					public void onClick(View view)
-					{
-						Log.v("Ip input is ", ipAddressInput.getText().toString());
-						try {
-							//this gives a fatal exception if something that is not an IP is insert
-							ipTargetAddress = InetAddress.getByName(ipAddressInput.getText().toString());
-							ipAddressButton.setVisibility(View.GONE);
-							ipAddressInput.setVisibility(View.GONE);
-						} catch (UnknownHostException e) {
-							e.printStackTrace();
-							Log.i("TAG", "this is not a valid IP address");
-						}
-					}
-				}); */
-
-	/*
-	public void printMessageOnScreen(String message, int x, int y){
-		TextView  tv = new TextView(this);
-		tv.setText(message);
-		LayoutParams layoutParams = new LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-		//ViewGroup.LayoutParams layoutParams = item.getLayoutParams();
-		//layoutParams.leftMargin = 1000;
-		layoutParams.width = x;
-		layoutParams.height = y;
-		layoutParams.topMargin = y;
-		layoutParams.leftMargin = x;
-
-		//ALL THIS STUFF MUST BE IN % OR SOMETHING TO FIT ANY SCREENSIZE
-
-
-		tv.setLayoutParams(layoutParams);
-		item.addView(tv);
-	}*/
-	/*
-	public void printOnScreenDebug(){
-		TextView  tv = new TextView(this);
-		tv.setText("Test");
-		LayoutParams layoutParams=new LayoutParams(200, 300);
-		layoutParams.addRule(RelativeLayout.CENTER_HORIZONTAL);
-		layoutParams.addRule(RelativeLayout.CENTER_VERTICAL);
-		tv.setLayoutParams(layoutParams);
-		item.addView(tv);
 	}
-	*/
+}
