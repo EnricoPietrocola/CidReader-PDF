@@ -82,6 +82,13 @@
 			android:text="Hide Annotations" />
 
 		<Button
+			android:id="@+id/undoButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="Undo" />
+
+		<Button
 			android:id="@+id/clearButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"

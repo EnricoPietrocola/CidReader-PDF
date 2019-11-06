@@ -67,8 +67,6 @@ public class PaintView extends View {
         this(context, null);
     }
 
-
-
     public PaintView(Context context, AttributeSet attrs) {
         super(context, attrs);
         mPaint = new Paint();
@@ -149,6 +147,7 @@ public class PaintView extends View {
 
         //mCanvas.drawColor(Color.RED);
         canvas.save();
+        mBitmap.eraseColor(Color.TRANSPARENT);
         mBitmap.setHasAlpha(true);
         //semi-transparent debug color
         //mBitmap.eraseColor(Color.argb(120, 255, 255, 120));
@@ -158,11 +157,12 @@ public class PaintView extends View {
             mPaint.setStrokeWidth(fp.strokeWidth);
             mPaint.setMaskFilter(null);
 
-            if (fp.emboss)
+            if (fp.emboss) {
                 mPaint.setMaskFilter(mEmboss);
-            else if (fp.blur)
+            }
+            else if (fp.blur) {
                 mPaint.setMaskFilter(mBlur);
-
+            }
             mCanvas.drawPath(fp.path, mPaint);
         }
 
@@ -209,6 +209,7 @@ public class PaintView extends View {
         //Log.i("PaintView", "Saved page " + String.valueOf(currentPage));
     }
 
+    //for each pdf page we create a path array item to record touch interaction (annotation drawings)
     public void changePage(int pageNumber){
         if(page.get(pageNumber) != null){
             clear();  //This clears pages for turning page effect
@@ -248,5 +249,17 @@ public class PaintView extends View {
         //mBitmap.reconfigure(annotationWidth, annotationHeight, pv.bitmap.getConfig());
         //pv.scale(pageView.bitmapW, pageView.bitmapH, false);
         //mCanvas.translate(annotationOffsetX, annotationOffsetY);
+    }
+
+    public void deleteLastPath(){
+
+        if(paths.size() > 0) {
+            paths.remove(paths.get(paths.size() - 1));
+        }
+        else{
+            //no more undos
+            //we could use this part to gray out the undo button
+        }
+        invalidate();
     }
 }

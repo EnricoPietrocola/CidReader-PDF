@@ -40,6 +40,7 @@ id search_close_button
 id search_forward_button
 id search_text
 id title_label
+id undoButton
 id zoom_button
 layout activity_menu
 layout document_activity

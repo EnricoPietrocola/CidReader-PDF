@@ -110,6 +110,8 @@ public class DocumentActivity extends Activity
 	public TextView pointer;
 	public ArrayList<InetAddress> connectedAddresses = new ArrayList<>();
 	protected View hideAllButton;
+	protected View undoButton;
+
 	protected int color = Color.BLUE;
 	protected int strokeWidth = 5;
 	protected View blackColorButton;
@@ -285,6 +287,14 @@ public class DocumentActivity extends Activity
 		hideAllButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				switchAnnotations();
+			}
+		});
+
+		undoButton = findViewById(R.id.undoButton);
+		undoButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				PaintView pv = paintViews.get(0);
+				pv.deleteLastPath();
 			}
 		});
 
