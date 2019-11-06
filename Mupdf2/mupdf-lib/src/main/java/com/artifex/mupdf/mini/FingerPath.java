@@ -10,6 +10,9 @@ public class FingerPath {
     public boolean blur;
     public int strokeWidth;
     public Path path;
+    public boolean isFading;
+    public long time;
+
 
     public FingerPath(int color, boolean emboss, boolean blur, int strokeWidth, Path path) {
         this.color = color;
@@ -17,6 +20,7 @@ public class FingerPath {
         this.blur = blur;
         this.strokeWidth = strokeWidth;
         this.path = path;
-        Log.i("PaintView", "FingerPath " + color);
+        this.isFading = false;
+        this.time = 255;
     }
 }

@@ -24,6 +24,8 @@ import org.w3c.dom.Document;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
+import java.util.Iterator;
+import java.util.TimerTask;
 
 
 public class PaintView extends View {
@@ -142,6 +144,8 @@ public class PaintView extends View {
         invalidate();
     }
 
+    long startTime;
+
     @Override
     protected void onDraw(Canvas canvas) {
 
@@ -152,7 +156,13 @@ public class PaintView extends View {
         //semi-transparent debug color
         //mBitmap.eraseColor(Color.argb(120, 255, 255, 120));
 
-        for (FingerPath fp : paths) { // paths is the fingerpath array
+        startTime = System.currentTimeMillis();
+
+        Iterator<FingerPath> iterator = paths.iterator();
+
+        //for (FingerPath fp : paths) { // paths is the fingerpath array
+        while(iterator.hasNext()){
+            FingerPath fp = iterator.next();
             mPaint.setColor(fp.color);
             mPaint.setStrokeWidth(fp.strokeWidth);
             mPaint.setMaskFilter(null);
@@ -163,8 +173,18 @@ public class PaintView extends View {
             else if (fp.blur) {
                 mPaint.setMaskFilter(mBlur);
             }
+
+            if (fp.isFading){
+                fp.time -= 1;
+                mPaint.setAlpha((int)fp.time);
+                if (fp.time <= 0){
+                    iterator.remove(/*fp*/);
+                    invalidate();
+                }
+            }
             mCanvas.drawPath(fp.path, mPaint);
         }
+
 
         //canvas.drawColor(Color.RED);
         if(pageView != null){
@@ -174,6 +194,8 @@ public class PaintView extends View {
 
         canvas.drawBitmap(mBitmap,0/*-annotationOffsetX*/, 0 /*-annotationOffsetY*/, mBitmapPaint);
         canvas.restore();
+        postInvalidateOnAnimation();
+
     }
 
 
@@ -181,12 +203,17 @@ public class PaintView extends View {
     public void touchStart(float x, float y) {
         mPath = new Path();
         FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth, mPath);
+        //fp.isFading = true;
+        /*if(fp.isFading) {
+            //fp.time =
+        }*/
         paths.add(fp);
 
         mPath.reset();
         mPath.moveTo(x, y);
         mX = x;
         mY = y;
+
     }
 
     public void touchMove(float x, float y) {
@@ -202,6 +229,11 @@ public class PaintView extends View {
 
     public void touchUp() {
         mPath.lineTo(mX, mY);
+        //Log.i("CID", Integer.toString(paths.size()));
+        //get the path being drawn
+        FingerPath fp = paths.get(paths.size() - 1);
+        //fp.time = System.currentTimeMillis() - startTime;
+        fp.isFading = true;
     }
 
     public void saveCurrentPage(int currentPage){
