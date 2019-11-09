@@ -629,7 +629,6 @@ id buttonPanel
 id cancel_action
 id checkbox
 id chronometer
-id clearButton
 id collapseActionView
 id contentPanel
 id custom
@@ -683,6 +682,7 @@ id redColorButton
 id right
 id right_icon
 id right_side
+id saveButton
 id screen
 id scrollIndicatorDown
 id scrollIndicatorUp

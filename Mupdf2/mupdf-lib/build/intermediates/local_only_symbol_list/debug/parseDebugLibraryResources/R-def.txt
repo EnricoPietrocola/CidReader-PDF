@@ -24,7 +24,6 @@ id action_layout_7pt
 id action_layout_8pt
 id action_layout_9pt
 id blackColorButton
-id clearButton
 id layout_button
 id mainRelativeLayout
 id navigation_bar
@@ -33,6 +32,7 @@ id page_label
 id page_seekbar
 id page_view
 id redColorButton
+id saveButton
 id search_backward_button
 id search_bar
 id search_button

@@ -16,6 +16,7 @@ import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
+import android.os.Environment;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
@@ -41,6 +42,8 @@ import android.view.MotionEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import java.io.File;
+import java.io.FileOutputStream;
 import java.net.UnknownHostException;
 import java.net.InetAddress;
 
@@ -53,6 +56,8 @@ import java.io.IOException;
 
 import android.widget.RelativeLayout.LayoutParams;
 import android.widget.ToggleButton;
+
+import static java.lang.System.out;
 
 public class DocumentActivity extends Activity
 {
@@ -122,6 +127,7 @@ public class DocumentActivity extends Activity
 	protected int strokeWidth = 5;
 	protected View blackColorButton;
 	protected View redColorButton;
+	protected View saveButton;
 
 
 	//Needed for graphics
@@ -302,6 +308,14 @@ public class DocumentActivity extends Activity
 			public void onClick(View v) {
 				PaintView pv = paintViews.get(0);
 				pv.deleteLastPath();
+			}
+		});
+
+		saveButton = findViewById(R.id.saveButton);
+		saveButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				PaintView pv = paintViews.get(0);
+				pv.saveFirstPage();
 			}
 		});
 
@@ -1141,4 +1155,6 @@ public class DocumentActivity extends Activity
 			localInitialized = true;
 		}
 	}
+
+
 }

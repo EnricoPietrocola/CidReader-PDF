@@ -10,6 +10,7 @@ import android.graphics.MaskFilter;
 import android.graphics.Paint;
 import android.graphics.Path;
 import android.graphics.PorterDuff;
+import android.os.Environment;
 import android.util.AttributeSet;
 import android.util.DisplayMetrics;
 import android.util.Log;
@@ -21,11 +22,19 @@ import android.widget.Scroller;
 
 import org.w3c.dom.Document;
 
+import java.io.File;
+import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
+import java.io.IOException;
+import java.io.OutputStream;
+import java.io.OutputStreamWriter;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.Iterator;
 import java.util.TimerTask;
+
+import static java.lang.System.out;
 
 
 public class PaintView extends View {
@@ -51,6 +60,7 @@ public class PaintView extends View {
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 
 
+
     //from pageview
     protected PageView pageView;
     protected int bitmapW, bitmapH;
@@ -62,6 +72,9 @@ public class PaintView extends View {
     protected float viewScale, minScale, maxScale;
     protected float annotationOffsetX, annotationOffsetY;
     protected int annotationWidth, annotationHeight;
+    protected ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
+    protected FileOutputStream fOut = null;
+
 
     //added for multipage support
     public ArrayList<ArrayList<FingerPath>> page = new ArrayList<>();
@@ -193,6 +206,11 @@ public class PaintView extends View {
             canvas.scale(viewScale, viewScale);
         }
 
+        //This part must be extended with proper page resizing of List and data to be functional
+        bitmaps.add(mBitmap);
+
+        //mBitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
+
         canvas.drawBitmap(mBitmap,0/*-annotationOffsetX*/, 0 /*-annotationOffsetY*/, mBitmapPaint);
         canvas.restore();
         postInvalidateOnAnimation();
@@ -295,5 +313,54 @@ public class PaintView extends View {
             //we could use this part to gray out the undo button
         }
         invalidate();
+    }
+
+    public void saveFirstPage(){
+        Log.i("CID", "SavingPages");
+
+        for (int i = 0; i > page.size(); i++) {
+            setDrawingCacheEnabled(true);
+            // check the out is not null..
+            out.flush();
+            String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() +
+                    "/PhysicsSketchpad";
+
+            File dir = new File(file_path);
+            if (!dir.exists())
+                dir.mkdirs();
+
+            File file = new File(dir, "sketchpad" + i + ".png");
+
+            try {
+                fOut = new FileOutputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+                Log.e("CID", "something went wrong with fOut = new FileOutputStream(file)");
+            }
+            //page.get(i).
+
+            //bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 85, fOut);
+
+            try {
+                fOut.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("CID", "something went wrong with fOut.flush");
+
+            }
+
+            try {
+                fOut.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+                Log.e("CID", "something went wrong with fOut.close");
+
+            }
+
+            System.out.println(file_path);
+
+            bitmaps.get(i).recycle();
+            System.gc();
+        }
     }
 }
