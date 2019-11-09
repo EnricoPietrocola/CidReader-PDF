@@ -88,6 +88,14 @@
 			android:layout_weight="1"
 			android:text="Undo" />
 
+		<Switch
+			android:id="@+id/trailSwitch"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="1"
+			android:text="Laser"
+			android:textColor="#DDFFFFFF" />
+
 		<Button
 			android:id="@+id/clearButton"
 			android:layout_width="wrap_content"

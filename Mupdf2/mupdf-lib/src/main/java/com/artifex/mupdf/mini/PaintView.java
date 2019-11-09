@@ -62,6 +62,7 @@ public class PaintView extends View {
     protected float viewScale, minScale, maxScale;
     protected float annotationOffsetX, annotationOffsetY;
     protected int annotationWidth, annotationHeight;
+
     //added for multipage support
     public ArrayList<ArrayList<FingerPath>> page = new ArrayList<>();
 
@@ -177,6 +178,7 @@ public class PaintView extends View {
             if (fp.isFading){
                 fp.time -= 1;
                 mPaint.setAlpha((int)fp.time);
+                Log.i("CID", "onDraw " + Boolean.toString(fp.isFading));
                 if (fp.time <= 0){
                     iterator.remove(/*fp*/);
                     invalidate();
@@ -202,11 +204,13 @@ public class PaintView extends View {
 
     public void touchStart(float x, float y) {
         mPath = new Path();
-        FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth, mPath);
-        //fp.isFading = true;
+
+        FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth,  mPath);
+        //fp.isFading =
         /*if(fp.isFading) {
             //fp.time =
         }*/
+        Log.i("CID", "TouchStart " +  Boolean.toString(DocumentActivity.isTrail));
         paths.add(fp);
 
         mPath.reset();
@@ -233,7 +237,7 @@ public class PaintView extends View {
         //get the path being drawn
         FingerPath fp = paths.get(paths.size() - 1);
         //fp.time = System.currentTimeMillis() - startTime;
-        fp.isFading = true;
+        fp.isFading = DocumentActivity.isTrail;
     }
 
     public void saveCurrentPage(int currentPage){

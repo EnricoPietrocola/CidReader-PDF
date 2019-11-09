@@ -3,6 +3,7 @@ package com.artifex.mupdf.mini;
 import com.artifex.mupdf.fitz.*;
 import com.artifex.mupdf.fitz.android.*;
 
+import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.content.BroadcastReceiver;
@@ -28,10 +29,12 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
+import android.widget.Switch;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MotionEvent;
@@ -49,6 +52,7 @@ import java.io.IOException;
 
 
 import android.widget.RelativeLayout.LayoutParams;
+import android.widget.ToggleButton;
 
 public class DocumentActivity extends Activity
 {
@@ -111,6 +115,8 @@ public class DocumentActivity extends Activity
 	public ArrayList<InetAddress> connectedAddresses = new ArrayList<>();
 	protected View hideAllButton;
 	protected View undoButton;
+	protected Switch trailSwitch;
+	protected static boolean isTrail;
 
 	protected int color = Color.BLUE;
 	protected int strokeWidth = 5;
@@ -122,6 +128,7 @@ public class DocumentActivity extends Activity
 	private ArrayList<PaintView> paintViews = new ArrayList<>();
 	private boolean annotationsVisible = true;
 
+	@SuppressLint("WrongViewCast")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 
@@ -295,6 +302,13 @@ public class DocumentActivity extends Activity
 			public void onClick(View v) {
 				PaintView pv = paintViews.get(0);
 				pv.deleteLastPath();
+			}
+		});
+
+		trailSwitch = (Switch) findViewById(R.id.trailSwitch);
+		trailSwitch.setOnCheckedChangeListener(new CompoundButton.OnCheckedChangeListener() {
+			public void onCheckedChanged(CompoundButton buttonView, boolean isChecked) {
+				isTrail = isChecked;
 			}
 		});
 

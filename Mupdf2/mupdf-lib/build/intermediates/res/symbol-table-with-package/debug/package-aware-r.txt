@@ -729,6 +729,7 @@ id title_label
 id title_template
 id top
 id topPanel
+id trailSwitch
 id undoButton
 id up
 id useLogo
