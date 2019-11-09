@@ -178,7 +178,6 @@ public class PaintView extends View {
             if (fp.isFading){
                 fp.time -= 1;
                 mPaint.setAlpha((int)fp.time);
-                Log.i("CID", "onDraw " + Boolean.toString(fp.isFading));
                 if (fp.time <= 0){
                     iterator.remove(/*fp*/);
                     invalidate();
@@ -210,7 +209,6 @@ public class PaintView extends View {
         /*if(fp.isFading) {
             //fp.time =
         }*/
-        Log.i("CID", "TouchStart " +  Boolean.toString(DocumentActivity.isTrail));
         paths.add(fp);
 
         mPath.reset();
