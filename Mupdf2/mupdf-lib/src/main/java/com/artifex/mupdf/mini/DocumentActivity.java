@@ -3,6 +3,7 @@ package com.artifex.mupdf.mini;
 import com.artifex.mupdf.fitz.*;
 import com.artifex.mupdf.fitz.android.*;
 
+import android.Manifest;
 import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
@@ -12,11 +13,14 @@ import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.IntentFilter;
 import android.content.SharedPreferences;
+import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
+import android.support.v4.app.ActivityCompat;
+import android.support.v4.content.ContextCompat;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
@@ -61,6 +65,7 @@ import static java.lang.System.out;
 
 public class DocumentActivity extends Activity
 {
+	private static final int PERMISSION_REQUEST = 42;
 	private final String APP = "MuPDF";
 
 	public final int NAVIGATE_REQUEST = 1;
@@ -314,8 +319,7 @@ public class DocumentActivity extends Activity
 		saveButton = findViewById(R.id.saveButton);
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				PaintView pv = paintViews.get(0);
-				pv.saveFirstPage();
+				saveAnnotationFiles();
 			}
 		});
 
@@ -377,7 +381,14 @@ public class DocumentActivity extends Activity
 		setContentView(item);
 	}
 
-
+	public void saveAnnotationFiles(){
+		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
+			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
+			Log.i("CID", "hey");
+		}
+		PaintView pv = paintViews.get(0);
+		pv.saveFirstPage();
+	}
 
 	public void onPageViewSizeChanged(int w, int h) {
 		canvasW = w;
