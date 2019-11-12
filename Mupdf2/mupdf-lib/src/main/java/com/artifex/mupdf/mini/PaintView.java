@@ -79,7 +79,7 @@ public class PaintView extends View {
     protected int annotationWidth, annotationHeight;
     protected ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
     protected FileOutputStream fOut = null;
-
+    protected Integer pageNum;
 
     //added for multipage support
     public ArrayList<ArrayList<FingerPath>> page = new ArrayList<>();
@@ -212,7 +212,19 @@ public class PaintView extends View {
         }
 
         //This part must be extended with proper page resizing of List and data to be functional
-        bitmaps.add(mBitmap);
+        //bitmaps[i] must be overridden if already present, compare it with document page number, otherwise the list becomes impossibly big and page count is lost
+        try {
+            if(bitmaps.get(pageNum) != null) {
+                bitmaps.set(pageNum, mBitmap);
+            }
+            else{
+                //what happens is page is skipped?
+                bitmaps.add(mBitmap);
+            }
+        } catch (Exception e) {
+            e.printStackTrace();
+        }
+
 
         //mBitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
 
@@ -269,6 +281,7 @@ public class PaintView extends View {
     //for each pdf page we create a path array item to record touch interaction (annotation drawings)
     public void changePage(int pageNumber){
         if(page.get(pageNumber) != null){
+            pageNum = pageNumber;
             clear();  //This clears pages for turning page effect
             paths = new ArrayList<FingerPath>(page.get(pageNumber));
             invalidate();
@@ -345,7 +358,7 @@ public class PaintView extends View {
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();            new Thread(new Runnable() {
                 public void run() {
                     // a potentially time consuming task
-                    for (int i = 0; i < 1; i++) {
+                    for (int i = 0; i < bitmaps.size(); i++) {
                         setDrawingCacheEnabled(true);
                         // check the out is not null..
                         //String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CidReader";
@@ -381,7 +394,7 @@ public class PaintView extends View {
 
                         Log.i("CID", Integer.toString(bitmaps.size()));
                         //bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 85, fOut);
-                        bitmaps.get(0).compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                        bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 100, fOut);
 
                         try {
                             Log.i("CID", "fOut.flush()");
