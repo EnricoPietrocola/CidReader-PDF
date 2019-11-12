@@ -319,6 +319,7 @@ public class DocumentActivity extends Activity
 		saveButton = findViewById(R.id.saveButton);
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+
 				saveAnnotationFiles();
 			}
 		});

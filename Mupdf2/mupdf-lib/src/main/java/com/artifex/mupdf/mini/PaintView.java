@@ -23,6 +23,7 @@ import android.view.MotionEvent;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Scroller;
+import android.widget.Toast;
 
 import org.w3c.dom.Document;
 
@@ -115,6 +116,7 @@ public class PaintView extends View {
         mBitmap = Bitmap.createBitmap(width, height, Bitmap.Config.ARGB_8888);
         mCanvas = new Canvas(mBitmap);
 
+        //bitmaps = new ArrayList<Bitmap>(pageCount);
         currentColor = DEFAULT_COLOR;
         strokeWidth = BRUSH_SIZE;
         normal(); //added here to bypass options
@@ -123,6 +125,7 @@ public class PaintView extends View {
         //multipage system
         for (int i = 0; i < pageCount; i++){
             page.add(new ArrayList<FingerPath>());
+            bitmaps.add(Bitmap.createScaledBitmap(mBitmap, width, height, false));
         }
         //Log.i("PaintView"Of(pageCount));, "pages = " + String.valueOf(page.size()));
         //Log.i("PaintView", "pageCount = " + String.value
@@ -211,17 +214,12 @@ public class PaintView extends View {
             canvas.scale(viewScale, viewScale);
         }
 
-        //This part must be extended with proper page resizing of List and data to be functional
-        //bitmaps[i] must be overridden if already present, compare it with document page number, otherwise the list becomes impossibly big and page count is lost
+        //this bit should be executed from time to time, but when?
         try {
-            if(bitmaps.get(pageNum) != null) {
-                bitmaps.set(pageNum, mBitmap);
-            }
-            else{
-                //what happens is page is skipped?
-                bitmaps.add(mBitmap);
-            }
+            Log.i("CID", Integer.toString(bitmaps.size()) + " and you're on page " + pageNum);
+            bitmaps.set(pageNum, mBitmap);
         } catch (Exception e) {
+            Toast.makeText(getContext(),"Something went wrong when saving annotations",Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
