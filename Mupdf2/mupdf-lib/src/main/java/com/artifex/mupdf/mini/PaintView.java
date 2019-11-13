@@ -278,8 +278,9 @@ public class PaintView extends View {
 
     //for each pdf page we create a path array item to record touch interaction (annotation drawings)
     public void changePage(int pageNumber){
+        pageNum = pageNumber;
+
         if(page.get(pageNumber) != null){
-            pageNum = pageNumber;
             clear();  //This clears pages for turning page effect
             paths = new ArrayList<FingerPath>(page.get(pageNumber));
             invalidate();
@@ -332,174 +333,65 @@ public class PaintView extends View {
     }
 
     public void saveFirstPage(){
-        /*if (ContextCompat.checkSelfPermission(getContext(), Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
-        }*/
-        /*
-        if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
-                != PackageManager.PERMISSION_GRANTED) {
+        new Thread(new Runnable() {
+            public void run() {
+                // a potentially time consuming task
+                for (int i = 0; i < bitmaps.size(); i++) {
+                    setDrawingCacheEnabled(true);
+                    String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/";
+                    File dir = new File(file_path);
 
-            // Should we show an explanation?
-            if (shouldShowRequestPermissionRationale(
-                    Manifest.permission.READ_EXTERNAL_STORAGE)) {
-            }
+                    Log.i("CID", file_path);
 
-            requestPermissions(new String[]{Manifest.permission.READ_EXTERNAL_STORAGE},
-                    3);
-
-            // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-            // app-defined int constant
-
-            return;
-        }*/
-
-        String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();            new Thread(new Runnable() {
-                public void run() {
-                    // a potentially time consuming task
-                    for (int i = 0; i < bitmaps.size(); i++) {
-                        setDrawingCacheEnabled(true);
-                        // check the out is not null..
-                        //String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/CidReader";
-                        String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/";
-                        //String file_path = "/test/";
-                        File dir = new File(file_path);
-
-                        Log.i("CID", file_path);
-
-                        if (!dir.exists()) {
-                            dir.mkdirs();
-                        }
-
-                        File file = new File(dir, "annotation" + i + ".png");
-
-                        if (!file.exists()) {
-                            try {
-                                file.createNewFile();
-                            } catch (IOException e) {
-                                e.printStackTrace();
-                            }
-                        }
-
-                        Log.i("CID", file.toString());
-
-                        try {
-                            Log.i("CID", "fOut = new FileOutPutStream(file)");
-                            fOut = new FileOutputStream(file);
-                        } catch (FileNotFoundException e) {
-                            Log.e("CID", "something went wrong with fOut = new FileOutputStream(file)");
-                            e.printStackTrace();
-                        }
-
-                        Log.i("CID", Integer.toString(bitmaps.size()));
-                        //bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 85, fOut);
-                        bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 100, fOut);
-
-                        try {
-                            Log.i("CID", "fOut.flush()");
-                            fOut.flush();
-                        } catch (IOException e) {
-                            Log.e("CID", "something went wrong with fOut.flush");
-                            e.printStackTrace();
-                        }
-                        try {
-                            Log.i("CID", "fOut.close()");
-                            fOut.close();
-                        } catch (IOException e) {
-                            Log.e("CID", "something went wrong with fOut.close");
-                            e.printStackTrace();
-                        }
-
-                        /*System.out.println(file);
-
-                        bitmaps.get(i).recycle();
-                        System.gc();
-                        */
-
+                    if (!dir.exists()) {
+                        dir.mkdirs();
                     }
+
+                    File file = new File(dir, "annotation" + i + ".png");
+
+                    if (!file.exists()) {
+                        try {
+                            file.createNewFile();
+                        } catch (IOException e) {
+                            e.printStackTrace();
+                        }
                     }
-            }).start();
 
+                    Log.i("CID", file.toString());
 
+                    try {
+                        Log.i("CID", "fOut = new FileOutPutStream(file)");
+                        fOut = new FileOutputStream(file);
+                    } catch (FileNotFoundException e) {
+                        Log.e("CID", "something went wrong with fOut = new FileOutputStream(file)");
+                        e.printStackTrace();
+                    }
 
-        /* Log.i("CID", "SavingPages");
+                    Log.i("CID", Integer.toString(bitmaps.size()));
 
-        for (int i = 0; i < 1; i++) {
-            setDrawingCacheEnabled(true);
-            // check the out is not null..
-            //out.flush();
+                    bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 100, fOut);
 
-            String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/PhysicsSketchpad";
+                    try {
+                        Log.i("CID", "fOut.flush()");
+                        fOut.flush();
+                    } catch (IOException e) {
+                        Log.e("CID", "something went wrong with fOut.flush");
+                        e.printStackTrace();
+                    }
+                    try {
+                        Log.i("CID", "fOut.close()");
+                        fOut.close();
+                    } catch (IOException e) {
+                        Log.e("CID", "something went wrong with fOut.close");
+                        e.printStackTrace();
+                    }
 
-            File dir = new File(file_path);
-            if (!dir.exists())
-                dir.mkdirs();
-
-            File file = new File(dir, "sketchpad" + i + ".png");
-
-
-            try (FileOutputStream out = new FileOutputStream(file)) {
-                mBitmap.compress(Bitmap.CompressFormat.PNG, 100, out); // bmp is your Bitmap instance
-                // PNG is a lossless format, the compression factor (100) is ignored
-            } catch (IOException e) {
-                e.printStackTrace();
+                    /*System.out.println(file);
+                    bitmaps.get(i).recycle();
+                    System.gc();
+                    */
+                }
             }
-            */
-
+        }).start();
     }
-
-    /*public void saveFirstPage(){
-        Log.i("CID", "SavingPages");
-
-        for (int i = 0; i < 1; i++) {
-
-            setDrawingCacheEnabled(true);
-            // check the out is not null..
-            //out.flush();
-
-            String file_path = Environment.getExternalStorageDirectory().getAbsolutePath() + "/PhysicsSketchpad";
-
-            Log.i("CID", file_path);
-
-            File dir = new File(file_path);
-            if (!dir.exists())
-                dir.mkdirs();
-
-            File file = new File(dir, "sketchpad" + i + ".png");
-
-            Log.i("CID", file.toString());
-
-            try {
-                Log.i("CID", "fOut = new FileOutPutStream(file)");
-                fOut = new FileOutputStream(file);
-            } catch (FileNotFoundException e) {
-                Log.e("CID", "something went wrong with fOut = new FileOutputStream(file)");
-                e.printStackTrace();
-            }
-            //page.get(i).
-
-            bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 85, fOut);
-
-            try {
-                Log.i("CID", "fOut.flush()");
-                fOut.flush();
-            } catch (IOException e) {
-                Log.e("CID", "something went wrong with fOut.flush");
-                e.printStackTrace();
-
-            }
-
-            try {
-                Log.i("CID", "fOut.close()");
-                fOut.close();
-            } catch (IOException e) {
-                Log.e("CID", "something went wrong with fOut.close");
-                e.printStackTrace();
-            }
-
-            System.out.println(file);
-
-            bitmaps.get(i).recycle();
-            System.gc();
-        }
-    }*/
 }

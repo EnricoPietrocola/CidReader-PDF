@@ -613,6 +613,8 @@ public class DocumentActivity extends Activity
 				}
 				loadPage();
 				loadOutline();
+				changePageDrawing();
+
 			}
 		});
 	}
@@ -636,6 +638,7 @@ public class DocumentActivity extends Activity
 			public void run() {
 				loadPage();
 				loadOutline();
+				changePageDrawing();
 			}
 		});
 	}
@@ -715,6 +718,7 @@ public class DocumentActivity extends Activity
 				pageSeekbar.setProgress(pageNumber);
 				wentBack = false;
 				fitPaintViews();
+				changePageDrawing();
 			}
 		});
 	}
@@ -794,6 +798,7 @@ public class DocumentActivity extends Activity
 
 	public void changePageDrawing(){
 		for (int i = 0; i < paintViews.size(); i++) {
+			Log.i("CID", currentPage + "");
 			paintViews.get(i).changePage(currentPage);
 		}
     }
