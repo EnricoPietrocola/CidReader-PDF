@@ -78,7 +78,7 @@ public class PaintView extends View {
     protected float viewScale, minScale, maxScale;
     protected float annotationOffsetX, annotationOffsetY;
     protected int annotationWidth, annotationHeight;
-    protected ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
+    //protected ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
     protected FileOutputStream fOut = null;
     protected Integer pageNum;
 
@@ -125,7 +125,7 @@ public class PaintView extends View {
         //multipage system
         for (int i = 0; i < pageCount; i++){
             page.add(new ArrayList<FingerPath>());
-            bitmaps.add(Bitmap.createScaledBitmap(mBitmap, width, height, false));
+            //bitmaps.add(Bitmap.createScaledBitmap(mBitmap, width, height, false));
         }
         //Log.i("PaintView"Of(pageCount));, "pages = " + String.valueOf(page.size()));
         //Log.i("PaintView", "pageCount = " + String.value
@@ -170,7 +170,6 @@ public class PaintView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-
         //mCanvas.drawColor(Color.RED);
         canvas.save();
         mBitmap.eraseColor(Color.TRANSPARENT);
@@ -181,8 +180,6 @@ public class PaintView extends View {
         startTime = System.currentTimeMillis();
 
         Iterator<FingerPath> iterator = paths.iterator();
-
-        //for (FingerPath fp : paths) { // paths is the fingerpath array
         while(iterator.hasNext()){
             FingerPath fp = iterator.next();
             mPaint.setColor(fp.color);
@@ -207,48 +204,25 @@ public class PaintView extends View {
             mCanvas.drawPath(fp.path, mPaint);
         }
 
-
         //canvas.drawColor(Color.RED);
         if(pageView != null){
             canvas.translate(annotationOffsetX, annotationOffsetY);
             canvas.scale(viewScale, viewScale);
         }
 
-        //this bit should be executed from time to time, but when?
-        try {
-            Log.i("CID", Integer.toString(bitmaps.size()) + " and you're on page " + pageNum);
-            bitmaps.set(pageNum, mBitmap);
-        } catch (Exception e) {
-            Toast.makeText(getContext(),"Something went wrong when saving annotations",Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-
-
-        //mBitmap.compress(Bitmap.CompressFormat.PNG, 85, fOut);
-
-        canvas.drawBitmap(mBitmap,0/*-annotationOffsetX*/, 0 /*-annotationOffsetY*/, mBitmapPaint);
+        canvas.drawBitmap(mBitmap,0, 0, mBitmapPaint);
         canvas.restore();
         postInvalidateOnAnimation();
-
     }
-
-
 
     public void touchStart(float x, float y) {
         mPath = new Path();
-
         FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth,  mPath);
-        //fp.isFading =
-        /*if(fp.isFading) {
-            //fp.time =
-        }*/
         paths.add(fp);
-
         mPath.reset();
         mPath.moveTo(x, y);
         mX = x;
         mY = y;
-
     }
 
     public void touchMove(float x, float y) {
@@ -279,6 +253,21 @@ public class PaintView extends View {
     //for each pdf page we create a path array item to record touch interaction (annotation drawings)
     public void changePage(int pageNumber){
         pageNum = pageNumber;
+
+        /*try {
+
+            //Log.i("CID", Integer.toString(bitmaps.size()) + " and you're on page " + pageNumber);
+
+
+            //bitmaps.set(pageNumber, _Bitmap);
+            //bitmaps.add(_Bitmap);
+        }
+        catch (Exception e) {
+            Toast.makeText(getContext(),"Something went wrong when saving annotations",Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }
+
+        */
 
         if(page.get(pageNumber) != null){
             clear();  //This clears pages for turning page effect
@@ -332,22 +321,23 @@ public class PaintView extends View {
         invalidate();
     }
 
-    public void saveFirstPage(){
+    public void saveFirstPage(final String id){
         new Thread(new Runnable() {
             public void run() {
+
                 // a potentially time consuming task
-                for (int i = 0; i < bitmaps.size(); i++) {
+                for (int i = 0; i < page.size(); i++) {
                     setDrawingCacheEnabled(true);
                     String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/";
                     File dir = new File(file_path);
 
-                    Log.i("CID", file_path);
+                    //Log.i("CID", file_path);
 
                     if (!dir.exists()) {
                         dir.mkdirs();
                     }
 
-                    File file = new File(dir, "annotation" + i + ".png");
+                    File file = new File(dir, "annotation_" + id + "_" + i + ".png");
 
                     if (!file.exists()) {
                         try {
@@ -357,32 +347,65 @@ public class PaintView extends View {
                         }
                     }
 
-                    Log.i("CID", file.toString());
+                    //Log.i("CID", file.toString());
 
                     try {
-                        Log.i("CID", "fOut = new FileOutPutStream(file)");
+                        //Log.i("CID", "fOut = new FileOutPutStream(file)");
                         fOut = new FileOutputStream(file);
                     } catch (FileNotFoundException e) {
-                        Log.e("CID", "something went wrong with fOut = new FileOutputStream(file)");
+                        //Log.e("CID", "something went wrong with fOut = new FileOutputStream(file)");
                         e.printStackTrace();
                     }
 
-                    Log.i("CID", Integer.toString(bitmaps.size()));
+                    //Log.i("CID", Integer.toString(bitmaps.size()));
 
-                    bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 100, fOut);
+
+                    Iterator<FingerPath> iterator = page.get(i).iterator();
+
+                    Bitmap _Bitmap = Bitmap.createBitmap(mBitmap.getWidth(), mBitmap.getHeight(), Bitmap.Config.ARGB_8888);
+
+                    Canvas _canvas = new Canvas(_Bitmap);
+
+                    while(iterator.hasNext()){
+                        FingerPath fp = iterator.next();
+                        mPaint.setColor(fp.color);
+                        mPaint.setStrokeWidth(fp.strokeWidth);
+                        mPaint.setMaskFilter(null);
+
+                        if (fp.emboss) {
+                            mPaint.setMaskFilter(mEmboss);
+                        }
+                        else if (fp.blur) {
+                            mPaint.setMaskFilter(mBlur);
+                        }
+
+                        if (fp.isFading){
+                            fp.time -= 1;
+                            mPaint.setAlpha((int)fp.time);
+                            if (fp.time <= 0){
+                                iterator.remove(/*fp*/);
+                                invalidate();
+                            }
+                        }
+
+                        _canvas.drawPath(fp.path, mPaint);
+                    }
+
+                    //bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 100, fOut);
+                    _Bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
 
                     try {
-                        Log.i("CID", "fOut.flush()");
+                        //Log.i("CID", "fOut.flush()");
                         fOut.flush();
                     } catch (IOException e) {
-                        Log.e("CID", "something went wrong with fOut.flush");
+                        //Log.e("CID", "something went wrong with fOut.flush");
                         e.printStackTrace();
                     }
                     try {
-                        Log.i("CID", "fOut.close()");
+                        //Log.i("CID", "fOut.close()");
                         fOut.close();
                     } catch (IOException e) {
-                        Log.e("CID", "something went wrong with fOut.close");
+                        //Log.e("CID", "something went wrong with fOut.close");
                         e.printStackTrace();
                     }
 

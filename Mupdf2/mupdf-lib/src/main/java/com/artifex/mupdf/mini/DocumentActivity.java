@@ -319,7 +319,12 @@ public class DocumentActivity extends Activity
 		saveButton = findViewById(R.id.saveButton);
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-
+				//saves current page before baking annotations in png files
+				if (currentPage > 0) {
+					for (int i = 0; i < paintViews.size(); i++) {
+						paintViews.get(i).saveCurrentPage(currentPage);
+					}
+				}
 				saveAnnotationFiles();
 			}
 		});
@@ -387,8 +392,11 @@ public class DocumentActivity extends Activity
 			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
 			Log.i("CID", "hey");
 		}
-		PaintView pv = paintViews.get(0);
-		pv.saveFirstPage();
+		PaintView pv;
+		for(int i = 0; i < paintViews.size(); i++) {
+			pv = paintViews.get(i);
+			pv.saveFirstPage(Integer.toString(i));
+		}
 	}
 
 	public void onPageViewSizeChanged(int w, int h) {
