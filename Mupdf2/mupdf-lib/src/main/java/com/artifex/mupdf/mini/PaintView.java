@@ -27,10 +27,13 @@ import android.widget.Toast;
 
 import org.w3c.dom.Document;
 
+import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
+import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.io.OutputStream;
 import java.io.OutputStreamWriter;
 import java.net.InetAddress;
@@ -416,5 +419,107 @@ public class PaintView extends View {
                 }
             }
         }).start();
+    }
+
+    protected void writeToFile(final String id) {
+
+        String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/";
+        File dir = new File(file_path);
+
+        if (!dir.exists()) {
+            dir.mkdirs();
+        }
+
+        for (int i = 0; i < page.size(); i++) {
+
+            File file = new File(dir, "annotation_" + id + "_" + i + ".txt");
+
+            if (!file.exists()) {
+                try {
+                    file.createNewFile();
+                } catch (IOException e) {
+                    e.printStackTrace();
+                }
+            }
+
+            try {
+                fOut = new FileOutputStream(file);
+            } catch (FileNotFoundException e) {
+                e.printStackTrace();
+            }
+
+            Iterator<FingerPath> iterator = page.get(i).iterator();
+
+            while(iterator.hasNext()){
+                FingerPath fp = iterator.next();
+                /*mPaint.setColor(fp.color);
+                mPaint.setStrokeWidth(fp.strokeWidth);
+                mPaint.setMaskFilter(null);
+
+                if (fp.emboss) {
+                    mPaint.setMaskFilter(mEmboss);
+                }
+                else if (fp.blur) {
+                    mPaint.setMaskFilter(mBlur);
+                }
+                */
+                if (fp.isFading){
+                    fp.time -= 1;
+                    mPaint.setAlpha((int)fp.time);
+                    if (fp.time <= 0){
+                        iterator.remove(/*fp*/);
+                        invalidate();
+                    }
+                }
+                try {
+                    fOut.write((fp.path.toString().getBytes()));
+                }
+                catch (IOException e) {
+                    Log.e("Exception", "File write failed: " + e.toString());
+                }
+            }
+
+            try {
+                fOut.flush();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+            try {
+                fOut.close();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+
+        }
+    }
+
+    protected String readFromFile(Context context) {
+
+        String ret = "";
+
+        try {
+            InputStream inputStream = context.openFileInput("config.txt");
+
+            if ( inputStream != null ) {
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+
+                inputStream.close();
+                ret = stringBuilder.toString();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
     }
 }

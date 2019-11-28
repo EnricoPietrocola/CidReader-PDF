@@ -322,10 +322,11 @@ public class DocumentActivity extends Activity
 				//saves current page before baking annotations in png files
 				if (currentPage > 0) {
 					for (int i = 0; i < paintViews.size(); i++) {
-						paintViews.get(i).saveCurrentPage(currentPage);
+						//paintViews.get(i).saveCurrentPage(currentPage);
+						paintViews.get(i).writeToFile(Integer.toString(currentPage));
 					}
 				}
-				saveAnnotationFiles();
+				//saveAnnotationFiles();
 			}
 		});
 

@@ -22,6 +22,5 @@ public class FingerPath {
         this.path = path;
         this.isFading = false;
         this.time = 255;
-
     }
 }
