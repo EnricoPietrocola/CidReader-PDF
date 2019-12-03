@@ -3,115 +3,115 @@
 3    package="com.artifex.mupdf.mini.test" >
 4
 5    <uses-sdk
-5-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:5:5-74
+5-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:5:5-74
 6        android:minSdkVersion="23"
-6-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:5:15-41
+6-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:5:15-41
 7        android:targetSdkVersion="25" />
-7-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:5:42-71
+7-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:5:42-71
 8
 9    <instrumentation
-9-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:11:5-15:77
+9-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:11:5-15:77
 10        android:name="android.test.InstrumentationTestRunner"
-10-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:11:22-75
+10-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:11:22-75
 11        android:functionalTest="false"
-11-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:14:22-52
+11-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:14:22-52
 12        android:handleProfiling="false"
-12-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:13:22-53
+12-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:13:22-53
 13        android:label="Tests for com.artifex.mupdf.mini.test"
-13-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:15:22-75
+13-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:15:22-75
 14        android:targetPackage="com.artifex.mupdf.mini.test" />
-14-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:12:22-73
+14-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:12:22-73
 15
 16    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />
-16-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:9:5-80
-16-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:9:22-77
+16-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:9:5-80
+16-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:9:22-77
 17    <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
-17-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:10:5-81
-17-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:10:22-78
+17-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:10:5-81
+17-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:10:22-78
 18    <uses-permission android:name="android.permission.INTERNET" />
-18-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-67
-18-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:22-64
+18-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:5-67
+18-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:11:22-64
 19
 20    <application android:debuggable="true" >
-20-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:7:5-9:19
-20-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:7:18-43
+20-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:7:5-9:19
+20-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:7:18-43
 21        <uses-library android:name="android.test.runner" />
-21-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:8:9-60
-21-->D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7490289041033386053.xml:8:23-57
+21-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:8:9-60
+21-->D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\tmp\manifest\androidTest\debug\manifestMerger7273936973807661494.xml:8:23-57
 22
 23        <activity
-23-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:14:9-44:20
+23-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:14:9-44:20
 24            android:name="com.artifex.mupdf.mini.DocumentActivity"
-24-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-67
+24-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:15:13-67
 25            android:configChanges="orientation|screenSize|keyboardHidden"
-25-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-74
+25-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:16:13-74
 26            android:label="MuPDF mini" >
-26-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:13-39
+26-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:17:13-39
 27            <intent-filter>
-27-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:18:13-30:29
+27-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:18:13-30:29
 28                <action android:name="android.intent.action.MAIN" /> <!-- this was VIEW -->
-28-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:19:17-69
-28-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:19:25-66
+28-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:19:17-69
+28-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:19:25-66
 29
 30                <category android:name="android.intent.category.DEFAULT" />
-30-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:17-76
-30-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:27-73
+30-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:17-76
+30-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:27-73
 31                <category android:name="android.intent.category.BROWSABLE" />
-31-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:17-78
-31-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:27-75
+31-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:17-78
+31-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:27-75
 32
 33                <data android:mimeType="application/pdf" />
-33-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
-33-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
+33-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+33-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
 34                <data android:mimeType="application/vnd.ms-xpsdocument" />
-34-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
-34-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
+34-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+34-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
 35                <data android:mimeType="application/oxps" />
-35-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
-35-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
+35-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+35-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
 36                <data android:mimeType="application/x-cbz" />
-36-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
-36-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
+36-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+36-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
 37                <data android:mimeType="application/epub+zip" />
-37-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
-37-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
+37-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+37-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
 38                <data android:mimeType="text/xml" />
-38-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
-38-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
+38-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+38-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:23-57
 39            </intent-filter>
 40            <intent-filter>
-40-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:31:13-43:29
+40-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:31:13-43:29
 41                <action android:name="android.intent.action.VIEW" />
-41-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:32:17-69
-41-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:32:25-66
+41-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:32:17-69
+41-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:32:25-66
 42
 43                <category android:name="android.intent.category.DEFAULT" />
-43-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:17-76
-43-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:27-73
+43-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:17-76
+43-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:21:27-73
 44                <category android:name="android.intent.category.BROWSABLE" />
-44-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:17-78
-44-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:27-75
+44-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:17-78
+44-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:22:27-75
 45
 46                <data android:pathPattern=".*\\.pdf" />
-46-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+46-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
 47                <data android:pathPattern=".*\\.xps" />
-47-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+47-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
 48                <data android:pathPattern=".*\\.oxps" />
-48-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+48-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
 49                <data android:pathPattern=".*\\.cbz" />
-49-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+49-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
 50                <data android:pathPattern=".*\\.epub" />
-50-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+50-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
 51                <data android:pathPattern=".*\\.fb2" />
-51-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
+51-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:24:17-60
 52            </intent-filter>
 53        </activity>
 54        <activity
-54-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:45:9-47:77
+54-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:45:9-47:77
 55            android:name="com.artifex.mupdf.mini.OutlineActivity"
-55-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:46:13-66
+55-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:46:13-66
 56            android:configChanges="orientation|screenSize|keyboardHidden" />
-56-->[__tested_artifact__::mupdf-lib] D:\RepoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:47:13-74
+56-->[__tested_artifact__::mupdf-lib] D:\repoGarr1\Mupdf2\mupdf-lib\build\intermediates\library_manifest\debug\AndroidManifest.xml:47:13-74
 57
 58        <meta-data
 58-->[com.android.support:appcompat-v7:25.4.0] C:\Users\Enrico\.gradle\caches\transforms-2\files-2.1\e191ea8d4755f03a4f4a2f9714242f06\appcompat-v7-25.4.0\AndroidManifest.xml:26:9-28:38

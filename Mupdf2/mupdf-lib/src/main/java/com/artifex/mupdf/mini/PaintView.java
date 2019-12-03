@@ -88,6 +88,14 @@ public class PaintView extends View {
     //added for multipage support
     public ArrayList<ArrayList<FingerPath>> page = new ArrayList<>();
 
+    //actionpages is a list of lists of strings, it stores actions for each page
+    //structure: User/Page/Actions
+    // ',' divides action string with parameters
+    // ';' divides actions
+    public ArrayList<ArrayList<String>> actionPages = new ArrayList<>();
+
+
+
     public PaintView(Context context) {
         this(context, null);
     }
@@ -130,6 +138,7 @@ public class PaintView extends View {
             page.add(new ArrayList<FingerPath>());
             //bitmaps.add(Bitmap.createScaledBitmap(mBitmap, width, height, false));
         }
+        initActionPages(pageCount);
         //Log.i("PaintView"Of(pageCount));, "pages = " + String.valueOf(page.size()));
         //Log.i("PaintView", "pageCount = " + String.value
         //Log.i("PaintView", "init" + String.valueOf(currentColor));
@@ -521,5 +530,13 @@ public class PaintView extends View {
         }
 
         return ret;
+    }
+
+    protected void initActionPages(int pageCount){
+        //initialize actionPages, a list of lists of strings, actions log into it for saving/loading/undo functionalities
+        for (int i = 0; i < pageCount; i++){
+            Log.i("CID", Integer.toString(pageCount));
+            actionPages.add(new ArrayList<String>());
+        }
     }
 }

@@ -16,6 +16,7 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
+import android.graphics.Paint;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
@@ -46,12 +47,16 @@ import android.view.MotionEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
+import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 import java.net.InetAddress;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Stack;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
@@ -133,6 +138,10 @@ public class DocumentActivity extends Activity
 	protected View blackColorButton;
 	protected View redColorButton;
 	protected View saveButton;
+	protected byte[] localHostByteArray = new byte[]{127, 0, 0, 1};
+	protected InetAddress localHost;
+	protected FileOutputStream fOut = null;
+
 
 
 	//Needed for graphics
@@ -146,11 +155,15 @@ public class DocumentActivity extends Activity
 		try {
 			byte[] ipAddr = new byte[]{127, 0, 0, 1};
 			InetAddress addr = InetAddress.getByAddress(ipAddr);
+			localHost = InetAddress.getByAddress(localHostByteArray);
+
 			connectedAddresses.add(addr);
 		}
 		catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
+
+
 
 		mainContext = getApplicationContext();
 
@@ -323,7 +336,8 @@ public class DocumentActivity extends Activity
 				if (currentPage > 0) {
 					for (int i = 0; i < paintViews.size(); i++) {
 						//paintViews.get(i).saveCurrentPage(currentPage);
-						paintViews.get(i).writeToFile(Integer.toString(currentPage));
+						//paintViews.get(i).writeToFile(Integer.toString(currentPage));
+						writeToFile("CID_Project", Integer.toString(currentPage));
 					}
 				}
 				//saveAnnotationFiles();
@@ -601,6 +615,7 @@ public class DocumentActivity extends Activity
 						doc.layout(layoutW, layoutH, layoutEm);
 					}
 					pageCount = doc.countPages();
+
 
 				} catch (Throwable x) {
 					doc = null;
@@ -980,20 +995,20 @@ public class DocumentActivity extends Activity
 				x = (x - (pageView.scrollX)) / pageView.viewScale;
 				y = (y - (pageView.scrollY)) / pageView.viewScale;
 
-				//Log.i("CID", "Touching: x = " + x + " y = " + y + " viewscale = " + pageView.viewScale + " H scroll = " + pageView.scrollX + " V scroll = " + pageView.scrollX /*+ " canvas W " + pageView.canvasW + " bitmap W " + pageView.bitmapW*/);
-
 				if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
 					switch (event.getAction()) {
 						case MotionEvent.ACTION_DOWN:
 							if (annotationsVisible) {
 
 								drawOnScreenLocal("ACTION_DOWN", x, y);
+								//drawOnScreenRemote(localHost, "ACTION_DOWN", x, y, strokeWidth, color);
 								RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color);
 							}
 							break;
 						case MotionEvent.ACTION_MOVE:
 							if (annotationsVisible) {
 								drawOnScreenLocal("ACTION_MOVE", x, y);
+								//drawOnScreenRemote(localHost, "ACTION_MOVE", x, y, strokeWidth, color);
 								RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color);
 							}
 							break;
@@ -1001,6 +1016,7 @@ public class DocumentActivity extends Activity
 
 							if (annotationsVisible) {
 								drawOnScreenLocal("ACTION_UP", x, y);
+								//drawOnScreenRemote(localHost, "ACTION_UP", x, y, strokeWidth, color);
 								RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color);
 							}
 							startTime = System.currentTimeMillis();
@@ -1018,6 +1034,9 @@ public class DocumentActivity extends Activity
 	}
 
 	public void drawOnScreenLocal(String action, float x, float y){
+
+		//record actions in file for local save data
+		paintViews.get(0).actionPages.get(currentPage).add(action + "," + Float.toString(x) + "," + Float.toString(y) + ";");
 
 		switch(action) {
 			case "ACTION_DOWN":
@@ -1045,6 +1064,13 @@ public class DocumentActivity extends Activity
 
 	public void drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor){
 
+		PaintView pv = findPaintViewByIpAddress(ip);
+
+		//record actions in file for remote save data
+		//actionPages.get(paintViews.indexOf(pv)).add(action + "," + Float.toString(x) + "," + Float.toString(y) + ";");
+		paintViews.get(paintViews.indexOf(pv)).actionPages.get(currentPage).add(action + "," + Float.toString(x) + "," + Float.toString(y) + ";");
+
+
 		float percX;
 		float percY;
 
@@ -1053,13 +1079,14 @@ public class DocumentActivity extends Activity
 		percX = x * pageView.bitmapW /*pageView.viewScale*/;
 		percY = (y * pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset;
 
-		PaintView pv = findPaintViewByIpAddress(ip);
+		Log.i("CID", ip.toString());
 
 		switch(action) {
 			case "ACTION_DOWN":
 				if (annotationsVisible) {
 					pv.currentColor = recvColor;
 					pv.strokeWidth = recvStrokeWidth;
+					Log.i("CID", Float.toString(percX - pageView.offsetX)  + " " + Float.toString(percY - pageView.offsetY));
 					pv.touchStart(percX - pageView.offsetX, percY - pageView.offsetY);
 					pv.invalidate();
 				}
@@ -1168,6 +1195,7 @@ public class DocumentActivity extends Activity
 	}
 
 	protected boolean localInitialized = false;
+
 	public void initializeLocalGraphics(){
 		if(!localInitialized){
 			//creates local graphics and initializes them (must be here in order to initialize with a known page count
@@ -1182,5 +1210,108 @@ public class DocumentActivity extends Activity
 		}
 	}
 
+	protected void writeToFile(String projectName ,final String id) {
+		String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/" + projectName;
+		File dir = new File(file_path);
+
+		if (!dir.exists()) {
+			dir.mkdirs();
+		}
+
+		//for each pv, save each page with a different name
+		for(int j = 0; j < paintViews.size(); j++) {
+			PaintView pv = paintViews.get(j);
+			for (int i = 0; i < pv.actionPages.size(); i++) {
+
+				File file = new File(dir, "annotation_" + id + "_" + i + ".txt");
+
+				if (!file.exists()) {
+					try {
+						file.createNewFile();
+					} catch (IOException e) {
+						e.printStackTrace();
+					}
+				}
+
+				try {
+					fOut = new FileOutputStream(file);
+				} catch (FileNotFoundException e) {
+					e.printStackTrace();
+				}
+
+				Iterator<String> iterator = pv.actionPages.get(i).iterator();
+
+				while (iterator.hasNext()) {
+					String fp = iterator.next();
+//                mPaint.setColor(fp.color);
+//                mPaint.setStrokeWidth(fp.strokeWidth);
+//                mPaint.setMaskFilter(null);
+//
+//                if (fp.emboss) {
+//                    mPaint.setMaskFilter(mEmboss);
+//                }
+//                else if (fp.blur) {
+//                    mPaint.setMaskFilter(mBlur);
+//                }
+//                */
+//				/*if (fp.isFading){
+//					fp.time -= 1;
+//					mPaint.setAlpha((int)fp.time);
+//					if (fp.time <= 0){
+//						iterator.remove(/*fp*/);
+//						invalidate();
+//					}
+//				}
+					try {
+						fOut.write(fp.getBytes());
+					} catch (IOException e) {
+						Log.e("Exception", "File write failed: " + e.toString());
+					}
+				}
+
+				try {
+					fOut.flush();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+				try {
+					fOut.close();
+				} catch (IOException e) {
+					e.printStackTrace();
+				}
+
+			}
+		}
+	}
+
+	protected String readFromFile(Context context) {
+
+		String ret = "";
+
+		try {
+			InputStream inputStream = context.openFileInput("config.txt");
+
+			if ( inputStream != null ) {
+				InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+				BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+				String receiveString = "";
+				StringBuilder stringBuilder = new StringBuilder();
+
+				while ( (receiveString = bufferedReader.readLine()) != null ) {
+					stringBuilder.append(receiveString);
+				}
+
+				inputStream.close();
+				ret = stringBuilder.toString();
+			}
+		}
+		catch (FileNotFoundException e) {
+			Log.e("login activity", "File not found: " + e.toString());
+		} catch (IOException e) {
+			Log.e("login activity", "Can not read file: " + e.toString());
+		}
+
+		return ret;
+	}
 
 }
