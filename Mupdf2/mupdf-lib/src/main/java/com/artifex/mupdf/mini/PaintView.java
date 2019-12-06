@@ -430,9 +430,9 @@ public class PaintView extends View {
         }).start();
     }
 
-    protected void writeToFile(final String id) {
+    protected void writeToFile(final String id, final String folderName) {
 
-        String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/";
+        String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + folderName + "/";
         File dir = new File(file_path);
 
         if (!dir.exists()) {

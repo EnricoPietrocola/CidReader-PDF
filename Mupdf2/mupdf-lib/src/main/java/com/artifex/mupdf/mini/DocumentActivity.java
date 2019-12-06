@@ -143,7 +143,7 @@ public class DocumentActivity extends Activity
 	protected InetAddress localHost;
 	protected FileOutputStream fOut = null;
 	protected Boolean menuVisible = false;
-
+	protected String projectName = "CID-Project";
 
 	//Needed for graphics
 	private ArrayList<PaintView> paintViews = new ArrayList<>();
@@ -356,6 +356,13 @@ public class DocumentActivity extends Activity
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Log.i("CID", "Do stuff");
+				if (currentPage > 0) {
+					for (int i = 0; i < paintViews.size(); i++) {
+						//paintViews.get(i).saveCurrentPage(currentPage); //this is for png save
+						paintViews.get(i).writeToFile(Integer.toString(currentPage), projectText.getText().toString());
+						//writeToFile(projectText.getText().toString(), Integer.toString(currentPage));
+					}
+				}
 			}
 		});
 
@@ -1260,7 +1267,7 @@ public class DocumentActivity extends Activity
 		}
 	}
 
-	protected void writeToFile(String projectName ,final String id) {
+	/*protected void writeToFile(String projectName ,final String id) {
 		String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/" + projectName;
 		File dir = new File(file_path);
 
@@ -1303,12 +1310,12 @@ public class DocumentActivity extends Activity
 //                else if (fp.blur) {
 //                    mPaint.setMaskFilter(mBlur);
 //                }
-//                */
-//				/*if (fp.isFading){
+//
+//				if (fp.isFading){
 //					fp.time -= 1;
 //					mPaint.setAlpha((int)fp.time);
 //					if (fp.time <= 0){
-//						iterator.remove(/*fp*/);
+//						iterator.remove(fp);
 //						invalidate();
 //					}
 //				}
@@ -1333,7 +1340,7 @@ public class DocumentActivity extends Activity
 			}
 		}
 	}
-
+*/
 	protected String readFromFile(Context context) {
 
 		String ret = "";
