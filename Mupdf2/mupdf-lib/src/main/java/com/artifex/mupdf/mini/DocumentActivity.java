@@ -16,13 +16,14 @@ import android.content.SharedPreferences;
 import android.content.pm.PackageManager;
 import android.graphics.Bitmap;
 import android.graphics.Color;
-import android.graphics.Paint;
+import android.graphics.drawable.GradientDrawable;
 import android.net.Uri;
 import android.os.Bundle;
 import android.os.Environment;
 import android.support.v4.app.ActivityCompat;
 import android.support.v4.content.ContextCompat;
 import android.text.Editable;
+import android.text.Layout;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
@@ -31,12 +32,15 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewGroup;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
@@ -64,9 +68,6 @@ import java.io.IOException;
 
 
 import android.widget.RelativeLayout.LayoutParams;
-import android.widget.ToggleButton;
-
-import static java.lang.System.out;
 
 public class DocumentActivity extends Activity
 {
@@ -137,11 +138,11 @@ public class DocumentActivity extends Activity
 	protected int strokeWidth = 5;
 	protected View blackColorButton;
 	protected View redColorButton;
-	protected View saveButton;
+	protected View menuButton;
 	protected byte[] localHostByteArray = new byte[]{127, 0, 0, 1};
 	protected InetAddress localHost;
 	protected FileOutputStream fOut = null;
-
+	protected Boolean menuVisible = false;
 
 
 	//Needed for graphics
@@ -329,17 +330,66 @@ public class DocumentActivity extends Activity
 			}
 		});
 
-		saveButton = findViewById(R.id.saveButton);
+		final LinearLayout menuLayout = new LinearLayout(this);
+		LinearLayout.LayoutParams menuLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,30);
+		LinearLayout.LayoutParams part = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,70);
+
+		menuLayout.setOrientation(LinearLayout.HORIZONTAL);
+		menuLayoutParams.topMargin = 200;
+		addContentView(menuLayout, menuLayoutParams);
+
+		final EditText projectText = new EditText(mainContext);
+		LayoutParams projectTextLayoutParams = new LayoutParams(LayoutParams.WRAP_CONTENT, LayoutParams.WRAP_CONTENT);
+		projectText.setLayoutParams(par);
+		projectText.setText("CID-Project");
+		menuLayout.addView(projectText);
+
+		final Button saveButton = new Button(mainContext);
+		saveButton.setLayoutParams(part);
+		saveButton.setText("Save");
+		menuLayout.addView(saveButton);
+		menuLayout.setVisibility(view.INVISIBLE);
+		menuLayout.setEnabled(false);
+
+		//SAVE BUTTON EXEC
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				//saves current page before baking annotations in png files
+				Log.i("CID", "Do stuff");
+			}
+		});
+
+		menuButton = findViewById(R.id.MenuButton);
+		menuButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				menuVisible = !menuVisible;
+
 				if (currentPage > 0) {
+					for (int i = 0; i < paintViews.size(); i++) {
+						paintViews.get(i).setVisibility(View.INVISIBLE);
+					}
+				}
+
+				if(menuVisible) {
+					menuLayout.setVisibility(view.VISIBLE);
+					pageView.setVisibility(View.INVISIBLE);
+				}
+				else{
+					menuLayout.setVisibility(view.INVISIBLE);
+					pageView.setVisibility(View.VISIBLE);
+				}
+
+				menuLayout.setEnabled(menuVisible);
+
+
+				//PUT THIS IN NEW SAVE BUTTON USING THE STRING INPUT AS PROJECT NAME
+				/*if (currentPage > 0) {
 					for (int i = 0; i < paintViews.size(); i++) {
 						//paintViews.get(i).saveCurrentPage(currentPage);
 						//paintViews.get(i).writeToFile(Integer.toString(currentPage));
 						writeToFile("CID_Project", Integer.toString(currentPage));
 					}
-				}
+				}*/
 				//saveAnnotationFiles();
 			}
 		});

@@ -588,6 +588,7 @@ drawable notify_panel_notification_icon_bg
 drawable seek_line
 drawable seek_thumb
 id HideAllButton
+id MenuButton
 id action0
 id action_bar
 id action_bar_activity_content
@@ -682,7 +683,6 @@ id redColorButton
 id right
 id right_icon
 id right_side
-id saveButton
 id screen
 id scrollIndicatorDown
 id scrollIndicatorUp

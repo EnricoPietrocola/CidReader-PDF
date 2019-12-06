@@ -11,6 +11,7 @@ drawable ic_zoom_out_map_white_24dp
 drawable seek_line
 drawable seek_thumb
 id HideAllButton
+id MenuButton
 id action_bar
 id action_layout_10pt
 id action_layout_11pt
@@ -32,7 +33,6 @@ id page_label
 id page_seekbar
 id page_view
 id redColorButton
-id saveButton
 id search_backward_button
 id search_bar
 id search_button
