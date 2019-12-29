@@ -249,12 +249,19 @@ public class PaintView extends View {
     }
 
     public void touchUp() {
-        mPath.lineTo(mX, mY);
-        //Log.i("CID", Integer.toString(paths.size()));
-        //get the path being drawn
-        FingerPath fp = paths.get(paths.size() - 1);
-        //fp.time = System.currentTimeMillis() - startTime;
-        fp.isFading = DocumentActivity.isTrail;
+        //try {
+            mPath.lineTo(mX, mY);
+            //Log.i("CID", Integer.toString(paths.size()));
+            //get the path being drawn
+            FingerPath fp = paths.get(paths.size() - 1);
+            //fp.time = System.currentTimeMillis() - startTime;
+            fp.isFading = DocumentActivity.isTrail;
+        /*}
+        catch (Exception e) {
+            Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
+            e.printStackTrace();
+        }*/
+
     }
 
     public void saveCurrentPage(int currentPage){

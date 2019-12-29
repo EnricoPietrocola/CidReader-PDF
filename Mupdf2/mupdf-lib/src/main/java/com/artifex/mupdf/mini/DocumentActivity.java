@@ -1047,8 +1047,8 @@ public class DocumentActivity extends Activity
 				float horizontalOffset = pageView.bitmapW > pageView.canvasW ? pageView.bitmapW - pageView.canvasW : 0;
 				float verticalOffset = pageView.bitmapH > pageView.canvasH ? pageView.bitmapH - pageView.canvasH : 0;
 
-				percX = x * pageView.bitmapW /*pageView.viewScale*/;
-				percY = (y * pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset;
+				percX = x / pageView.bitmapW /*pageView.viewScale*/;
+				percY = (y / pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset / pageView.bitmapH;
 				x = (x - (pageView.scrollX)) / pageView.viewScale;
 				y = (y - (pageView.scrollY)) / pageView.viewScale;
 
@@ -1126,7 +1126,7 @@ public class DocumentActivity extends Activity
 		//record actions in file for remote save data
 		//actionPages.get(paintViews.indexOf(pv)).add(action + "," + Float.toString(x) + "," + Float.toString(y) + ";");
 		paintViews.get(paintViews.indexOf(pv)).actionPages.get(currentPage).add(action + "," + Float.toString(x) + "," + Float.toString(y) + ";");
-
+		Log.i("CID", pv.ipAddress.toString());
 
 		float percX;
 		float percY;
