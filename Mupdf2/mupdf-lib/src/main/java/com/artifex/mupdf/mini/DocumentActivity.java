@@ -1042,15 +1042,18 @@ public class DocumentActivity extends Activity
 				float percY;
 
 				//float horizontalOffset = (canvasW - pageView.bitmapW) / 2;
-				//float verticalOffset = (canvasH - pageView.bitmapH) / 2;
+				float verticalOffset = (canvasH - pageView.bitmapH) / 2;
 
 				float horizontalOffset = pageView.bitmapW > pageView.canvasW ? pageView.bitmapW - pageView.canvasW : 0;
-				float verticalOffset = pageView.bitmapH > pageView.canvasH ? pageView.bitmapH - pageView.canvasH : 0;
+				//float verticalOffset = pageView.bitmapH > pageView.canvasH ? pageView.bitmapH - pageView.canvasH : 0;
 
-				percX = x / pageView.bitmapW /*pageView.viewScale*/;
-				percY = (y / pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset / pageView.bitmapH;
+
 				x = (x - (pageView.scrollX)) / pageView.viewScale;
 				y = (y - (pageView.scrollY)) / pageView.viewScale;
+
+				percX = x / pageView.bitmapW /*pageView.viewScale*/;
+				Log.i("CID", "x " + x + " y" + y + " " + verticalOffset);
+				percY = ((y - verticalOffset) / pageView.bitmapH) /*/ pageView.viewScale*/ ;
 
 				if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
 					switch (event.getAction()) {
