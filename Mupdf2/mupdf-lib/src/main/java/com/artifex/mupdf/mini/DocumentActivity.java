@@ -1041,19 +1041,22 @@ public class DocumentActivity extends Activity
 				float percX;
 				float percY;
 
-				//float horizontalOffset = (canvasW - pageView.bitmapW) / 2;
+				float horizontalOffset = (canvasW - pageView.bitmapW) / 2;
 				float verticalOffset = (canvasH - pageView.bitmapH) / 2;
 
-				float horizontalOffset = pageView.bitmapW > pageView.canvasW ? pageView.bitmapW - pageView.canvasW : 0;
+				//float horizontalOffset = pageView.bitmapW > pageView.canvasW ? pageView.bitmapW - pageView.canvasW : 0;
 				//float verticalOffset = pageView.bitmapH > pageView.canvasH ? pageView.bitmapH - pageView.canvasH : 0;
 
+				percX = ((x - horizontalOffset) / pageView.bitmapW ) /*pageView.viewScale*/;
+				percY = ((y - verticalOffset) / pageView.bitmapH) /*/ pageView.viewScale*/;
 
 				x = (x - (pageView.scrollX)) / pageView.viewScale;
 				y = (y - (pageView.scrollY)) / pageView.viewScale;
 
-				percX = x / pageView.bitmapW /*pageView.viewScale*/;
-				Log.i("CID", "x " + x + " y" + y + " " + verticalOffset);
-				percY = ((y - verticalOffset) / pageView.bitmapH) /*/ pageView.viewScale*/ ;
+
+
+				Log.i("CID", "TouchEvent percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset);
+
 
 				if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
 					switch (event.getAction()) {
@@ -1080,7 +1083,6 @@ public class DocumentActivity extends Activity
 								RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color);
 							}
 							startTime = System.currentTimeMillis();
-
 							break;
 					}
 				} else if (event.getPointerCount() == 2) {
@@ -1090,7 +1092,6 @@ public class DocumentActivity extends Activity
 		}
 		boolean ret = super.dispatchTouchEvent(event);
 		return ret;
-
 	}
 
 	public void drawOnScreenLocal(String action, float x, float y){
@@ -1128,7 +1129,7 @@ public class DocumentActivity extends Activity
 
 		//record actions in file for remote save data
 		//actionPages.get(paintViews.indexOf(pv)).add(action + "," + Float.toString(x) + "," + Float.toString(y) + ";");
-		paintViews.get(paintViews.indexOf(pv)).actionPages.get(currentPage).add(action + "," + Float.toString(x) + "," + Float.toString(y) + ";");
+		paintViews.get(paintViews.indexOf(pv)).actionPages.get(currentPage).add(action + "," + x + "," + y + ";");
 		Log.i("CID", pv.ipAddress.toString());
 
 		float percX;
@@ -1138,6 +1139,9 @@ public class DocumentActivity extends Activity
 
 		percX = x * pageView.bitmapW /*pageView.viewScale*/;
 		percY = (y * pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset;
+
+		Log.i("CID", "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset);
+		Toast.makeText(this, "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset, Toast.LENGTH_LONG).show();
 
 		Log.i("CID", ip.toString());
 
