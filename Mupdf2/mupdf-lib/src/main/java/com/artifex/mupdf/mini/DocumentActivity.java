@@ -1053,8 +1053,6 @@ public class DocumentActivity extends Activity
 				x = (x - (pageView.scrollX)) / pageView.viewScale;
 				y = (y - (pageView.scrollY)) / pageView.viewScale;
 
-
-
 				Log.i("CID", "TouchEvent percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset);
 
 
@@ -1065,14 +1063,14 @@ public class DocumentActivity extends Activity
 
 								drawOnScreenLocal("ACTION_DOWN", x, y);
 								//drawOnScreenRemote(localHost, "ACTION_DOWN", x, y, strokeWidth, color);
-								RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color);
+								RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color, isTrail);
 							}
 							break;
 						case MotionEvent.ACTION_MOVE:
 							if (annotationsVisible) {
 								drawOnScreenLocal("ACTION_MOVE", x, y);
 								//drawOnScreenRemote(localHost, "ACTION_MOVE", x, y, strokeWidth, color);
-								RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color);
+								RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color, isTrail);
 							}
 							break;
 						case MotionEvent.ACTION_UP:
@@ -1080,7 +1078,7 @@ public class DocumentActivity extends Activity
 							if (annotationsVisible) {
 								drawOnScreenLocal("ACTION_UP", x, y);
 								//drawOnScreenRemote(localHost, "ACTION_UP", x, y, strokeWidth, color);
-								RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color);
+								RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color, isTrail);
 							}
 							startTime = System.currentTimeMillis();
 							break;
@@ -1123,7 +1121,7 @@ public class DocumentActivity extends Activity
 		}
 	}
 
-	public void drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor){
+	public void drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail){
 
 		PaintView pv = findPaintViewByIpAddress(ip);
 
@@ -1135,13 +1133,14 @@ public class DocumentActivity extends Activity
 		float percX;
 		float percY;
 
+		float horizontalOffset = (canvasW - pageView.bitmapW) / 2;
 		float verticalOffset = (canvasH - pageView.bitmapH) / 2;
 
-		percX = x * pageView.bitmapW /*pageView.viewScale*/;
+		percX = (x * pageView.bitmapW) /*pageView.viewScale*/ + horizontalOffset;
 		percY = (y * pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset;
 
-		Log.i("CID", "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset);
-		Toast.makeText(this, "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset, Toast.LENGTH_LONG).show();
+		Log.i("CID", "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " horizontalOffset " + horizontalOffset + " verticalOffset " + verticalOffset + " isTrail " + isLineTrail);
+		Toast.makeText(this, "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " horizontalOffset " + horizontalOffset + " verticalOffset " + verticalOffset + " isTrail " + isLineTrail, Toast.LENGTH_LONG).show();
 
 		Log.i("CID", ip.toString());
 
@@ -1190,10 +1189,10 @@ public class DocumentActivity extends Activity
 		udpClient.Send();
 	}
 
-	private void RPCDrawOnScren(String event, float x, float y, int strokeWidth, int color){
+	private void RPCDrawOnScren(String event, float x, float y, int strokeWidth, int color, boolean isLineTrail){
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
-		udpClient.Message = "drawOnScreen," + event + "," + x + "," + y + "," + strokeWidth + "," + color;
+		udpClient.Message = "drawOnScreen," + event + "," + x + "," + y + "," + strokeWidth + "," + color + "," + isLineTrail;
 		udpClient.Send();
 	}
 
