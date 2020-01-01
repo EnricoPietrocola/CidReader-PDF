@@ -139,10 +139,12 @@ public class DocumentActivity extends Activity
 	protected View blackColorButton;
 	protected View redColorButton;
 	protected View menuButton;
+	protected View toolsButton;
 	protected byte[] localHostByteArray = new byte[]{127, 0, 0, 1};
 	protected InetAddress localHost;
 	protected FileOutputStream fOut = null;
 	protected Boolean menuVisible = false;
+	protected Boolean toolsVisible = false;
 	protected String projectName = "CID-Project";
 
 	//Needed for graphics
@@ -371,19 +373,25 @@ public class DocumentActivity extends Activity
 			public void onClick(View v) {
 				menuVisible = !menuVisible;
 
-				if (currentPage > 0) {
-					for (int i = 0; i < paintViews.size(); i++) {
-						paintViews.get(i).setVisibility(View.INVISIBLE);
-					}
-				}
+				Log.i("CID", "MenuButtonPressed" + menuVisible);
 
 				if(menuVisible) {
 					menuLayout.setVisibility(view.VISIBLE);
 					pageView.setVisibility(View.INVISIBLE);
+					if (currentPage >= 0) {
+						for (int i = 0; i < paintViews.size(); i++) {
+							paintViews.get(i).setVisibility(View.INVISIBLE);
+						}
+					}
 				}
 				else{
 					menuLayout.setVisibility(view.INVISIBLE);
 					pageView.setVisibility(View.VISIBLE);
+					if (currentPage >= 0) {
+						for (int i = 0; i < paintViews.size(); i++) {
+							paintViews.get(i).setVisibility(View.VISIBLE);
+						}
+					}
 				}
 
 				menuLayout.setEnabled(menuVisible);
@@ -408,14 +416,76 @@ public class DocumentActivity extends Activity
 			}
 		});
 
-		blackColorButton = findViewById(R.id.blackColorButton);
+		final LinearLayout toolsLayout = new LinearLayout(this);
+		LinearLayout.LayoutParams toolsLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+		LinearLayout.LayoutParams toolPar = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,30);
+		LinearLayout.LayoutParams toolPart = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,70);
+
+		toolsLayout.setOrientation(LinearLayout.HORIZONTAL);
+		toolsLayoutParams.topMargin = 200;
+		addContentView(toolsLayout, toolsLayoutParams);
+
+		toolsButton = findViewById(R.id.ToolsButton);
+		toolsButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				toolsVisible = !toolsVisible;
+
+				Log.i("CID", "toolsButtonPressed" + toolsVisible);
+
+				if(toolsVisible) {
+					toolsLayout.setVisibility(view.VISIBLE);
+					pageView.setVisibility(View.INVISIBLE);
+					if (currentPage >= 0) {
+						for (int i = 0; i < paintViews.size(); i++) {
+							paintViews.get(i).setVisibility(View.INVISIBLE);
+						}
+					}
+				}
+				else{
+					toolsLayout.setVisibility(view.INVISIBLE);
+					pageView.setVisibility(View.VISIBLE);
+					if (currentPage >= 0) {
+						for (int i = 0; i < paintViews.size(); i++) {
+							paintViews.get(i).setVisibility(View.VISIBLE);
+						}
+					}
+				}
+
+				toolsLayout.setEnabled(toolsVisible);
+
+
+				//PUT THIS IN NEW SAVE BUTTON USING THE STRING INPUT AS PROJECT NAME
+				/*if (currentPage > 0) {
+					for (int i = 0; i < paintViews.size(); i++) {
+						//paintViews.get(i).saveCurrentPage(currentPage);
+						//paintViews.get(i).writeToFile(Integer.toString(currentPage));
+						writeToFile("CID_Project", Integer.toString(currentPage));
+					}
+				}*/
+				//saveAnnotationFiles();
+			}
+		});
+
+		final Button blackColorButton = new Button(mainContext);
+		blackColorButton.setLayoutParams(toolPar);
+		blackColorButton.setText("Black");
+		toolsLayout.addView(blackColorButton);
+		toolsLayout.setVisibility(view.INVISIBLE);
+		toolsLayout.setEnabled(false);
+
 		blackColorButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				color = Color.BLACK;
 			}
 		});
 
-		redColorButton = findViewById(R.id.redColorButton);
+		final Button redColorButton = new Button(mainContext);
+		redColorButton.setLayoutParams(toolPart);
+		redColorButton.setText("Red");
+		toolsLayout.addView(redColorButton);
+		toolsLayout.setVisibility(view.INVISIBLE);
+		toolsLayout.setEnabled(false);
+
 		redColorButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				color = Color.RED;

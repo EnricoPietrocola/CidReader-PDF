@@ -589,6 +589,7 @@ drawable seek_line
 drawable seek_thumb
 id HideAllButton
 id MenuButton
+id ToolsButton
 id action0
 id action_bar
 id action_bar_activity_content
@@ -624,7 +625,6 @@ id add
 id alertTitle
 id always
 id beginning
-id blackColorButton
 id bottom
 id buttonPanel
 id cancel_action
@@ -679,7 +679,6 @@ id percent
 id progress_circular
 id progress_horizontal
 id radio
-id redColorButton
 id right
 id right_icon
 id right_side

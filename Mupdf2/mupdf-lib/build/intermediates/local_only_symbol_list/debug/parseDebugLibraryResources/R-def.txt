@@ -12,6 +12,7 @@ drawable seek_line
 drawable seek_thumb
 id HideAllButton
 id MenuButton
+id ToolsButton
 id action_bar
 id action_layout_10pt
 id action_layout_11pt
@@ -24,7 +25,6 @@ id action_layout_6pt
 id action_layout_7pt
 id action_layout_8pt
 id action_layout_9pt
-id blackColorButton
 id layout_button
 id mainRelativeLayout
 id navigation_bar
@@ -32,7 +32,6 @@ id outline_button
 id page_label
 id page_seekbar
 id page_view
-id redColorButton
 id search_backward_button
 id search_bar
 id search_button
