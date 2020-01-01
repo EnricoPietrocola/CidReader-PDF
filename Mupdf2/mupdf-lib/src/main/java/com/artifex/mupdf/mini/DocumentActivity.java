@@ -1002,7 +1002,7 @@ public class DocumentActivity extends Activity
 						printOnScreenLocal(Integer.parseInt(parsedMessage[2]), Integer.parseInt(parsedMessage[3]));
 						break;
 					case "drawOnScreen":
-						drawOnScreenRemote(ip, parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]), Integer.parseInt(parsedMessage[5]), Integer.parseInt(parsedMessage[6]));
+						drawOnScreenRemote(ip, parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]), Integer.parseInt(parsedMessage[5]), Integer.parseInt(parsedMessage[6]), Boolean.parseBoolean(parsedMessage[7]));
 
 					default:
 						//default
@@ -1114,7 +1114,7 @@ public class DocumentActivity extends Activity
 				break;
 			case "ACTION_UP":
 				if (annotationsVisible) {
-					paintViews.get(0).touchUp();
+					paintViews.get(0).touchUp(isTrail);
 					paintViews.get(0).invalidate();
 				}
 				break;
@@ -1162,7 +1162,7 @@ public class DocumentActivity extends Activity
 				break;
 			case "ACTION_UP":
 				if (annotationsVisible) {
-					pv.touchUp();
+					pv.touchUp(isLineTrail);
 					pv.invalidate();
 				}
 				break;

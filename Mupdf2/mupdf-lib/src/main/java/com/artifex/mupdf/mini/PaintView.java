@@ -248,14 +248,15 @@ public class PaintView extends View {
         }
     }
 
-    public void touchUp() {
+    public void touchUp(boolean isFading) {
         //try {
             mPath.lineTo(mX, mY);
             //Log.i("CID", Integer.toString(paths.size()));
             //get the path being drawn
             FingerPath fp = paths.get(paths.size() - 1);
             //fp.time = System.currentTimeMillis() - startTime;
-            fp.isFading = DocumentActivity.isTrail;
+            //fp.isFading = DocumentActivity.isTrail;                   //THIS MUST BE SET FROM DrawScreenRemote to work properly remotely
+            fp.isFading = isFading;
         /*}
         catch (Exception e) {
             Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
