@@ -74,41 +74,41 @@
 			android:src="@drawable/ic_toc_white_24dp"
 			android:visibility="gone" />
 
-		<Button
-			android:id="@+id/HideAllButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:text="Hide Annotations" />
-
-		<Button
-			android:id="@+id/undoButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:text="Undo" />
-
 		<Switch
 			android:id="@+id/trailSwitch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
+			android:layout_weight="0"
 			android:text="Laser"
 			android:textColor="#DDFFFFFF" />
-
-		<Button
-			android:id="@+id/MenuButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="1"
-			android:text="Menu" />
 
 		<Button
 			android:id="@+id/ToolsButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
-			android:layout_weight="1"
+			android:layout_weight="0"
 			android:text="Tools" />
+
+		<Button
+			android:id="@+id/HideAllButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:text="Hide" />
+
+		<Button
+			android:id="@+id/undoButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:text="Undo" />
+
+		<Button
+			android:id="@+id/MenuButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:text="Menu" />
 
 	</LinearLayout>
 
