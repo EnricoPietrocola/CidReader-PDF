@@ -2,7 +2,7 @@ package com.pietrocola.enrico.mupdf2;
 
 import android.Manifest;
 import android.app.Activity;
-import android.support.v7.app.AppCompatActivity;
+import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.artifex.mupdf.mini.DocumentActivity;
 
@@ -15,15 +15,14 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 import android.os.Environment;
-import android.support.v4.app.ActivityCompat;
-import android.support.v4.content.ContextCompat;
+import androidx.core.app.ActivityCompat;
+import androidx.core.content.ContextCompat;
 import android.content.pm.PackageManager;
 import android.util.Log;
 import android.view.View;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
-import android.widget.Button;
 import android.content.Context;
 import android.widget.ListAdapter;
 import android.widget.ListView;

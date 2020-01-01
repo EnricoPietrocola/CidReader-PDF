@@ -83,6 +83,13 @@
 			android:textColor="#DDFFFFFF" />
 
 		<Button
+			android:id="@+id/ToolsButton"
+			android:layout_width="wrap_content"
+			android:layout_height="wrap_content"
+			android:layout_weight="0"
+			android:text="Tools" />
+
+		<Button
 			android:id="@+id/HideAllButton"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
@@ -102,13 +109,6 @@
 			android:layout_height="wrap_content"
 			android:layout_weight="0"
 			android:text="Menu" />
-
-		<Button
-			android:id="@+id/ToolsButton"
-			android:layout_width="wrap_content"
-			android:layout_height="wrap_content"
-			android:layout_weight="0"
-			android:text="Tools" />
 
 	</LinearLayout>
 

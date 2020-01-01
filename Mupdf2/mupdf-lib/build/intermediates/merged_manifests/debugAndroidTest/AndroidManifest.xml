@@ -17,7 +17,9 @@
     <uses-permission android:name="android.permission.WRITE_EXTERNAL_STORAGE" />
     <uses-permission android:name="android.permission.INTERNET" />
 
-    <application android:debuggable="true" >
+    <application
+        android:appComponentFactory="androidx.core.app.CoreComponentFactory"
+        android:debuggable="true" >
         <uses-library android:name="android.test.runner" />
 
         <activity
@@ -54,10 +56,6 @@
         <activity
             android:name="com.artifex.mupdf.mini.OutlineActivity"
             android:configChanges="orientation|screenSize|keyboardHidden" />
-
-        <meta-data
-            android:name="android.support.VERSION"
-            android:value="25.4.0" />
     </application>
 
 </manifest>
