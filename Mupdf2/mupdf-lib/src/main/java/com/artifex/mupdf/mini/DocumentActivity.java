@@ -2,6 +2,7 @@ package com.artifex.mupdf.mini;
 
 import com.artifex.mupdf.fitz.*;
 import com.artifex.mupdf.fitz.android.*;
+import com.skydoves.colorpickerview.ActionMode;
 import com.skydoves.colorpickerview.ColorEnvelope;
 import com.skydoves.colorpickerview.ColorPickerDialog;
 import com.skydoves.colorpickerview.ColorPickerView;
@@ -381,11 +382,6 @@ public class DocumentActivity extends Activity
 				if(menuVisible) {
 					menuLayout.setVisibility(view.VISIBLE);
 					pageView.setVisibility(View.INVISIBLE);
-					/*if (currentPage >= 0) {
-						for (int i = 0; i < paintViews.size(); i++) {
-							paintViews.get(i).setVisibility(View.INVISIBLE);
-						}
-					}*/
 					switchAnnotations();
 
 				}
@@ -393,26 +389,9 @@ public class DocumentActivity extends Activity
 					menuLayout.setVisibility(view.INVISIBLE);
 					pageView.setVisibility(View.VISIBLE);
 					switchAnnotations();
-					/*
-					if (currentPage >= 0) {
-						for (int i = 0; i < paintViews.size(); i++) {
-							paintViews.get(i).setVisibility(View.VISIBLE);
-						}
-					}*/
 				}
 
 				menuLayout.setEnabled(menuVisible);
-
-
-				//PUT THIS IN NEW SAVE BUTTON USING THE STRING INPUT AS PROJECT NAME
-				/*if (currentPage > 0) {
-					for (int i = 0; i < paintViews.size(); i++) {
-						//paintViews.get(i).saveCurrentPage(currentPage);
-						//paintViews.get(i).writeToFile(Integer.toString(currentPage));
-						writeToFile("CID_Project", Integer.toString(currentPage));
-					}
-				}*/
-				//saveAnnotationFiles();
 			}
 		});
 
@@ -436,10 +415,11 @@ public class DocumentActivity extends Activity
 		//addContentView(toolsLayout, toolsLayoutParams);
 
 		toolsButton = findViewById(R.id.ToolsButton);
-		toolsLayout.setVisibility(view.INVISIBLE);
+		//toolsLayout.setVisibility(view.INVISIBLE);
 		toolsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				disableAnnotationInteraction();
+				//toolsLayout.setVisibility(view.VISIBLE);
+				toggleAnnotationInteraction();
 			}
 		});
 
@@ -447,15 +427,17 @@ public class DocumentActivity extends Activity
 		//this part is the tools menu content
 
 		colorPickerView = (ColorPickerView) findViewById(R.id.colorPickerView);
-
+		colorPickerView.setActionMode(ActionMode.LAST);
 
 		colorPickerView.setColorListener(new ColorListener() {
 			@Override
 			public void onColorSelected(int chosenColor, boolean fromUser) {
-				LinearLayout linearLayout = (LinearLayout) findViewById(R.id.toolsLayout);
-				linearLayout.setBackgroundColor(Color.TRANSPARENT);
+				//LinearLayout linearLayout = (LinearLayout) findViewById(R.id.toolsLayout);
+				//linearLayout.setBackgroundColor(Color.TRANSPARENT);
 				color = chosenColor;
 
+				//toolsLayout.setVisibility(view.INVISIBLE);
+				toggleAnnotationInteraction();
 			}
 		});
 
@@ -519,7 +501,7 @@ public class DocumentActivity extends Activity
 		});
 	}
 
-	public void disableAnnotationInteraction(){
+	public void toggleAnnotationInteraction(){
 		toolsVisible = !toolsVisible;
 
 		if(toolsVisible) {
@@ -1134,8 +1116,8 @@ public class DocumentActivity extends Activity
 
 				//Log.i("CID", "TouchEvent percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset);
 				Log.i("CID", toolsVisible + " " + menuVisible);
-				if (!toolsVisible && !menuVisible) {
-					Log.i("CID", "still happening");
+				if (!menuVisible) {
+
 					if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
 						switch (event.getAction()) {
 							case MotionEvent.ACTION_DOWN:
@@ -1145,6 +1127,13 @@ public class DocumentActivity extends Activity
 									//drawOnScreenRemote(localHost, "ACTION_DOWN", x, y, strokeWidth, color);
 									RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color, isTrail);
 								}
+
+								/*if (toolsVisible){
+									//toolsVisible = !toolsVisible;
+									Log.i("CID", "this is happening");
+									toolsLayout.setVisibility(view.INVISIBLE);
+									toggleAnnotationInteraction();
+								}*/
 								break;
 							case MotionEvent.ACTION_MOVE:
 								if (annotationsVisible) {
@@ -1160,6 +1149,7 @@ public class DocumentActivity extends Activity
 									//drawOnScreenRemote(localHost, "ACTION_UP", x, y, strokeWidth, color);
 									RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color, isTrail);
 								}
+
 								startTime = System.currentTimeMillis();
 								break;
 						}
@@ -1167,9 +1157,6 @@ public class DocumentActivity extends Activity
 						fitPaintViews();
 						startTime = System.currentTimeMillis();
 					}
-				}
-				else if (!menuVisible || toolsVisible){
-					//disableAnnotationInteraction();
 				}
 		}
 		boolean ret = super.dispatchTouchEvent(event);
