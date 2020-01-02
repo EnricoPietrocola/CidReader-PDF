@@ -19,12 +19,43 @@
 		android:visibility="visible" />
 
 	<LinearLayout
+		android:id="@+id/paintViewLayout"
+		android:layout_width="match_parent"
+		android:layout_height="match_parent"
+		android:orientation="horizontal"></LinearLayout>
+
+	<LinearLayout
+		android:id="@+id/toolsLayout"
+		android:layout_width="match_parent"
+		android:layout_height="555dp"
+		android:background="#00FFFFFF"
+		android:backgroundTintMode="multiply"
+		android:gravity="center|right"
+		android:orientation="horizontal"
+		android:overScrollMode="always"
+		android:scrollbarAlwaysDrawHorizontalTrack="false"
+		android:scrollbarAlwaysDrawVerticalTrack="false"
+		tools:visibility="invisible">
+
+		<com.skydoves.colorpickerview.ColorPickerView
+			android:id="@+id/colorPickerView"
+			android:layout_width="400dp"
+			android:layout_height="400dp"
+			android:background="@android:color/background_light"
+			android:backgroundTint="@android:color/background_light"
+			android:visibility="visible"
+			app:palette="@drawable/palette"
+			app:selector="@drawable/wheel" />
+	</LinearLayout>
+
+	<LinearLayout
 		android:id="@+id/action_bar"
 		android:layout_width="match_parent"
 		android:layout_height="48dp"
 		android:layout_alignParentTop="true"
 		android:background="#303030"
 		android:orientation="horizontal"
+		android:scrollbars="horizontal"
 		android:visibility="gone">
 
 		<TextView
@@ -78,35 +109,40 @@
 			android:id="@+id/trailSwitch"
 			android:layout_width="wrap_content"
 			android:layout_height="wrap_content"
+			android:layout_gravity="right|center_vertical"
 			android:layout_weight="0"
 			android:text="Laser"
 			android:textColor="#DDFFFFFF" />
 
 		<Button
 			android:id="@+id/ToolsButton"
-			android:layout_width="wrap_content"
+			android:layout_width="69dp"
 			android:layout_height="wrap_content"
+			android:layout_gravity="right"
 			android:layout_weight="0"
 			android:text="Tools" />
 
 		<Button
 			android:id="@+id/HideAllButton"
-			android:layout_width="wrap_content"
+			android:layout_width="55dp"
 			android:layout_height="wrap_content"
+			android:layout_gravity="right"
 			android:layout_weight="0"
 			android:text="Hide" />
 
 		<Button
 			android:id="@+id/undoButton"
-			android:layout_width="wrap_content"
+			android:layout_width="62dp"
 			android:layout_height="wrap_content"
+			android:layout_gravity="right"
 			android:layout_weight="0"
 			android:text="Undo" />
 
 		<Button
 			android:id="@+id/MenuButton"
-			android:layout_width="wrap_content"
+			android:layout_width="66dp"
 			android:layout_height="wrap_content"
+			android:layout_gravity="right"
 			android:layout_weight="0"
 			android:text="Menu" />
 

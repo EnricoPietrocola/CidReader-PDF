@@ -781,6 +781,7 @@ id buttonPanel
 id checkbox
 id checked
 id chronometer
+id colorPickerView
 id colorPickerViewFrame
 id content
 id contentPanel
@@ -826,6 +827,7 @@ id packed
 id page_label
 id page_seekbar
 id page_view
+id paintViewLayout
 id parent
 id parentPanel
 id percent
@@ -883,6 +885,7 @@ id title
 id titleDividerNoCustom
 id title_label
 id title_template
+id toolsLayout
 id top
 id topPanel
 id trailSwitch

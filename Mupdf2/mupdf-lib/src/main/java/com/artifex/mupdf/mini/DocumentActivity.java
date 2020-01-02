@@ -2,6 +2,13 @@ package com.artifex.mupdf.mini;
 
 import com.artifex.mupdf.fitz.*;
 import com.artifex.mupdf.fitz.android.*;
+import com.skydoves.colorpickerview.ColorEnvelope;
+import com.skydoves.colorpickerview.ColorPickerDialog;
+import com.skydoves.colorpickerview.ColorPickerView;
+import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
+import com.skydoves.colorpickerview.listeners.ColorListener;
+import com.skydoves.colorpickerview.listeners.ColorPickerViewListener;
+import com.skydoves.colorpickerview.BuildConfig;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -141,6 +148,9 @@ public class DocumentActivity extends Activity
 	protected Boolean menuVisible = false;
 	protected Boolean toolsVisible = false;
 	protected String projectName = "CID-Project";
+	protected ColorPickerView colorPickerView;
+	protected LinearLayout toolsLayout;
+	protected LinearLayout paintViewLayout;
 
 	//Needed for graphics
 	private ArrayList<PaintView> paintViews = new ArrayList<>();
@@ -160,8 +170,6 @@ public class DocumentActivity extends Activity
 		catch (UnknownHostException e) {
 			e.printStackTrace();
 		}
-
-
 
 		mainContext = getApplicationContext();
 
@@ -373,20 +381,24 @@ public class DocumentActivity extends Activity
 				if(menuVisible) {
 					menuLayout.setVisibility(view.VISIBLE);
 					pageView.setVisibility(View.INVISIBLE);
-					if (currentPage >= 0) {
+					/*if (currentPage >= 0) {
 						for (int i = 0; i < paintViews.size(); i++) {
 							paintViews.get(i).setVisibility(View.INVISIBLE);
 						}
-					}
+					}*/
+					switchAnnotations();
+
 				}
 				else{
 					menuLayout.setVisibility(view.INVISIBLE);
 					pageView.setVisibility(View.VISIBLE);
+					switchAnnotations();
+					/*
 					if (currentPage >= 0) {
 						for (int i = 0; i < paintViews.size(); i++) {
 							paintViews.get(i).setVisibility(View.VISIBLE);
 						}
-					}
+					}*/
 				}
 
 				menuLayout.setEnabled(menuVisible);
@@ -411,57 +423,44 @@ public class DocumentActivity extends Activity
 			}
 		});
 
-		final LinearLayout toolsLayout = new LinearLayout(this);
-		LinearLayout.LayoutParams toolsLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-		LinearLayout.LayoutParams toolPar = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,30);
-		LinearLayout.LayoutParams toolPart = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,70);
+		paintViewLayout = (LinearLayout) findViewById(R.id.paintViewLayout);
+		toolsLayout = (LinearLayout) findViewById(R.id.toolsLayout);
+		//LinearLayout.LayoutParams toolsLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
+		//LinearLayout.LayoutParams toolPar = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,30);
+		//LinearLayout.LayoutParams toolPart = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,70);
 
-		toolsLayout.setOrientation(LinearLayout.HORIZONTAL);
-		toolsLayoutParams.topMargin = 200;
-		addContentView(toolsLayout, toolsLayoutParams);
+		//toolsLayout.setOrientation(LinearLayout.HORIZONTAL);
+		//toolsLayoutParams.topMargin = 200;
+		//toolsLayout.removeView(findViewById(R.id.ColorPickerView));
+		//setContentView(toolsLayout, toolsLayoutParams);
+		//addContentView(toolsLayout, toolsLayoutParams);
 
 		toolsButton = findViewById(R.id.ToolsButton);
+		toolsLayout.setVisibility(view.INVISIBLE);
 		toolsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				toolsVisible = !toolsVisible;
-
-				Log.i("CID", "toolsButtonPressed" + toolsVisible);
-
-				if(toolsVisible) {
-					toolsLayout.setVisibility(view.VISIBLE);
-					pageView.setVisibility(View.INVISIBLE);
-					if (currentPage >= 0) {
-						for (int i = 0; i < paintViews.size(); i++) {
-							paintViews.get(i).setVisibility(View.INVISIBLE);
-						}
-					}
-				}
-				else{
-					toolsLayout.setVisibility(view.INVISIBLE);
-					pageView.setVisibility(View.VISIBLE);
-					if (currentPage >= 0) {
-						for (int i = 0; i < paintViews.size(); i++) {
-							paintViews.get(i).setVisibility(View.VISIBLE);
-						}
-					}
-				}
-
-				toolsLayout.setEnabled(toolsVisible);
-
-
-				//PUT THIS IN NEW SAVE BUTTON USING THE STRING INPUT AS PROJECT NAME
-				/*if (currentPage > 0) {
-					for (int i = 0; i < paintViews.size(); i++) {
-						//paintViews.get(i).saveCurrentPage(currentPage);
-						//paintViews.get(i).writeToFile(Integer.toString(currentPage));
-						writeToFile("CID_Project", Integer.toString(currentPage));
-					}
-				}*/
-				//saveAnnotationFiles();
+				disableAnnotationInteraction();
 			}
 		});
 
-		final Button blackColorButton = new Button(mainContext);
+
+		//this part is the tools menu content
+
+		colorPickerView = (ColorPickerView) findViewById(R.id.colorPickerView);
+
+
+		colorPickerView.setColorListener(new ColorListener() {
+			@Override
+			public void onColorSelected(int chosenColor, boolean fromUser) {
+				LinearLayout linearLayout = (LinearLayout) findViewById(R.id.toolsLayout);
+				linearLayout.setBackgroundColor(Color.TRANSPARENT);
+				color = chosenColor;
+
+			}
+		});
+
+
+		/*final Button blackColorButton = new Button(mainContext);
 		blackColorButton.setLayoutParams(toolPar);
 		blackColorButton.setText("Black");
 		toolsLayout.addView(blackColorButton);
@@ -487,6 +486,8 @@ public class DocumentActivity extends Activity
 			}
 		});
 
+		 */
+
 		layoutButton = findViewById(R.id.layout_button);
 		layoutPopupMenu = new PopupMenu(this, layoutButton);
 		layoutPopupMenu.getMenuInflater().inflate(R.menu.layout_menu, layoutPopupMenu.getMenu());
@@ -510,11 +511,24 @@ public class DocumentActivity extends Activity
 				return true;
 			}
 		});
+
 		layoutButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				layoutPopupMenu.show();
 			}
 		});
+	}
+
+	public void disableAnnotationInteraction(){
+		toolsVisible = !toolsVisible;
+
+		if(toolsVisible) {
+			toolsLayout.setVisibility(view.VISIBLE);
+		}
+		else{
+			toolsLayout.setVisibility(view.INVISIBLE);
+		}
+		toolsLayout.setEnabled(toolsVisible);
 	}
 
 	public void layoutSetup(){
@@ -1118,39 +1132,44 @@ public class DocumentActivity extends Activity
 				x = (x - (pageView.scrollX)) / pageView.viewScale;
 				y = (y - (pageView.scrollY)) / pageView.viewScale;
 
-				Log.i("CID", "TouchEvent percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset);
+				//Log.i("CID", "TouchEvent percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset);
+				Log.i("CID", toolsVisible + " " + menuVisible);
+				if (!toolsVisible && !menuVisible) {
+					Log.i("CID", "still happening");
+					if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
+						switch (event.getAction()) {
+							case MotionEvent.ACTION_DOWN:
+								if (annotationsVisible) {
 
+									drawOnScreenLocal("ACTION_DOWN", x, y);
+									//drawOnScreenRemote(localHost, "ACTION_DOWN", x, y, strokeWidth, color);
+									RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color, isTrail);
+								}
+								break;
+							case MotionEvent.ACTION_MOVE:
+								if (annotationsVisible) {
+									drawOnScreenLocal("ACTION_MOVE", x, y);
+									//drawOnScreenRemote(localHost, "ACTION_MOVE", x, y, strokeWidth, color);
+									RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color, isTrail);
+								}
+								break;
+							case MotionEvent.ACTION_UP:
 
-				if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
-					switch (event.getAction()) {
-						case MotionEvent.ACTION_DOWN:
-							if (annotationsVisible) {
-
-								drawOnScreenLocal("ACTION_DOWN", x, y);
-								//drawOnScreenRemote(localHost, "ACTION_DOWN", x, y, strokeWidth, color);
-								RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color, isTrail);
-							}
-							break;
-						case MotionEvent.ACTION_MOVE:
-							if (annotationsVisible) {
-								drawOnScreenLocal("ACTION_MOVE", x, y);
-								//drawOnScreenRemote(localHost, "ACTION_MOVE", x, y, strokeWidth, color);
-								RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color, isTrail);
-							}
-							break;
-						case MotionEvent.ACTION_UP:
-
-							if (annotationsVisible) {
-								drawOnScreenLocal("ACTION_UP", x, y);
-								//drawOnScreenRemote(localHost, "ACTION_UP", x, y, strokeWidth, color);
-								RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color, isTrail);
-							}
-							startTime = System.currentTimeMillis();
-							break;
+								if (annotationsVisible) {
+									drawOnScreenLocal("ACTION_UP", x, y);
+									//drawOnScreenRemote(localHost, "ACTION_UP", x, y, strokeWidth, color);
+									RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color, isTrail);
+								}
+								startTime = System.currentTimeMillis();
+								break;
+						}
+					} else if (event.getPointerCount() == 2) {
+						fitPaintViews();
+						startTime = System.currentTimeMillis();
 					}
-				} else if (event.getPointerCount() == 2) {
-					fitPaintViews();
-					startTime = System.currentTimeMillis();
+				}
+				else if (!menuVisible || toolsVisible){
+					//disableAnnotationInteraction();
 				}
 		}
 		boolean ret = super.dispatchTouchEvent(event);
@@ -1275,13 +1294,15 @@ public class DocumentActivity extends Activity
 
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 
+
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		paintViews.get(0).setLayoutParams(paintViewLayoutParams);
 		pv.init(pageView.bitmapW, pageView.bitmapH, pageCount);
 		pv.currentColor = color;
 		pv.strokeWidth = strokeWidth;
-		item.addView(paintViews.get(0));
+		paintViewLayout.addView(paintViews.get(0));
+
 		fitPaintViews();
 	}
 

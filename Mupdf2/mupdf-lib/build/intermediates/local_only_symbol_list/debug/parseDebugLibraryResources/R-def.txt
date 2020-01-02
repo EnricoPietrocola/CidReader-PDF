@@ -25,6 +25,7 @@ id action_layout_6pt
 id action_layout_7pt
 id action_layout_8pt
 id action_layout_9pt
+id colorPickerView
 id layout_button
 id mainRelativeLayout
 id navigation_bar
@@ -32,6 +33,7 @@ id outline_button
 id page_label
 id page_seekbar
 id page_view
+id paintViewLayout
 id search_backward_button
 id search_bar
 id search_button
@@ -39,6 +41,7 @@ id search_close_button
 id search_forward_button
 id search_text
 id title_label
+id toolsLayout
 id trailSwitch
 id undoButton
 id zoom_button
