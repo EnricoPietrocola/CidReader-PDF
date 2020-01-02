@@ -164,8 +164,8 @@ public class PageView extends View implements
 			}
 		}
 		if (!foundLink) {
-			float a = canvasW / 3;
-			float b = a * 2;
+			float a = canvasW / 20;
+			float b = canvasW - a;
 			if (x <= a){
 				goBackward();
 			}
@@ -223,6 +223,8 @@ public class PageView extends View implements
 
 	public void onScaleEnd(ScaleGestureDetector det) { }
 
+	float size = 18f/20f;
+
 	public void goBackward() {
 		scroller.forceFinished(true);
 		if (scrollY <= 0) {
@@ -230,9 +232,9 @@ public class PageView extends View implements
 				actionListener.goBackward();
 				return;
 			}
-			scroller.startScroll(scrollX, scrollY, -canvasW * 9 / 10, bitmapH - canvasH - scrollY, 500);
+			//scroller.startScroll(scrollX, scrollY, -canvasW * 9 / 10, bitmapH - canvasH - scrollY, 500);
 		} else {
-			scroller.startScroll(scrollX, scrollY, 0, -canvasH * 9 / 10, 250);
+			//scroller.startScroll(scrollX, scrollY, 0, -canvasH * 9 / 10, 250);
 		}
 		invalidate();
 	}
@@ -245,9 +247,9 @@ public class PageView extends View implements
 				actionListener.goForward();
 				return;
 			}
-			scroller.startScroll(scrollX, scrollY, canvasW * 9 / 10, -scrollY, 500);
+			//scroller.startScroll(scrollX, scrollY, canvasW * 9 / 10, -scrollY, 500);
 		} else {
-			scroller.startScroll(scrollX, scrollY, 0, canvasH * 9 / 10, 250);
+			//scroller.startScroll(scrollX, scrollY, 0, canvasH * 9 / 10, 250);
 		}
 		invalidate();
 	}
