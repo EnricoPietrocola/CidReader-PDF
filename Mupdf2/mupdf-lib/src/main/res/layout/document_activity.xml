@@ -35,7 +35,7 @@
 		android:overScrollMode="always"
 		android:scrollbarAlwaysDrawHorizontalTrack="false"
 		android:scrollbarAlwaysDrawVerticalTrack="false"
-		tools:visibility="invisible">
+		tools:visibility="visible">
 
 		<com.skydoves.colorpickerview.ColorPickerView
 			android:id="@+id/colorPickerView"

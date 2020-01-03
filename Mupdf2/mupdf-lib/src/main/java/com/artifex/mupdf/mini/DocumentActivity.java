@@ -29,6 +29,8 @@ import android.os.Bundle;
 
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
+
+import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
@@ -423,24 +425,46 @@ public class DocumentActivity extends Activity
 			}
 		});
 
-
 		//this part is the tools menu content
 
 		colorPickerView = (ColorPickerView) findViewById(R.id.colorPickerView);
 		colorPickerView.setActionMode(ActionMode.LAST);
+		Log.i("CID", "Colorpicker is null = " + Boolean.toString(colorPickerView == null));
+		//toolsLayout.setVisibility(view.INVISIBLE);
+
+		//for some reason simply setting the color here crashes the application saying that coordinates must be < bitmap width or height (bitmap is the color palette), this hack fixes it
+		final Handler handler = new Handler();
+		handler.postDelayed(new Runnable() {
+			@Override
+			public void run() {
+				colorPickerView.setSelectorPoint(850, 450);
+			}
+		}, 100);
 
 		colorPickerView.setColorListener(new ColorListener() {
 			@Override
 			public void onColorSelected(int chosenColor, boolean fromUser) {
-				//LinearLayout linearLayout = (LinearLayout) findViewById(R.id.toolsLayout);
-				//linearLayout.setBackgroundColor(Color.TRANSPARENT);
 				color = chosenColor;
-
-				//toolsLayout.setVisibility(view.INVISIBLE);
 				toggleAnnotationInteraction();
 			}
 		});
 
+
+
+		/*final Button redColorButton = new Button(mainContext);
+		LinearLayout.LayoutParams toolPart = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,70);
+		redColorButton.setLayoutParams(toolPart);
+		redColorButton.setText("ColoRed");
+		toolsLayout.addView(redColorButton);
+		//toolsLayout.setVisibility(view.INVISIBLE);
+		//toolsLayout.setEnabled(false);
+
+		redColorButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				Log.i("CID", "Colorpicker chosen color is" + colorPickerView.getSelectedPoint());
+				colorPickerView.setSelectorPoint(854, 457);
+			}
+		});*/
 
 		/*final Button blackColorButton = new Button(mainContext);
 		blackColorButton.setLayoutParams(toolPar);
@@ -1116,7 +1140,7 @@ public class DocumentActivity extends Activity
 
 				//Log.i("CID", "TouchEvent percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset);
 				Log.i("CID", toolsVisible + " " + menuVisible);
-				if (!menuVisible) {
+				if (!menuVisible && !toolsVisible) {
 
 					if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
 						switch (event.getAction()) {
