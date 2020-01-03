@@ -3,6 +3,7 @@ package com.artifex.mupdf.mini;
 import com.artifex.mupdf.fitz.*;
 
 import android.content.Context;
+import android.gesture.Gesture;
 import android.graphics.Bitmap;
 import android.graphics.Canvas;
 import android.graphics.Color;
@@ -20,6 +21,7 @@ import android.widget.Scroller;
 public class PageView extends View implements
 	GestureDetector.OnGestureListener,
 	ScaleGestureDetector.OnScaleGestureListener
+
 {
 	protected DocumentActivity actionListener;
 
@@ -75,13 +77,13 @@ public class PageView extends View implements
 		errorPath.moveTo(100, -100);
 		errorPath.lineTo(-100, 100);
 
+		scaleDetector.setQuickScaleEnabled(false);
+
 	}
 
 	public void setActionListener(DocumentActivity l) {
 		actionListener = l;
 	}
-
-
 
 	public void setError() {
 		if (bitmap != null)
@@ -225,7 +227,7 @@ public class PageView extends View implements
 
 	float size = 18f/20f;
 
-	public void goBackward() {
+	public void goBackward(){
 		scroller.forceFinished(true);
 		if (scrollY <= 0) {
 			if (scrollX <= 0) {

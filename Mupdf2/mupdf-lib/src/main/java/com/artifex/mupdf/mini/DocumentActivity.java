@@ -418,17 +418,19 @@ public class DocumentActivity extends Activity
 
 		toolsButton = findViewById(R.id.ToolsButton);
 		//toolsLayout.setVisibility(view.INVISIBLE);
+		//colorPickerView.setActionMode(ActionMode.LAST);
+
 		toolsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				//toolsLayout.setVisibility(view.VISIBLE);
 				toggleAnnotationInteraction();
 			}
+
 		});
 
 		//this part is the tools menu content
 
 		colorPickerView = (ColorPickerView) findViewById(R.id.colorPickerView);
-		colorPickerView.setActionMode(ActionMode.LAST);
+		//colorPickerView.setActionMode(ActionMode.LAST);
 		Log.i("CID", "Colorpicker is null = " + Boolean.toString(colorPickerView == null));
 		//toolsLayout.setVisibility(view.INVISIBLE);
 
@@ -1302,10 +1304,7 @@ public class DocumentActivity extends Activity
 		PaintView pv = new PaintView(mainContext);
 		paintViews.add(pv);
 		paintViews.get(0).ipAddress = ip;
-
 		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
-
-
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		paintViews.get(0).setLayoutParams(paintViewLayoutParams);
@@ -1313,7 +1312,6 @@ public class DocumentActivity extends Activity
 		pv.currentColor = color;
 		pv.strokeWidth = strokeWidth;
 		paintViewLayout.addView(paintViews.get(0));
-
 		fitPaintViews();
 	}
 
