@@ -335,6 +335,7 @@ public class DocumentActivity extends Activity
 			public void onClick(View v) {
 				PaintView pv = paintViews.get(0);
 				pv.deleteLastPath();
+				RPCUndoLastEdit(currentPage);
 			}
 		});
 
@@ -1090,7 +1091,12 @@ public class DocumentActivity extends Activity
 						break;
 					case "drawOnScreen":
 						drawOnScreenRemote(ip, parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]), Integer.parseInt(parsedMessage[5]), Integer.parseInt(parsedMessage[6]), Boolean.parseBoolean(parsedMessage[7]));
-
+						break;
+					case "undo":
+						PaintView pv = findPaintViewByIpAddress(ip);
+						pv.deleteLastPath();
+						//pv.deleteLastPathOnPage(Integer.parseInt(parsedMessage[2]));
+						break;
 					default:
 						//default
 				}
@@ -1290,6 +1296,13 @@ public class DocumentActivity extends Activity
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
 		udpClient.Message = "drawOnScreen," + event + "," + x + "," + y + "," + strokeWidth + "," + color + "," + isLineTrail;
+		udpClient.Send();
+	}
+
+	private void RPCUndoLastEdit(int pageNumber){
+		UDP_Client udpClient = new UDP_Client();
+		udpClient.addr = ipTargetAddress;
+		udpClient.Message = "undo," + pageNumber;
 		udpClient.Send();
 	}
 

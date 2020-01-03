@@ -322,8 +322,20 @@ public class PaintView extends View {
             paths.remove(paths.get(paths.size() - 1));
         }
         else{
-            //no more undos
+            //no more undos on current page
             //we could use this part to gray out the undo button
+        }
+        invalidate();
+    }
+
+    public void deleteLastPathOnPage(int pageNumber){
+        Log.i("CID", "Received undo on page " + pageNumber);
+        if(page.get(pageNumber).size() > 0) {
+            page.get(pageNumber).remove(page.get(pageNumber).size() - 1);
+            Log.i("CID", "TEST");
+        }
+        else{
+            //no more undos
         }
         invalidate();
     }
