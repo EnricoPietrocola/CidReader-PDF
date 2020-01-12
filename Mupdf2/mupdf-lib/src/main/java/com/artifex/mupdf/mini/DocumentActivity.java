@@ -440,15 +440,19 @@ public class DocumentActivity extends Activity
 		handler.postDelayed(new Runnable() {
 			@Override
 			public void run() {
-				colorPickerView.setSelectorPoint(850, 450);
+				colorPickerView.selectByHsv(Color.RED);
+				toolsLayout.setVisibility(view.INVISIBLE);
 			}
 		}, 100);
+
+
+
 
 		colorPickerView.setColorListener(new ColorListener() {
 			@Override
 			public void onColorSelected(int chosenColor, boolean fromUser) {
 				color = chosenColor;
-				toggleAnnotationInteraction();
+				//toggleAnnotationInteraction();
 			}
 		});
 
@@ -914,11 +918,16 @@ public class DocumentActivity extends Activity
 		if (navigationBar.getVisibility() == View.VISIBLE) {
 			currentBar.setVisibility(View.GONE);
 			navigationBar.setVisibility(View.GONE);
+			toolsLayout.setVisibility(View.GONE);
+			toolsVisible = false;
 			if (currentBar == searchBar)
 				hideKeyboard();
 		} else {
 			currentBar.setVisibility(View.VISIBLE);
 			navigationBar.setVisibility(View.VISIBLE);
+
+
+
 			if (currentBar == searchBar) {
 				searchBar.requestFocus();
 				showKeyboard();
@@ -1075,7 +1084,7 @@ public class DocumentActivity extends Activity
 				//parsedMessage[1] is the command
 				//the others are the command's parameters
 				///////////////////////////////////////////////////////////////////////////////////////////
-
+				Log.i("CID", "Recieving: " + parsedMessage);
 				switch (parsedMessage[1]) {
 					case "goForward":
 						goForwardLocal();
@@ -1243,7 +1252,7 @@ public class DocumentActivity extends Activity
 		percY = (y * pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset;
 
 		Log.i("CID", "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " horizontalOffset " + horizontalOffset + " verticalOffset " + verticalOffset + " isTrail " + isLineTrail);
-		Toast.makeText(this, "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " horizontalOffset " + horizontalOffset + " verticalOffset " + verticalOffset + " isTrail " + isLineTrail, Toast.LENGTH_LONG).show();
+		//Toast.makeText(this, "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " horizontalOffset " + horizontalOffset + " verticalOffset " + verticalOffset + " isTrail " + isLineTrail, Toast.LENGTH_LONG).show();
 
 		Log.i("CID", ip.toString());
 

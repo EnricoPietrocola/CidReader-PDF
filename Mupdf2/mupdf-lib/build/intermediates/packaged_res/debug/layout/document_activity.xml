@@ -22,7 +22,9 @@
 		android:id="@+id/paintViewLayout"
 		android:layout_width="match_parent"
 		android:layout_height="match_parent"
-		android:orientation="horizontal"></LinearLayout>
+		android:orientation="horizontal">
+
+	</LinearLayout>
 
 	<LinearLayout
 		android:id="@+id/toolsLayout"
@@ -56,7 +58,7 @@
 		android:background="#303030"
 		android:orientation="horizontal"
 		android:scrollbars="horizontal"
-		android:visibility="gone">
+		android:visibility="visible">
 
 		<TextView
 			android:id="@+id/title_label"

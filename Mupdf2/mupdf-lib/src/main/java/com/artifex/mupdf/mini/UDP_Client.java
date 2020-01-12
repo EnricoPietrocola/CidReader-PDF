@@ -28,7 +28,7 @@ public class UDP_Client {
                     //addr = InetAddress.getByName("192.168.1.153");
                     ds = new DatagramSocket();
                     DatagramPacket dp;
-                    dp = new DatagramPacket(Message.getBytes(), Message.length(), addr, 12777 );
+                    dp = new DatagramPacket(Message.getBytes(), Message.length(), addr, 12777 ); //original port was 12777
                     ds.setBroadcast(true);
                     ds.send(dp);
                     //Log.i("tag", "sending data " + Message);

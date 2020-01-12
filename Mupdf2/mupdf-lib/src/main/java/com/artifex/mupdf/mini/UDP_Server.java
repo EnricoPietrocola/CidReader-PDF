@@ -35,22 +35,7 @@ public class UDP_Server
 
                 try
                 {
-                    //Log.i("tag", "Launching Server " + Server_aktiv);
-
                     ds = new DatagramSocket(12777);
-
-                    //ds.getPort()
-                    //Log.i("tag", "Launching Server " + ds.getPort());
-                    /*TextView tv = new TextView(context.getApplicationContext());
-                    tv.setText("port opened " + ds.getPort());
-                    RelativeLayout.LayoutParams layoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-                    layoutParams.width = 400;
-                    layoutParams.height = 400;
-                    layoutParams.topMargin = 400;
-                    layoutParams.leftMargin = 400;
-                    tv.setTextColor(Color.RED);
-                    tv.setLayoutParams(layoutParams);
-                    DocumentActivity.item.addView(tv);*/
 
                     while(Server_aktiv)
                     {
