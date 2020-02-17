@@ -36,6 +36,8 @@ public class MainActivity extends AppCompatActivity {
     public Context mainContext;
     public static RelativeLayout item;
     public Uri file;
+    public EditText ipText;
+
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -44,10 +46,10 @@ public class MainActivity extends AppCompatActivity {
 
         mainContext = getApplicationContext();
         item = new RelativeLayout(mainContext);
+        ipText = new EditText(mainContext);
         setContentView(item);
 
         //IP TEXT EDIT FIELD
-        final EditText ipText = new EditText(mainContext);
         RelativeLayout.LayoutParams ipTextLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         ipTextLayoutParams.width = 400;
         ipTextLayoutParams.height = 100;
@@ -57,51 +59,6 @@ public class MainActivity extends AppCompatActivity {
         ipText.setText("192.168.1.1");
         //addContentView(ipText, ipTextLayoutParams);
         item.addView(ipText);
-
-        /*
-        //CONNECT BUTTON
-        final Button connectButton = new Button(mainContext);
-        RelativeLayout.LayoutParams connectButtonLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        connectButtonLayoutParams.width = 400;
-        connectButtonLayoutParams.height = 100;
-        connectButtonLayoutParams.topMargin = 150;
-        connectButtonLayoutParams.leftMargin = 0;
-        connectButton.setLayoutParams(connectButtonLayoutParams);
-        connectButton.setText("Connect");
-        //addContentView(connectButton, connectButtonLayoutParams);
-        item.addView(connectButton);
-
-        //CONNECT BUTTON EXEC
-        connectButton.setOnClickListener(new View.OnClickListener() {
-            public void onClick(View v) {
-
-                if (checkSelfPermission(Manifest.permission.INTERNET)
-                        != PackageManager.PERMISSION_GRANTED) {
-
-                    // Should we show an explanation?
-                    if (shouldShowRequestPermissionRationale(
-                            Manifest.permission.INTERNET)) {
-                    }
-
-                    requestPermissions(new String[]{Manifest.permission.INTERNET},
-                            3);
-
-                    // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
-                    // app-defined int constant
-
-                    return;
-                }
-                try {
-                    DocumentActivity.ipTargetAddress = InetAddress.getByName(ipText.getText().toString());
-                } catch (UnknownHostException e) {
-                    e.printStackTrace();
-                }
-                //Start process
-                    //startMuPDFActivityWithExampleFile();
-            }
-        });
-
-*/
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -116,10 +73,44 @@ public class MainActivity extends AppCompatActivity {
 
             // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
             // app-defined int constant
-
+            //CreatePDFList();
             return;
         }
 
+
+        CreatePDFList();
+
+    }
+
+    @Override
+    public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+        Log.i("CID" , "request code " + requestCode );
+        switch (requestCode) {
+            case 3 : {
+                // If request is cancelled, the result arrays are empty.
+                if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+                    // permission was granted, yay! Do the
+                    // contacts-related task you need to do.
+                    Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
+                    finish();
+                    startActivity(getIntent());
+
+                } else {
+
+                    // permission denied, boo! Disable the
+                    // functionality that depends on this permission.
+                    Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+                }
+                return;
+            }
+
+            // other 'case' lines to check for other
+            // permissions this app might request
+        }
+    }
+
+    public void CreatePDFList(){
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
 
         //Log.i("Files", "Path: " + path);
@@ -157,6 +148,7 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
+
     }
 
     public void ConnectAndOpenPDF(EditText ipText){
