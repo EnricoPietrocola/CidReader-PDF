@@ -24,6 +24,7 @@ import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
 import android.content.Context;
+import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
@@ -34,7 +35,7 @@ public class MainActivity extends AppCompatActivity {
     protected final int PERMISSION_REQUEST = 42;
 
     public Context mainContext;
-    public static RelativeLayout item;
+    public static LinearLayout item;
     public Uri file;
     public EditText ipText;
 
@@ -45,19 +46,16 @@ public class MainActivity extends AppCompatActivity {
         super.onCreate(savedInstanceState);
 
         mainContext = getApplicationContext();
-        item = new RelativeLayout(mainContext);
+        item = new LinearLayout(mainContext);
         ipText = new EditText(mainContext);
+        item.setOrientation(LinearLayout.VERTICAL);
         setContentView(item);
 
-        //IP TEXT EDIT FIELD
-        RelativeLayout.LayoutParams ipTextLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.WRAP_CONTENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
-        ipTextLayoutParams.width = 400;
-        ipTextLayoutParams.height = 100;
-        ipTextLayoutParams.topMargin = 0;
-        ipTextLayoutParams.leftMargin = 0;
+
+        //IP INPUT TEXT FIELD
+        LinearLayout.LayoutParams ipTextLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         ipText.setLayoutParams(ipTextLayoutParams);
         ipText.setText("192.168.1.1");
-        //addContentView(ipText, ipTextLayoutParams);
         item.addView(ipText);
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
@@ -73,18 +71,14 @@ public class MainActivity extends AppCompatActivity {
 
             // MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
             // app-defined int constant
-            //CreatePDFList();
             return;
         }
 
-
         CreatePDFList();
-
     }
 
     @Override
     public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
-        Log.i("CID" , "request code " + requestCode );
         switch (requestCode) {
             case 3 : {
                 // If request is cancelled, the result arrays are empty.
@@ -126,11 +120,7 @@ public class MainActivity extends AppCompatActivity {
         ListAdapter documentsListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
 
         final ListView documentsList = new ListView(mainContext);
-        RelativeLayout.LayoutParams documentsListLayoutParams = new RelativeLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
-        documentsListLayoutParams.width = 720;
-        documentsListLayoutParams.height = 1000;
-        documentsListLayoutParams.topMargin = 250;
-        documentsListLayoutParams.leftMargin = 0;
+        LinearLayout.LayoutParams documentsListLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
         documentsList.setLayoutParams(documentsListLayoutParams);
         documentsList.setAdapter(documentsListAdapter);
         item.addView(documentsList);
