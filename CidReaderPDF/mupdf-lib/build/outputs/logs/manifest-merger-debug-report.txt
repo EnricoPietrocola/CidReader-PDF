@@ -31,9 +31,9 @@ ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:11:9
 		ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:13:13-74
 	android:name
 		ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:12:13-45
-intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:mimeType:application/epub+zip+data:mimeType:application/oxps+data:mimeType:application/pdf+data:mimeType:application/vnd.ms-xpsdocument+data:mimeType:application/x-cbz+data:mimeType:text/xml
+intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:mimeType:application/epub+zip+data:mimeType:application/oxps+data:mimeType:application/pdf+data:mimeType:application/vnd.ms-xpsdocument+data:mimeType:application/x-cbz+data:mimeType:text/xml
 ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:15:13-27:29
-action#android.intent.action.MAIN
+action#android.intent.action.VIEW
 ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:16:17-69
 	android:name
 		ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:16:25-66
@@ -53,10 +53,6 @@ ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:1
 		ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:23-57
 intent-filter#action:name:android.intent.action.VIEW+category:name:android.intent.category.BROWSABLE+category:name:android.intent.category.DEFAULT+data:pathPattern:.*\\.cbz+data:pathPattern:.*\\.epub+data:pathPattern:.*\\.fb2+data:pathPattern:.*\\.oxps+data:pathPattern:.*\\.pdf+data:pathPattern:.*\\.xps
 ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:28:13-40:29
-action#android.intent.action.VIEW
-ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:29:17-69
-	android:name
-		ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:29:25-66
 activity#com.artifex.mupdf.mini.OutlineActivity
 ADDED from D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:42:9-44:86
 	android:configChanges

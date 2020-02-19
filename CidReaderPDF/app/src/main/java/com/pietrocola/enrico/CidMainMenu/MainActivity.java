@@ -126,14 +126,6 @@ public class MainActivity extends AppCompatActivity {
             }
         }
 
-        /*for(int i=0; i<files.length; i++)
-        {
-            File file = files[i];
-            //It's assumed that all file in the path are in supported type
-            String filePath = file.getPath();
-            if(filePath.endsWith(".jpg")) // Condition to check .jpg file extension
-                tFileList.add(filePath);
-        }*/
         ListAdapter documentsListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
 
         final ListView documentsList = new ListView(mainContext);
@@ -155,7 +147,6 @@ public class MainActivity extends AppCompatActivity {
                     }
                 }
         );
-
     }
 
     public void ConnectAndOpenPDF(EditText ipText){
@@ -233,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
 
-    @Override
+    /*@Override
     public void onActivityResult(int requestCode, int resultCode,
                                  Intent resultData) {
 
@@ -262,7 +253,7 @@ public class MainActivity extends AppCompatActivity {
             }
         }
     }
-
+*/
 
 
 }

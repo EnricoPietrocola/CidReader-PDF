@@ -13,7 +13,7 @@
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="MuPDF mini">
             <intent-filter>
-                <action android:name="android.intent.action.MAIN" /> <!-- this was VIEW -->
+                <action android:name="android.intent.action.VIEW" /> <!-- this was VIEW -->
 
                 <category android:name="android.intent.category.DEFAULT" />
                 <category android:name="android.intent.category.BROWSABLE" />
