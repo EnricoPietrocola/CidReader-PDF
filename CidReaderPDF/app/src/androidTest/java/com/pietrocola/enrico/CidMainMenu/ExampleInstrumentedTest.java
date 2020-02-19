@@ -1,4 +1,4 @@
-package com.pietrocola.enrico.mupdf2;
+package com.pietrocola.enrico.CidMainMenu;
 
 import android.content.Context;
 import androidx.test.platform.app.InstrumentationRegistry;
