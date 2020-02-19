@@ -116,7 +116,7 @@ public class MainActivity extends AppCompatActivity {
         {
             String filepath = files[i].getName();
 
-            //allowed
+            //allowed file extensions for file list
             if(     filepath.endsWith(".PDF") ||
                     filepath.endsWith(".pdf")||
                     filepath.endsWith(".jpg")||
