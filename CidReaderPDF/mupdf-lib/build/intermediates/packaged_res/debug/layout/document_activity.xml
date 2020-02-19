@@ -18,13 +18,12 @@
 		android:keepScreenOn="true"
 		android:visibility="visible" />
 
-	<LinearLayout
+	<FrameLayout
 		android:id="@+id/paintViewLayout"
 		android:layout_width="match_parent"
-		android:layout_height="match_parent"
-		android:orientation="horizontal">
+		android:layout_height="match_parent">
 
-	</LinearLayout>
+	</FrameLayout>
 
 	<LinearLayout
 		android:id="@+id/toolsLayout"

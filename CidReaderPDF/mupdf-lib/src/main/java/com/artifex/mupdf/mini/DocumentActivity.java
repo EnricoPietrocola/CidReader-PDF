@@ -47,6 +47,7 @@ import android.view.inputmethod.InputMethodManager;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
+import android.widget.FrameLayout;
 import android.widget.LinearLayout;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
@@ -153,7 +154,7 @@ public class DocumentActivity extends Activity
 	protected String projectName = "CID-Project";
 	protected ColorPickerView colorPickerView;
 	protected LinearLayout toolsLayout;
-	protected LinearLayout paintViewLayout;
+	protected FrameLayout paintViewLayout;
 
 	//Needed for graphics
 	private ArrayList<PaintView> paintViews = new ArrayList<>();
@@ -405,7 +406,7 @@ public class DocumentActivity extends Activity
 			}
 		});
 
-		paintViewLayout = (LinearLayout) findViewById(R.id.paintViewLayout);
+		paintViewLayout = (FrameLayout) findViewById(R.id.paintViewLayout);
 		toolsLayout = (LinearLayout) findViewById(R.id.toolsLayout);
 		//LinearLayout.LayoutParams toolsLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
 		//LinearLayout.LayoutParams toolPar = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,30);
@@ -1326,7 +1327,7 @@ public class DocumentActivity extends Activity
 		PaintView pv = new PaintView(mainContext);
 		paintViews.add(pv);
 		paintViews.get(0).ipAddress = ip;
-		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		FrameLayout.LayoutParams paintViewLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		paintViews.get(0).setLayoutParams(paintViewLayoutParams);
@@ -1340,7 +1341,7 @@ public class DocumentActivity extends Activity
 	public void createRemoteGraphics(InetAddress ip){
 		PaintView pv = new PaintView(mainContext);
 		pv.ipAddress = ip;
-		RelativeLayout.LayoutParams paintViewLayoutParams = new RelativeLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
+		FrameLayout.LayoutParams paintViewLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		pv.setLayoutParams(paintViewLayoutParams);
@@ -1348,7 +1349,8 @@ public class DocumentActivity extends Activity
 		pv.init(pageView.bitmapW, pageView.bitmapH, pageCount);
 
 		//edit brush settings after init
-		item.addView(pv);
+		//item.addView(pv);
+		paintViewLayout.addView(pv);
 		paintViews.add(pv);
 		fitPaintViews();
 	}
