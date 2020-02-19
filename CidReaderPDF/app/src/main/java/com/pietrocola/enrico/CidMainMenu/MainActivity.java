@@ -13,6 +13,7 @@ import java.io.FileNotFoundException;
 import java.io.InputStream;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
+import java.util.ArrayList;
 
 import android.os.Environment;
 import androidx.core.app.ActivityCompat;
@@ -109,11 +110,30 @@ public class MainActivity extends AppCompatActivity {
 
         File directory = new File(path);
         File[] files = directory.listFiles();
-        String[] names = new String[files.length];
+
+        ArrayList<String> names = new ArrayList<>();
         for (int i = 0; i < files.length; i++)
         {
-            names[i] = files[i].getName();
+            String filepath = files[i].getName();
+
+            //allowed
+            if(     filepath.endsWith(".PDF") ||
+                    filepath.endsWith(".pdf")||
+                    filepath.endsWith(".jpg")||
+                    filepath.endsWith(".JPG"))
+            {
+                names.add(filepath);
+            }
         }
+
+        /*for(int i=0; i<files.length; i++)
+        {
+            File file = files[i];
+            //It's assumed that all file in the path are in supported type
+            String filePath = file.getPath();
+            if(filePath.endsWith(".jpg")) // Condition to check .jpg file extension
+                tFileList.add(filePath);
+        }*/
         ListAdapter documentsListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, names);
 
         final ListView documentsList = new ListView(mainContext);
