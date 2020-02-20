@@ -27,12 +27,14 @@
 
 	<LinearLayout
 		android:id="@+id/toolsLayout"
-		android:layout_width="match_parent"
-		android:layout_height="555dp"
+		android:layout_width="wrap_content"
+		android:layout_height="668dp"
+		android:layout_alignParentEnd="true"
+		android:layout_marginEnd="22dp"
 		android:background="#00FFFFFF"
 		android:backgroundTintMode="multiply"
 		android:gravity="center|right"
-		android:orientation="horizontal"
+		android:orientation="vertical"
 		android:overScrollMode="always"
 		android:scrollbarAlwaysDrawHorizontalTrack="false"
 		android:scrollbarAlwaysDrawVerticalTrack="false"
@@ -41,12 +43,29 @@
 		<com.skydoves.colorpickerview.ColorPickerView
 			android:id="@+id/colorPickerView"
 			android:layout_width="400dp"
-			android:layout_height="400dp"
+			android:layout_height="555dp"
 			android:background="@android:color/background_light"
 			android:backgroundTint="@android:color/background_light"
 			android:visibility="visible"
 			app:palette="@drawable/palette"
 			app:selector="@drawable/wheel" />
+
+		<com.skydoves.colorpickerview.sliders.AlphaSlideBar
+			android:id="@+id/alphaSlideBar"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:borderColor_AlphaSlideBar="@android:color/darker_gray"
+			app:borderSize_AlphaSlideBar="5"
+			app:selector_AlphaSlideBar="@drawable/wheel" />
+
+		<com.skydoves.colorpickerview.sliders.BrightnessSlideBar
+			android:id="@+id/brightnessSlide"
+			android:layout_width="match_parent"
+			android:layout_height="wrap_content"
+			app:selector_BrightnessSlider="@drawable/wheel"
+			app:borderColor_BrightnessSlider="@android:color/darker_gray"
+			app:borderSize_BrightnessSlider="5"/>
+
 	</LinearLayout>
 
 	<LinearLayout

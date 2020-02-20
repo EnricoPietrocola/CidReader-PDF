@@ -10,6 +10,8 @@ import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.skydoves.colorpickerview.listeners.ColorListener;
 import com.skydoves.colorpickerview.listeners.ColorPickerViewListener;
 import com.skydoves.colorpickerview.BuildConfig;
+import com.skydoves.colorpickerview.sliders.AlphaSlideBar;
+import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
 
 import android.Manifest;
 import android.annotation.SuppressLint;
@@ -432,6 +434,12 @@ public class DocumentActivity extends Activity
 		//this part is the tools menu content
 
 		colorPickerView = (ColorPickerView) findViewById(R.id.colorPickerView);
+
+		AlphaSlideBar alphaSlideBar = (AlphaSlideBar) findViewById(R.id.alphaSlideBar);
+		colorPickerView.attachAlphaSlider(alphaSlideBar);
+
+		BrightnessSlideBar brightnessSlideBar = (BrightnessSlideBar) findViewById(R.id.brightnessSlide);
+		colorPickerView.attachBrightnessSlider(brightnessSlideBar);
 		//colorPickerView.setActionMode(ActionMode.LAST);
 		Log.i("CID", "Colorpicker is null = " + Boolean.toString(colorPickerView == null));
 		//toolsLayout.setVisibility(view.INVISIBLE);
