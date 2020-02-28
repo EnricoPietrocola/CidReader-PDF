@@ -39,8 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public static LinearLayout item;
     public Uri file;
     public EditText ipText;
-
-
+    
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
@@ -51,7 +50,6 @@ public class MainActivity extends AppCompatActivity {
         ipText = new EditText(mainContext);
         item.setOrientation(LinearLayout.VERTICAL);
         setContentView(item);
-
 
         //IP INPUT TEXT FIELD
         LinearLayout.LayoutParams ipTextLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
@@ -190,17 +188,6 @@ public class MainActivity extends AppCompatActivity {
         startActivity(intent);
     }
 
-    public void startMuPDFActivityWithExampleFile() {
-        File dir = Environment.getExternalStoragePublicDirectory
-                (Environment.DIRECTORY_DOWNLOADS);
-        File file = new File(dir, "example.pdf");
-        Uri uri = Uri.fromFile(file);
-        startMuPDFActivity(uri);
-        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
-            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
-        //setContentView(R.layout.activity_main);
-    }
-
     private static final int READ_REQUEST_CODE = 42;
     /**
      * Fires an intent to spin up the "file chooser" UI
@@ -223,37 +210,4 @@ public class MainActivity extends AppCompatActivity {
 
         startActivityForResult(intent, READ_REQUEST_CODE);
     }
-
-    /*@Override
-    public void onActivityResult(int requestCode, int resultCode,
-                                 Intent resultData) {
-
-        // The ACTION_OPEN_DOCUMENT intent was sent with the request code
-        // READ_REQUEST_CODE. If the request code seen here doesn't match, it's the
-        // response to some other intent, and the code below shouldn't run at all.
-        InputStream stream;
-        if (requestCode == READ_REQUEST_CODE && resultCode == Activity.RESULT_OK) {
-            // The document selected by the user won't be returned in the intent.
-            // Instead, a URI to that document will be contained in the return intent
-            // provided to this method as a parameter.
-            // Pull that URI using resultData.getData().
-            Uri uri = Uri.parse("example.pdf");
-            if (resultData != null) {
-                uri = resultData.getData();
-                Log.i("TAG", "Uri: " + android.net.Uri.parse(uri.toString()));
-
-                File file = new File(uri.getPath());
-                try {
-                    stream = getContentResolver().openInputStream(uri);
-
-                } catch (FileNotFoundException e) {
-                    e.printStackTrace();
-                }
-
-            }
-        }
-    }
-*/
-
-
 }
