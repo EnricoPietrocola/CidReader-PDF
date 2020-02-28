@@ -144,8 +144,6 @@ public class DocumentActivity extends Activity
 
 	protected int color = Color.BLUE;
 	protected int strokeWidth = 5;
-	protected View blackColorButton;
-	protected View redColorButton;
 	protected View menuButton;
 	protected View toolsButton;
 	protected byte[] localHostByteArray = new byte[]{127, 0, 0, 1};
@@ -157,8 +155,6 @@ public class DocumentActivity extends Activity
 	protected ColorPickerView colorPickerView;
 	protected LinearLayout toolsLayout;
 	protected FrameLayout paintViewLayout;
-
-	//Needed for graphics
 	private ArrayList<PaintView> paintViews = new ArrayList<>();
 	private boolean annotationsVisible = true;
 
@@ -188,7 +184,6 @@ public class DocumentActivity extends Activity
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		displayDPI = metrics.densityDpi;
 
-		//printOnScreenDebug();
 		layoutSetup();
 
 		UDP_Server udpServer = new UDP_Server();
@@ -364,7 +359,7 @@ public class DocumentActivity extends Activity
 		menuLayout.setVisibility(view.INVISIBLE);
 		menuLayout.setEnabled(false);
 
-		//SAVE BUTTON EXEC
+		//Save button exec
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				Log.i("CID", "Do stuff");
@@ -383,20 +378,16 @@ public class DocumentActivity extends Activity
 			public void onClick(View v) {
 				menuVisible = !menuVisible;
 
-				Log.i("CID", "MenuButtonPressed" + menuVisible);
-
 				if(menuVisible) {
 					menuLayout.setVisibility(view.VISIBLE);
 					pageView.setVisibility(View.INVISIBLE);
 					switchAnnotations();
-
 				}
 				else{
 					menuLayout.setVisibility(view.INVISIBLE);
 					pageView.setVisibility(View.VISIBLE);
 					switchAnnotations();
 				}
-
 				menuLayout.setEnabled(menuVisible);
 			}
 		});
@@ -410,20 +401,8 @@ public class DocumentActivity extends Activity
 
 		paintViewLayout = (FrameLayout) findViewById(R.id.paintViewLayout);
 		toolsLayout = (LinearLayout) findViewById(R.id.toolsLayout);
-		//LinearLayout.LayoutParams toolsLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
-		//LinearLayout.LayoutParams toolPar = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,30);
-		//LinearLayout.LayoutParams toolPart = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,70);
-
-		//toolsLayout.setOrientation(LinearLayout.HORIZONTAL);
-		//toolsLayoutParams.topMargin = 200;
-		//toolsLayout.removeView(findViewById(R.id.ColorPickerView));
-		//setContentView(toolsLayout, toolsLayoutParams);
-		//addContentView(toolsLayout, toolsLayoutParams);
 
 		toolsButton = findViewById(R.id.ToolsButton);
-		//toolsLayout.setVisibility(view.INVISIBLE);
-		//colorPickerView.setActionMode(ActionMode.LAST);
-
 		toolsButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				toggleAnnotationInteraction();
@@ -431,20 +410,13 @@ public class DocumentActivity extends Activity
 
 		});
 
-		//this part is the tools menu content
-
+		//create colorpicker and controls
 		colorPickerView = (ColorPickerView) findViewById(R.id.colorPickerView);
-
 		AlphaSlideBar alphaSlideBar = (AlphaSlideBar) findViewById(R.id.alphaSlideBar);
 		colorPickerView.attachAlphaSlider(alphaSlideBar);
-
 		BrightnessSlideBar brightnessSlideBar = (BrightnessSlideBar) findViewById(R.id.brightnessSlide);
 		colorPickerView.attachBrightnessSlider(brightnessSlideBar);
-		//colorPickerView.setActionMode(ActionMode.LAST);
-		Log.i("CID", "Colorpicker is null = " + Boolean.toString(colorPickerView == null));
-		//toolsLayout.setVisibility(view.INVISIBLE);
 
-		//for some reason simply setting the color here crashes the application saying that coordinates must be < bitmap width or height (bitmap is the color palette), this hack fixes it
 		final Handler handler = new Handler();
 		handler.postDelayed(new Runnable() {
 			@Override
@@ -454,61 +426,12 @@ public class DocumentActivity extends Activity
 			}
 		}, 100);
 
-
-
-
 		colorPickerView.setColorListener(new ColorListener() {
 			@Override
 			public void onColorSelected(int chosenColor, boolean fromUser) {
 				color = chosenColor;
-				//toggleAnnotationInteraction();
 			}
 		});
-
-
-
-		/*final Button redColorButton = new Button(mainContext);
-		LinearLayout.LayoutParams toolPart = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,70);
-		redColorButton.setLayoutParams(toolPart);
-		redColorButton.setText("ColoRed");
-		toolsLayout.addView(redColorButton);
-		//toolsLayout.setVisibility(view.INVISIBLE);
-		//toolsLayout.setEnabled(false);
-
-		redColorButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				Log.i("CID", "Colorpicker chosen color is" + colorPickerView.getSelectedPoint());
-				colorPickerView.setSelectorPoint(854, 457);
-			}
-		});*/
-
-		/*final Button blackColorButton = new Button(mainContext);
-		blackColorButton.setLayoutParams(toolPar);
-		blackColorButton.setText("Black");
-		toolsLayout.addView(blackColorButton);
-		toolsLayout.setVisibility(view.INVISIBLE);
-		toolsLayout.setEnabled(false);
-
-		blackColorButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				color = Color.BLACK;
-			}
-		});
-
-		final Button redColorButton = new Button(mainContext);
-		redColorButton.setLayoutParams(toolPart);
-		redColorButton.setText("Red");
-		toolsLayout.addView(redColorButton);
-		toolsLayout.setVisibility(view.INVISIBLE);
-		toolsLayout.setEnabled(false);
-
-		redColorButton.setOnClickListener(new View.OnClickListener() {
-			public void onClick(View v) {
-				color = Color.RED;
-			}
-		});
-
-		 */
 
 		layoutButton = findViewById(R.id.layout_button);
 		layoutPopupMenu = new PopupMenu(this, layoutButton);
@@ -565,6 +488,7 @@ public class DocumentActivity extends Activity
 			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
 			Log.i("CID", "hey");
 		}
+
 		PaintView pv;
 		for(int i = 0; i < paintViews.size(); i++) {
 			pv = paintViews.get(i);
@@ -584,9 +508,11 @@ public class DocumentActivity extends Activity
 
 		} else if (isReflowable) {
 			relayoutDocument();
+			//paintview resize
 			fitPaintViews();
 		} else {
 			loadPage();
+			//paintview resize
 			fitPaintViews();
 		}
 	}
@@ -795,14 +721,13 @@ public class DocumentActivity extends Activity
 				}
 				loadPage();
 				loadOutline();
+				//Paintview hook up
 				changePageDrawing();
-
 			}
 		});
 	}
 
 	protected void relayoutDocument() {
-
 		worker.add(new Worker.Task() {
 			public void work() {
 				try {
@@ -890,11 +815,10 @@ public class DocumentActivity extends Activity
 			public void run() {
 				if (bitmap != null) {
 					pageView.setBitmap(bitmap, wentBack, links, hits);
-
 				}
-				else
+				else {
 					pageView.setError();
-
+				}
 				pageLabel.setText((currentPage+1) + " / " + pageCount);
 				pageSeekbar.setMax(pageCount - 1);
 				pageSeekbar.setProgress(pageNumber);
@@ -904,7 +828,6 @@ public class DocumentActivity extends Activity
 			}
 		});
 	}
-
 
 	protected void showSearch() {
 		currentBar = searchBar;
@@ -934,8 +857,6 @@ public class DocumentActivity extends Activity
 		} else {
 			currentBar.setVisibility(View.VISIBLE);
 			navigationBar.setVisibility(View.VISIBLE);
-
-
 
 			if (currentBar == searchBar) {
 				searchBar.requestFocus();
@@ -1019,7 +940,6 @@ public class DocumentActivity extends Activity
 		udpClient.addr = ipTargetAddress;
 		udpClient.Message = "goToPage," + p;
 		udpClient.Send();
-
 	}
 
 	public void gotoURI(String uri) {
@@ -1043,7 +963,6 @@ public class DocumentActivity extends Activity
 		}
 
 		//check if remote command comes from new ip
-
 		InetAddress ip = null;
 		try {
 			ip = InetAddress.getByName(splitMessage[0].substring(1));
@@ -1147,24 +1066,20 @@ public class DocumentActivity extends Activity
 		float y = event.getRawY();
 
 		View v = getCurrentFocus();
-			if (y >= (canvasH - pageView.bitmapH) / 2 && y <= ((canvasH - pageView.bitmapH) / 2) + pageView.bitmapH) {
+			if (y >= (canvasH - pageView.bitmapH) / 2f && y <= ((canvasH - pageView.bitmapH) / 2f) + pageView.bitmapH) {
 
 				float percX;
 				float percY;
 
-				float horizontalOffset = (canvasW - pageView.bitmapW) / 2;
-				float verticalOffset = (canvasH - pageView.bitmapH) / 2;
+				float horizontalOffset = (canvasW - pageView.bitmapW) / 2f;
+				float verticalOffset = (canvasH - pageView.bitmapH) / 2f;
 
-				//float horizontalOffset = pageView.bitmapW > pageView.canvasW ? pageView.bitmapW - pageView.canvasW : 0;
-				//float verticalOffset = pageView.bitmapH > pageView.canvasH ? pageView.bitmapH - pageView.canvasH : 0;
-
-				percX = ((x - horizontalOffset) / pageView.bitmapW ) /*pageView.viewScale*/;
-				percY = ((y - verticalOffset) / pageView.bitmapH) /*/ pageView.viewScale*/;
+				percX = ((x - horizontalOffset) / pageView.bitmapW );
+				percY = ((y - verticalOffset) / pageView.bitmapH);
 
 				x = (x - (pageView.scrollX)) / pageView.viewScale;
 				y = (y - (pageView.scrollY)) / pageView.viewScale;
 
-				//Log.i("CID", "TouchEvent percX " + percX + " percY " + percY + " x " + x + " y " + y + " " + verticalOffset);
 				Log.i("CID", toolsVisible + " " + menuVisible);
 				if (!menuVisible && !toolsVisible) {
 
@@ -1174,21 +1089,13 @@ public class DocumentActivity extends Activity
 								if (annotationsVisible) {
 
 									drawOnScreenLocal("ACTION_DOWN", x, y);
-									//drawOnScreenRemote(localHost, "ACTION_DOWN", x, y, strokeWidth, color);
 									RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color, isTrail);
 								}
 
-								/*if (toolsVisible){
-									//toolsVisible = !toolsVisible;
-									Log.i("CID", "this is happening");
-									toolsLayout.setVisibility(view.INVISIBLE);
-									toggleAnnotationInteraction();
-								}*/
 								break;
 							case MotionEvent.ACTION_MOVE:
 								if (annotationsVisible) {
 									drawOnScreenLocal("ACTION_MOVE", x, y);
-									//drawOnScreenRemote(localHost, "ACTION_MOVE", x, y, strokeWidth, color);
 									RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color, isTrail);
 								}
 								break;
@@ -1196,7 +1103,6 @@ public class DocumentActivity extends Activity
 
 								if (annotationsVisible) {
 									drawOnScreenLocal("ACTION_UP", x, y);
-									//drawOnScreenRemote(localHost, "ACTION_UP", x, y, strokeWidth, color);
 									RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color, isTrail);
 								}
 
@@ -1247,22 +1153,19 @@ public class DocumentActivity extends Activity
 		PaintView pv = findPaintViewByIpAddress(ip);
 
 		//record actions in file for remote save data
-		//actionPages.get(paintViews.indexOf(pv)).add(action + "," + Float.toString(x) + "," + Float.toString(y) + ";");
 		paintViews.get(paintViews.indexOf(pv)).actionPages.get(currentPage).add(action + "," + x + "," + y + ";");
 		Log.i("CID", pv.ipAddress.toString());
 
 		float percX;
 		float percY;
 
-		float horizontalOffset = (canvasW - pageView.bitmapW) / 2;
-		float verticalOffset = (canvasH - pageView.bitmapH) / 2;
+		float horizontalOffset = (canvasW - pageView.bitmapW) / 2f;
+		float verticalOffset = (canvasH - pageView.bitmapH) / 2f;
 
-		percX = (x * pageView.bitmapW) /*pageView.viewScale*/ + horizontalOffset;
-		percY = (y * pageView.bitmapH) /*/ pageView.viewScale*/ + verticalOffset;
+		percX = (x * pageView.bitmapW) + horizontalOffset;
+		percY = (y * pageView.bitmapH) + verticalOffset;
 
 		Log.i("CID", "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " horizontalOffset " + horizontalOffset + " verticalOffset " + verticalOffset + " isTrail " + isLineTrail);
-		//Toast.makeText(this, "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " horizontalOffset " + horizontalOffset + " verticalOffset " + verticalOffset + " isTrail " + isLineTrail, Toast.LENGTH_LONG).show();
-
 		Log.i("CID", ip.toString());
 
 		switch(action) {
@@ -1355,9 +1258,6 @@ public class DocumentActivity extends Activity
 		pv.setLayoutParams(paintViewLayoutParams);
 		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
 		pv.init(pageView.bitmapW, pageView.bitmapH, pageCount);
-
-		//edit brush settings after init
-		//item.addView(pv);
 		paintViewLayout.addView(pv);
 		paintViews.add(pv);
 		fitPaintViews();
