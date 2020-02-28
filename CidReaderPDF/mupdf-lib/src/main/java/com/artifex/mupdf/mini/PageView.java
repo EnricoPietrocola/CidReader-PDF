@@ -47,6 +47,7 @@ public class PageView extends View implements
 	protected int offsetX, offsetY;
 	public boolean isZoomedX = false;
 	public boolean isZoomedY = false;
+	public boolean isScrollActive = false;
 
 	public PageView(Context ctx, AttributeSet atts) {
 		super(ctx, atts);
@@ -181,12 +182,14 @@ public class PageView extends View implements
 	}
 
 	public boolean onScroll(MotionEvent e1, MotionEvent e2, float dx, float dy) {
-		/*if (bitmap != null) {
-			scrollX += (int)dx;
-			scrollY += (int)dy;
-			scroller.forceFinished(true);
-			invalidate();
-		}*/
+		if(isScrollActive) {
+			if (bitmap != null) {
+				scrollX += (int)dx;
+				scrollY += (int)dy;
+				scroller.forceFinished(true);
+				invalidate();
+			}
+		}
 		return true;
 	}
 
@@ -293,8 +296,12 @@ public class PageView extends View implements
 			y = (canvasH - bitmapH) / 2;
 		} else {
 			isZoomedY = true;
-			if (scrollY < 0) scrollY = 0;
-			if (scrollY > bitmapH - canvasH) scrollY = bitmapH - canvasH;
+			if (scrollY < 0){
+				scrollY = 0;
+			}
+			if (scrollY > bitmapH - canvasH){
+				scrollY = bitmapH - canvasH;
+			}
 			y = -scrollY;
 		}
 

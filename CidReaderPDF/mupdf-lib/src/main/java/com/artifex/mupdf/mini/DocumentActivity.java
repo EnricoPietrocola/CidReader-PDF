@@ -139,6 +139,8 @@ public class DocumentActivity extends Activity
 	public ArrayList<InetAddress> connectedAddresses = new ArrayList<>();
 	protected View hideAllButton;
 	protected View undoButton;
+	protected View scrollButton;
+
 	protected Switch trailSwitch;
 	protected static boolean isTrail;
 
@@ -389,6 +391,14 @@ public class DocumentActivity extends Activity
 					switchAnnotations();
 				}
 				menuLayout.setEnabled(menuVisible);
+			}
+		});
+
+		scrollButton = findViewById(R.id.scrollButton);
+		scrollButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				pageView.isScrollActive = !pageView.isScrollActive;
+				//switchAnnotations();
 			}
 		});
 

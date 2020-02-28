@@ -170,6 +170,15 @@ public class PaintView extends View {
 
         startTime = System.currentTimeMillis();
 
+        if(pageView != null){
+            canvas.translate(annotationOffsetX, annotationOffsetY);
+            canvas.scale(viewScale, viewScale);
+        }
+
+        canvas.drawBitmap(mBitmap,0, 0, mBitmapPaint);
+        canvas.restore();
+        postInvalidateOnAnimation();
+
         Iterator<FingerPath> iterator = paths.iterator();
         while(iterator.hasNext()){
             FingerPath fp = iterator.next();
@@ -194,18 +203,12 @@ public class PaintView extends View {
             }
             mCanvas.drawPath(fp.path, mPaint);
         }
-        if(pageView != null){
-            canvas.translate(annotationOffsetX, annotationOffsetY);
-            canvas.scale(viewScale, viewScale);
-        }
 
-        canvas.drawBitmap(mBitmap,0, 0, mBitmapPaint);
-        canvas.restore();
-        postInvalidateOnAnimation();
     }
 
     public void touchStart(float x, float y) {
-
+        //x -= scrollX + annotationOffsetX;
+        //y -= scrollY + annotationOffsetY;
 
         mPath = new Path();
         FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth,  mPath);
@@ -217,6 +220,10 @@ public class PaintView extends View {
     }
 
     public void touchMove(float x, float y) {
+        //x -= scrollX + annotationOffsetX;
+        //y -= scrollY + annotationOffsetY;
+
+
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mY);
 
@@ -261,6 +268,7 @@ public class PaintView extends View {
 
     public void pageViewTransform(PageView pv){
         pageView = pv;
+
         annotationHeight = pv.bitmapH;
         annotationWidth = pv.bitmapW;
 
@@ -270,6 +278,12 @@ public class PaintView extends View {
         scrollY = pv.scrollY;
 
         viewScale = pv.viewScale;
+
+        Log.i("CID", "annotationWidth " + annotationWidth + " annotationHeight " + annotationHeight);
+        Log.i("CID", "annotationOffsetX " + annotationOffsetX + " annotationOffsetY " + annotationOffsetY);
+        Log.i("CID", "scrollX " + scrollX + " scrollY " + scrollY);
+        Log.i("CID", "viewScale " + viewScale);
+
 
         invalidate();
     }
