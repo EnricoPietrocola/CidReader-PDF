@@ -205,6 +205,8 @@ public class PaintView extends View {
     }
 
     public void touchStart(float x, float y) {
+
+
         mPath = new Path();
         FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth,  mPath);
         paths.add(fp);
@@ -264,6 +266,9 @@ public class PaintView extends View {
 
         annotationOffsetX = pv.offsetX;
         annotationOffsetY = pv.offsetY;
+        scrollX = pv.scrollX;
+        scrollY = pv.scrollY;
+
         viewScale = pv.viewScale;
 
         invalidate();
