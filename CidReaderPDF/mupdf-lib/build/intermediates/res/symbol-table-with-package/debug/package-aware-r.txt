@@ -771,11 +771,13 @@ id actions
 id activity_chooser_view_content
 id add
 id alertTitle
+id alphaSlideBar
 id alphaSlideBarFrame
 id always
 id async
 id blocking
 id bottom
+id brightnessSlide
 id brightnessSlideBarFrame
 id buttonPanel
 id checkbox

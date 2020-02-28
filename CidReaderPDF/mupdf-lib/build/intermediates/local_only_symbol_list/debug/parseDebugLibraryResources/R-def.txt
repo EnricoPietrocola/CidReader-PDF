@@ -25,6 +25,8 @@ id action_layout_6pt
 id action_layout_7pt
 id action_layout_8pt
 id action_layout_9pt
+id alphaSlideBar
+id brightnessSlide
 id colorPickerView
 id layout_button
 id mainRelativeLayout
