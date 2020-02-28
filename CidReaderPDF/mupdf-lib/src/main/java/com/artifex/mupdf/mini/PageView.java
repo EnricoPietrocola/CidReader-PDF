@@ -146,8 +146,8 @@ public class PageView extends View implements
 		float x = e.getX();
 		float y = e.getY();
 		if (showLinks && links != null) {
-			float dx = (bitmapW <= canvasW) ? (bitmapW - canvasW) / 2 : scrollX;
-			float dy = (bitmapH <= canvasH) ? (bitmapH - canvasH) / 2 : scrollY;
+			float dx = (bitmapW <= canvasW) ? (bitmapW - canvasW) / 2f : scrollX;
+			float dy = (bitmapH <= canvasH) ? (bitmapH - canvasH) / 2f : scrollY;
 			float mx = (x + dx) / viewScale;
 			float my = (y + dy) / viewScale;
 			for (Link link : links) {
@@ -166,7 +166,7 @@ public class PageView extends View implements
 			}
 		}
 		if (!foundLink) {
-			float a = canvasW / 20;
+			float a = canvasW / 20f;
 			float b = canvasW - a;
 			if (x <= a){
 				goBackward();
@@ -242,7 +242,6 @@ public class PageView extends View implements
 	}
 
 	public void goForward() {
-		//Log.i("TAG","PAGEVIEW");
 		scroller.forceFinished(true);
 		if (scrollY + canvasH >= bitmapH) {
 			if (scrollX + canvasW >= bitmapW) {
@@ -259,19 +258,13 @@ public class PageView extends View implements
 	public void onDraw(Canvas canvas) {
 		int x, y;
 
-
-		//offsetX = (canvasW - bitmapW) / 2;
-		//offsetY = (canvasH - bitmapH) / 2;
-		//Log.i("offset",  "Pageview " + offsetX + " " + offsetY + " " + bitmapW + " " + bitmapH + " " + canvasW + " " + canvasH);
-
 		if (bitmap == null) {
 
 			if (error) {
-				canvas.translate(canvasW / 2, canvasH / 2);
+				canvas.translate(canvasW / 2f, canvasH / 2f);
 				canvas.drawPath(errorPath, errorPaint);
 				invalidate();
 			}
-
 			return;
 		}
 
@@ -304,10 +297,6 @@ public class PageView extends View implements
 			if (scrollY > bitmapH - canvasH) scrollY = bitmapH - canvasH;
 			y = -scrollY;
 		}
-
-		//bitmap.setHasAlpha(true);
-		//bitmap.eraseColor(Color.argb(120, 255, 120, 255));
-		//Log.i("offset",  "Pageview " + offsetX + " " + offsetY + " " + bitmapW + " " + bitmapH + " " + canvasW + " " + canvasH);
 
 		offsetX = x;
 		offsetY = y;

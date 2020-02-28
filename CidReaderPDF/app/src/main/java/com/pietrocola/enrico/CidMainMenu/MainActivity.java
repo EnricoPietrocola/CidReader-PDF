@@ -39,7 +39,7 @@ public class MainActivity extends AppCompatActivity {
     public static LinearLayout item;
     public Uri file;
     public EditText ipText;
-    
+
     @Override
     protected void onCreate(Bundle savedInstanceState) {
 
