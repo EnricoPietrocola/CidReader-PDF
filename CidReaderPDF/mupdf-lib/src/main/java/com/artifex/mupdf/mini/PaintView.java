@@ -55,8 +55,6 @@ public class PaintView extends View {
     protected Canvas mCanvas;
     private Paint mBitmapPaint = new Paint(Paint.DITHER_FLAG);
 
-
-
     //from pageview
     protected PageView pageView;
     protected int bitmapW, bitmapH;
@@ -101,10 +99,7 @@ public class PaintView extends View {
 
         mEmboss = new EmbossMaskFilter(new float[] {1, 1, 1}, 0.4f, 6, 3.5f);
         mBlur = new BlurMaskFilter(5, BlurMaskFilter.Blur.NORMAL);
-        //Log.e("PaintView", "Constructor" + String.valueOf(currentColor));
         scroller = new Scroller(context);
-
-        //Log.i("PaintView", "WOAH " + offsetX);
     }
 
     public void init(int width, int height /*DisplayMetrics metrics*/, int pageCount) {
@@ -169,12 +164,9 @@ public class PaintView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
-        //mCanvas.drawColor(Color.RED);
         canvas.save();
         mBitmap.eraseColor(Color.TRANSPARENT);
         mBitmap.setHasAlpha(true);
-        //semi-transparent debug color
-        //mBitmap.eraseColor(Color.argb(120, 255, 255, 120));
 
         startTime = System.currentTimeMillis();
 
@@ -202,8 +194,6 @@ public class PaintView extends View {
             }
             mCanvas.drawPath(fp.path, mPaint);
         }
-
-        //canvas.drawColor(Color.RED);
         if(pageView != null){
             canvas.translate(annotationOffsetX, annotationOffsetY);
             canvas.scale(viewScale, viewScale);
@@ -238,16 +228,11 @@ public class PaintView extends View {
     public void touchUp(boolean isFading) {
         try {
             mPath.lineTo(mX, mY);
-            //Log.i("CID", Integer.toString(paths.size()));
             //get the path being drawn
-
             FingerPath fp = paths.get(paths.size() - 1);
-            //fp.time = System.currentTimeMillis() - startTime;
-            //fp.isFading = DocumentActivity.isTrail;                   //THIS MUST BE SET FROM DrawScreenRemote to work properly remotely
             fp.isFading = isFading;
         }
         catch (Exception e) {
-            //Toast.makeText(getContext(),"Something went wrong",Toast.LENGTH_SHORT).show();
             e.printStackTrace();
         }
 
@@ -255,27 +240,11 @@ public class PaintView extends View {
 
     public void saveCurrentPage(int currentPage){
         page.set(currentPage, new ArrayList<>(paths)); //_paths
-        //Log.i("PaintView", "Saved page " + String.valueOf(currentPage));
     }
 
     //for each pdf page we create a path array item to record touch interaction (annotation drawings)
     public void changePage(int pageNumber){
         pageNum = pageNumber;
-
-        /*try {
-
-            //Log.i("CID", Integer.toString(bitmaps.size()) + " and you're on page " + pageNumber);
-
-
-            //bitmaps.set(pageNumber, _Bitmap);
-            //bitmaps.add(_Bitmap);
-        }
-        catch (Exception e) {
-            Toast.makeText(getContext(),"Something went wrong when saving annotations",Toast.LENGTH_SHORT).show();
-            e.printStackTrace();
-        }
-
-        */
 
         if(page.get(pageNumber) != null){
             clear();  //This clears pages for turning page effect
@@ -292,29 +261,12 @@ public class PaintView extends View {
         pageView = pv;
         annotationHeight = pv.bitmapH;
         annotationWidth = pv.bitmapW;
-        //Log.i("offset", pv.offsetX + " " + pv.offsetY);
-        //Log.i("offset",  "Paintview " + pv.offsetX + " " + pv.offsetY + " " + bitmapW + " " + bitmapH + " " + canvasW + " " + canvasH + " " + pv.viewScale);
-        //annotationOffsetX = (pv.canvasW - pv.bitmapW) / 2;
-        //annotationOffsetY = (pv.canvasH - pv.bitmapH) / 2;
+
         annotationOffsetX = pv.offsetX;
         annotationOffsetY = pv.offsetY;
         viewScale = pv.viewScale;
-        //annotationOffsetX = pv.offsetX;
-        //annotationOffsetY = pv.offsetY;
-        //mCanvas.restore();
+
         invalidate();
-
-        //scale(annotationWidth, annotationHeight, false);
-        /*if(annotationWidth != 0){
-            mBitmap.setWidth(annotationWidth);
-        }
-        if (annotationHeight != 0) {
-            mBitmap.setHeight(annotationHeight);
-        }*/
-
-        //mBitmap.reconfigure(annotationWidth, annotationHeight, pv.bitmap.getConfig());
-        //pv.scale(pageView.bitmapW, pageView.bitmapH, false);
-        //mCanvas.translate(annotationOffsetX, annotationOffsetY);
     }
 
     public void deleteLastPath(){
@@ -344,8 +296,6 @@ public class PaintView extends View {
     public void saveFirstPage(final String id){
         new Thread(new Runnable() {
             public void run() {
-
-                // a potentially time consuming task
                 for (int i = 0; i < page.size(); i++) {
                     setDrawingCacheEnabled(true);
                     String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/";
@@ -411,7 +361,6 @@ public class PaintView extends View {
                         _canvas.drawPath(fp.path, mPaint);
                     }
 
-                    //bitmaps.get(i).compress(Bitmap.CompressFormat.PNG, 100, fOut);
                     _Bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
 
                     try {
@@ -429,10 +378,6 @@ public class PaintView extends View {
                         e.printStackTrace();
                     }
 
-                    /*System.out.println(file);
-                    bitmaps.get(i).recycle();
-                    System.gc();
-                    */
                 }
             }
         }).start();
