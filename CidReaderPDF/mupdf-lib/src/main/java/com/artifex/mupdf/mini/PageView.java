@@ -56,9 +56,9 @@ public class PageView extends View implements
 		detector = new GestureDetector(ctx, this);
 		scaleDetector = new ScaleGestureDetector(ctx, this);
 
-		viewScale = 1;
-		minScale = 1;
-		maxScale = 2;
+		viewScale = 1f;
+		minScale = 1f;
+		maxScale = 2f;
 
 		linkPaint = new Paint();
 		linkPaint.setARGB(32, 0, 0, 255);
@@ -190,7 +190,7 @@ public class PageView extends View implements
 				invalidate();
 			}
 		}
-		return true;
+		return false;
 	}
 
 	public boolean onFling(MotionEvent e1, MotionEvent e2, float dx, float dy) {
@@ -206,13 +206,17 @@ public class PageView extends View implements
 
 	public boolean onScaleBegin(ScaleGestureDetector det) { return true; }
 
+
+	public float pageFocusX;
+	public float pageFocusY;
+
 	public boolean onScale(ScaleGestureDetector det) {
 		if (bitmap != null) {
 			float focusX = det.getFocusX();
 			float focusY = det.getFocusY();
 			float scaleFactor = det.getScaleFactor();
-			float pageFocusX = (focusX + scrollX) / viewScale;
-			float pageFocusY = (focusY + scrollY) / viewScale;
+			pageFocusX = (focusX + scrollX) / viewScale;
+			pageFocusY = (focusY + scrollY) / viewScale;
 			viewScale *= scaleFactor;
 			if (viewScale < minScale) viewScale = minScale;
 			if (viewScale > maxScale) viewScale = maxScale;
@@ -308,7 +312,7 @@ public class PageView extends View implements
 		offsetX = x;
 		offsetY = y;
 		actionListener.fitPaintViews();
-
+        Log.i("CID", "Page canvasW " + canvasW + " Page canvasH " + canvasH + " bitmapW " + bitmapW + " bitmapH " + bitmapH);
 		canvas.translate(x, y);
 		canvas.scale(viewScale, viewScale);
 		canvas.drawBitmap(bitmap, 0, 0, null);

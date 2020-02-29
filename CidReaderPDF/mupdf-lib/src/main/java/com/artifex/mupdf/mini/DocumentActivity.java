@@ -398,7 +398,6 @@ public class DocumentActivity extends Activity
 		scrollButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				pageView.isScrollActive = !pageView.isScrollActive;
-				//switchAnnotations();
 			}
 		});
 
@@ -1081,14 +1080,17 @@ public class DocumentActivity extends Activity
 				float percX;
 				float percY;
 
-				float horizontalOffset = (canvasW - pageView.bitmapW) / 2f;
-				float verticalOffset = (canvasH - pageView.bitmapH) / 2f;
-
+				//float horizontalOffset = (canvasW - pageView.bitmapW) / 2f;
+				//float verticalOffset = (canvasH - pageView.bitmapH) / 2f;
+				float horizontalOffset = pageView.scrollX;
+				float verticalOffset = pageView.scrollY;
 				percX = ((x - horizontalOffset) / pageView.bitmapW );
 				percY = ((y - verticalOffset) / pageView.bitmapH);
 
-				x = (x - (pageView.scrollX)) / pageView.viewScale;
-				y = (y - (pageView.scrollY)) / pageView.viewScale;
+				//x = (x - (pageView.scrollX)) / pageView.viewScale;
+				//y = (y - (pageView.scrollY)) / pageView.viewScale;
+
+
 
 				Log.i("CID", toolsVisible + " " + menuVisible);
 				if (!menuVisible && !toolsVisible) {
@@ -1139,13 +1141,13 @@ public class DocumentActivity extends Activity
 				if (annotationsVisible) {
 					paintViews.get(0).strokeWidth = strokeWidth;
 					paintViews.get(0).currentColor = color;
-					paintViews.get(0).touchStart(x - pageView.offsetX, y - pageView.offsetY);
+					paintViews.get(0).touchStart(x /*- pageView.offsetX*/, y /*- pageView.offsetY*/);
 					paintViews.get(0).invalidate();
 				}
 				break;
 			case "ACTION_MOVE":
 				if (annotationsVisible) {
-					paintViews.get(0).touchMove(x - pageView.offsetX, y - pageView.offsetY);
+					paintViews.get(0).touchMove(x /*- pageView.offsetX*/, y /*- pageView.offsetY*/);
 					paintViews.get(0).invalidate();
 				}
 				break;

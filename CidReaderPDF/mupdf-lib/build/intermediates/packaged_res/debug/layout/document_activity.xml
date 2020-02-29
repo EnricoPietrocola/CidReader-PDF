@@ -166,6 +166,14 @@
 			android:layout_weight="0"
 			android:text="Menu" />
 
+		<Button
+			android:id="@+id/scrollButton"
+			android:layout_width="66dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="right"
+			android:layout_weight="1"
+			android:text="scroll" />
+
 	</LinearLayout>
 
 	<LinearLayout
@@ -249,6 +257,7 @@
 			android:text="- / -"
 			android:textColor="#FFFFFF"
 			android:textSize="16dp" />
+
 	</LinearLayout>
 
 </RelativeLayout>

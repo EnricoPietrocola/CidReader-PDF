@@ -164,20 +164,14 @@ public class PaintView extends View {
 
     @Override
     protected void onDraw(Canvas canvas) {
+        //super.onDraw(canvas);
         canvas.save();
+        //mCanvas.save();
+        //canvas = mCanvas;
         mBitmap.eraseColor(Color.TRANSPARENT);
         mBitmap.setHasAlpha(true);
 
         startTime = System.currentTimeMillis();
-
-        if(pageView != null){
-            canvas.translate(annotationOffsetX, annotationOffsetY);
-            canvas.scale(viewScale, viewScale);
-        }
-
-        canvas.drawBitmap(mBitmap,0, 0, mBitmapPaint);
-        canvas.restore();
-        postInvalidateOnAnimation();
 
         Iterator<FingerPath> iterator = paths.iterator();
         while(iterator.hasNext()){
@@ -203,12 +197,28 @@ public class PaintView extends View {
             }
             mCanvas.drawPath(fp.path, mPaint);
         }
+        if(pageView != null){
 
+            canvas.translate(annotationOffsetX, annotationOffsetY);
+            //Log.i("CID", "Paint canvasW " + canvas.getWidth() + " Paint canvasH " + canvas.getHeight() + " bitmapW " + mBitmap.getWidth() + " bitmapH " + mBitmap.getHeight());
+            canvas.scale(viewScale, viewScale);
+        }
+        canvas.drawBitmap(mBitmap, 0, 0, mBitmapPaint);
+        canvas.restore();
+        postInvalidateOnAnimation();
     }
 
     public void touchStart(float x, float y) {
-        //x -= scrollX + annotationOffsetX;
-        //y -= scrollY + annotationOffsetY;
+        if (viewScale == 1f){
+        }
+        else{
+            x = (x / viewScale) +  Math.abs(annotationOffsetX / viewScale);
+        }
+        if (viewScale == 1f){
+        }
+        else{
+            y = (y / viewScale) + Math.abs(annotationOffsetY / viewScale);
+        }
 
         mPath = new Path();
         FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth,  mPath);
@@ -219,10 +229,18 @@ public class PaintView extends View {
         mY = y;
     }
 
-    public void touchMove(float x, float y) {
-        //x -= scrollX + annotationOffsetX;
-        //y -= scrollY + annotationOffsetY;
 
+    public void touchMove(float x, float y) {
+        if (viewScale == 1f){
+        }
+        else{
+            x = (x / viewScale) + Math.abs(annotationOffsetX / viewScale);
+        }
+        if (viewScale == 1f){
+        }
+        else{
+            y = (y / viewScale) + Math.abs(annotationOffsetY / viewScale);
+        }
 
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mY);
@@ -266,6 +284,10 @@ public class PaintView extends View {
 
     }
 
+    public float focusX;
+    public float focusY;
+
+
     public void pageViewTransform(PageView pv){
         pageView = pv;
 
@@ -277,11 +299,13 @@ public class PaintView extends View {
         scrollX = pv.scrollX;
         scrollY = pv.scrollY;
 
+        focusX = pv.pageFocusX;
+        focusY = pv.pageFocusY;
         viewScale = pv.viewScale;
 
         Log.i("CID", "annotationWidth " + annotationWidth + " annotationHeight " + annotationHeight);
         Log.i("CID", "annotationOffsetX " + annotationOffsetX + " annotationOffsetY " + annotationOffsetY);
-        Log.i("CID", "scrollX " + scrollX + " scrollY " + scrollY);
+        //Log.i("CID", "scrollX " + scrollX + " scrollY " + scrollY);
         Log.i("CID", "viewScale " + viewScale);
 
 
