@@ -1089,18 +1089,21 @@ public class DocumentActivity extends Activity
 				percX = ((x - horizontalOffset) / pageView.bitmapW);
 				percY = ((y - verticalOffset) / pageView.bitmapH);
 
-				if(pageView.viewScale == 1f){
-					horizontalOffset = (pageView.canvasW - pageView.bitmapW) / 2f;
-					x = (x - horizontalOffset);
+				if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale != 1f){
+					horizontalOffset = (pageView.canvasW - pageView.bitmapW);
+					x = x - horizontalOffset * pageView.viewScale;
 				}
-				else{
+				else if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale == 1f){
+					horizontalOffset = (pageView.canvasH - pageView.bitmapH);
+					y = y - horizontalOffset / 2f;
 				}
-				if(pageView.viewScale == 1f){
-					verticalOffset = (pageView.canvasH - pageView.bitmapH) / 2f;
-					Log.i("CID", " is this happening?");
-					y = (y - verticalOffset);
+				if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale != 1f){
+					verticalOffset = (pageView.canvasH - pageView.bitmapH);
+					y = y - verticalOffset * pageView.viewScale;
 				}
-				else{
+				else if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale == 1f){
+					verticalOffset = (pageView.canvasH - pageView.bitmapH);
+					y = y - verticalOffset / 2f;
 				}
 
 
