@@ -58,7 +58,7 @@ public class PageView extends View implements
 
 		viewScale = 1f;
 		minScale = 1f;
-		maxScale = 2f;
+		maxScale = 4f;
 
 		linkPaint = new Paint();
 		linkPaint.setARGB(32, 0, 0, 255);

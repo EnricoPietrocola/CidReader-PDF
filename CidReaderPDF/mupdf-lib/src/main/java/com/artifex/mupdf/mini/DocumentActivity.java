@@ -1082,13 +1082,27 @@ public class DocumentActivity extends Activity
 
 				//float horizontalOffset = (canvasW - pageView.bitmapW) / 2f;
 				//float verticalOffset = (canvasH - pageView.bitmapH) / 2f;
+
 				float horizontalOffset = pageView.scrollX;
 				float verticalOffset = pageView.scrollY;
-				percX = ((x - horizontalOffset) / pageView.bitmapW );
+
+				percX = ((x - horizontalOffset) / pageView.bitmapW);
 				percY = ((y - verticalOffset) / pageView.bitmapH);
 
-				//x = (x - (pageView.scrollX)) / pageView.viewScale;
-				//y = (y - (pageView.scrollY)) / pageView.viewScale;
+				if(pageView.viewScale == 1f){
+					horizontalOffset = (pageView.canvasW - pageView.bitmapW) / 2f;
+					x = (x - horizontalOffset);
+				}
+				else{
+				}
+				if(pageView.viewScale == 1f){
+					verticalOffset = (pageView.canvasH - pageView.bitmapH) / 2f;
+					Log.i("CID", " is this happening?");
+					y = (y - verticalOffset);
+				}
+				else{
+				}
+
 
 
 
