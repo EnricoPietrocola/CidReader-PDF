@@ -46,15 +46,20 @@ import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
 import android.view.inputmethod.InputMethodManager;
+import android.widget.AdapterView;
+import android.widget.ArrayAdapter;
 import android.widget.Button;
 import android.widget.CompoundButton;
 import android.widget.EditText;
 import android.widget.FrameLayout;
 import android.widget.LinearLayout;
+import android.widget.ListAdapter;
+import android.widget.ListView;
 import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
+import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MotionEvent;
@@ -344,7 +349,7 @@ public class DocumentActivity extends Activity
 		LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,30);
 		LinearLayout.LayoutParams part = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,70);
 
-		menuLayout.setOrientation(LinearLayout.HORIZONTAL);
+		menuLayout.setOrientation(LinearLayout.VERTICAL);
 		menuLayoutParams.topMargin = 200;
 		addContentView(menuLayout, menuLayoutParams);
 
@@ -374,6 +379,40 @@ public class DocumentActivity extends Activity
 				}
 			}
 		});
+
+		//List of connections to be filled
+		final TextView connectionsTitle = new TextView(mainContext);
+		connectionsTitle.setText("Connections");
+		connectionsTitle.setLayoutParams(part);
+		menuLayout.addView(connectionsTitle);
+
+		ArrayList<String> connections = new ArrayList<>();
+		for (int i = 0; i < connectedAddresses.size(); i++)
+		{
+			String connection = connectedAddresses.get(i).toString();
+			connections.add(connection);
+		}
+
+		//need to be visualized and put on top of everything
+
+		ListAdapter connectionsListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, connections);
+
+		final ListView connectionsList = new ListView(mainContext);
+		LinearLayout.LayoutParams connectionsListLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
+		connectionsList.setLayoutParams(part);
+		connectionsList.setAdapter(connectionsListAdapter);
+		menuLayout.addView(connectionsList);
+
+		connectionsList.setOnItemClickListener(
+				new AdapterView.OnItemClickListener() {
+					@Override
+					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
+						//do things with connected ips
+						String itemClicked = String.valueOf(parent.getItemAtPosition(position));
+						Log.i("CID", "Clicked on " + itemClicked);
+					}
+				}
+		);
 
 		menuButton = findViewById(R.id.MenuButton);
 		menuButton.setOnClickListener(new View.OnClickListener() {
