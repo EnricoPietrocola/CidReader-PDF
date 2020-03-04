@@ -239,8 +239,10 @@ public class PageView extends View implements
 		if (scrollY <= 0) {
 			if (scrollX <= 0) {
 				actionListener.goBackward();
+
 				return;
 			}
+			//this scrolls the document when tapping on the side of the screen, doesn't work great when editing music sheet so it's been hidden
 			//scroller.startScroll(scrollX, scrollY, -canvasW * 9 / 10, bitmapH - canvasH - scrollY, 500);
 		} else {
 			//scroller.startScroll(scrollX, scrollY, 0, -canvasH * 9 / 10, 250);

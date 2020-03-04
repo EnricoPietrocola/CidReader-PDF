@@ -965,7 +965,8 @@ public class DocumentActivity extends Activity
 
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.addr = ipTargetAddress;
-			udpClient.Message = "goBackward";
+			//udpClient.Message = "goBackward";
+			udpClient.Message = "goToPage," + (currentPage - 1);
 			udpClient.Send();
 		}
 	}
@@ -976,7 +977,8 @@ public class DocumentActivity extends Activity
 
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.addr = ipTargetAddress;
-			udpClient.Message = "goForward";
+			//udpClient.Message = "goForward";
+			udpClient.Message = "goToPage," + (currentPage + 1);
 			udpClient.Send();
 		}
 	}
@@ -1144,8 +1146,6 @@ public class DocumentActivity extends Activity
 					//verticalOffset = (pageView.canvasH - pageView.bitmapH);
 					y = y - verticalOffset;
 				}
-
-
 
 
 				Log.i("CID", toolsVisible + " " + menuVisible);
