@@ -5,6 +5,10 @@ It is created to help Networked Music students and performers to interact on mus
 Works with UDP sockets and on any modern android tablet.
 
 ![ExampleImage](https://media.giphy.com/media/UvWuE9d1LzedVJLtGz/giphy.gif)
+[Video example](https://www.youtube.com/watch?v=5DPnnhvZc1Q)
+
+Right now Cid features:
+* UDP connectivity trhough IP address
 
 Video example for a CidReader-PDF session
 https://www.youtube.com/watch?v=5DPnnhvZc1Q
