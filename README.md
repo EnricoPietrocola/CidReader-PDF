@@ -4,6 +4,8 @@ Cid is an open source Android PDF reader able to share realtime interaction onli
 It is created to help Networked Music students and performers to interact on music sheet on a distance or locally.
 Works with UDP sockets and on any modern android tablet.
 
+![ExampleImage](http://enricopietrocola.altervista.org/wp-content/uploads/2019/06/7WcWh2rVdkcqilKDRe-CqKmjnioj_Awep7ioynYTfFwERN8hCtSMX4_QVVzIzDN585_jViTsmakR3SXogEzgqt1cSBIMqgdjkhNy5wEDs1280-960x540.jpg)
+
 Video example for a CidReader-PDF session
 https://www.youtube.com/watch?v=5DPnnhvZc1Q
 
