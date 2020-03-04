@@ -69,6 +69,7 @@ public class PaintView extends View {
     //protected ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
     protected FileOutputStream fOut = null;
     protected Integer pageNum;
+    protected boolean touchStarted;
 
     //added for multipage support
     public ArrayList<ArrayList<FingerPath>> page = new ArrayList<>();
@@ -209,6 +210,8 @@ public class PaintView extends View {
     }
 
     public void touchStart(float x, float y) {
+        touchStarted = true;
+
         if (viewScale == 1f){
         }
         else{
@@ -228,8 +231,7 @@ public class PaintView extends View {
         mX = x;
         mY = y;
     }
-
-
+    
     public void touchMove(float x, float y) {
         if (viewScale == 1f){
         }
@@ -244,11 +246,15 @@ public class PaintView extends View {
 
         float dx = Math.abs(x - mX);
         float dy = Math.abs(y - mY);
+        if(mPath == null) {
 
-        if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
-            mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
-            mX = x;
-            mY = y;
+        }
+        else if (dx >= TOUCH_TOLERANCE || dy >= TOUCH_TOLERANCE) {
+            if (touchStarted) {
+                mPath.quadTo(mX, mY, (x + mX) / 2, (y + mY) / 2);
+                mX = x;
+                mY = y;
+            }
         }
     }
 
@@ -262,7 +268,7 @@ public class PaintView extends View {
         catch (Exception e) {
             e.printStackTrace();
         }
-
+        touchStarted = false;
     }
 
     public void saveCurrentPage(int currentPage){

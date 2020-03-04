@@ -1117,7 +1117,7 @@ public class DocumentActivity extends Activity
 
 		View v = getCurrentFocus();
 			if (y >= (canvasH - pageView.bitmapH) / 2f && y <= ((canvasH - pageView.bitmapH) / 2f) + pageView.bitmapH) {
-
+				Log.i("CID","Canvas H " + canvasH + " bitmap " + pageView.bitmapH + " " + (canvasH - pageView.bitmapH) / 2f + " " + y);
 				float percX;
 				float percY;
 
@@ -1146,7 +1146,6 @@ public class DocumentActivity extends Activity
 					//verticalOffset = (pageView.canvasH - pageView.bitmapH);
 					y = y - verticalOffset;
 				}
-
 
 				Log.i("CID", toolsVisible + " " + menuVisible);
 				if (!menuVisible && !toolsVisible) {
@@ -1193,6 +1192,7 @@ public class DocumentActivity extends Activity
 		paintViews.get(0).actionPages.get(currentPage).add(action + "," + Float.toString(x) + "," + Float.toString(y) + ";");
 
 		switch(action) {
+			//if ACTION DOWN happens outside of bounds, there will be now touchstart but there will be a touchMove
 			case "ACTION_DOWN":
 				if (annotationsVisible) {
 					paintViews.get(0).strokeWidth = strokeWidth;
