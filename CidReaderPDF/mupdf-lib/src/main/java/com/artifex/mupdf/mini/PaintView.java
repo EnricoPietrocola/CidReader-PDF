@@ -309,21 +309,22 @@ public class PaintView extends View {
         focusY = pv.pageFocusY;
         viewScale = pv.viewScale;
 
-        Log.i("CID", "annotationWidth " + annotationWidth + " annotationHeight " + annotationHeight);
-        Log.i("CID", "annotationOffsetX " + annotationOffsetX + " annotationOffsetY " + annotationOffsetY);
+        //Log.i("CID", "annotationWidth " + annotationWidth + " annotationHeight " + annotationHeight);
+        //Log.i("CID", "annotationOffsetX " + annotationOffsetX + " annotationOffsetY " + annotationOffsetY);
         //Log.i("CID", "scrollX " + scrollX + " scrollY " + scrollY);
-        Log.i("CID", "viewScale " + viewScale);
-
-
+        //Log.i("CID", "viewScale " + viewScale);
         invalidate();
     }
 
     public void deleteLastPath(){
 
         if(paths.size() > 0) {
+            //Log.i("CID", "Undo, path's size " + paths.size());
             paths.remove(paths.get(paths.size() - 1));
+            //Log.i("CID", "Undo, path's size " + paths.size());
         }
         else{
+            Log.i("CID", "Can't undo ");
             //no more undos on current page
             //we could use this part to gray out the undo button
         }
@@ -331,10 +332,10 @@ public class PaintView extends View {
     }
 
     public void deleteLastPathOnPage(int pageNumber){
-        Log.i("CID", "Received undo on page " + pageNumber);
+        //Log.i("CID", "Received undo on page " + pageNumber);
         if(page.get(pageNumber).size() > 0) {
             page.get(pageNumber).remove(page.get(pageNumber).size() - 1);
-            Log.i("CID", "TEST");
+           // Log.i("CID", "TEST");
         }
         else{
             //no more undos

@@ -369,7 +369,6 @@ public class DocumentActivity extends Activity
 		//Save button exec
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
-				Log.i("CID", "Do stuff");
 				if (currentPage > 0) {
 					for (int i = 0; i < paintViews.size(); i++) {
 						//paintViews.get(i).saveCurrentPage(currentPage); //this is for png save
@@ -534,7 +533,6 @@ public class DocumentActivity extends Activity
 	public void saveAnnotationFiles(){
 		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
 			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
-			Log.i("CID", "hey");
 		}
 
 		PaintView pv;
@@ -954,7 +952,7 @@ public class DocumentActivity extends Activity
 
 	public void changePageDrawing(){
 		for (int i = 0; i < paintViews.size(); i++) {
-			Log.i("CID", currentPage + "");
+			//Log.i("CID", currentPage + "");
 			paintViews.get(i).changePage(currentPage);
 		}
     }
@@ -1062,7 +1060,7 @@ public class DocumentActivity extends Activity
 				//parsedMessage[1] is the command
 				//the others are the command's parameters
 				///////////////////////////////////////////////////////////////////////////////////////////
-				Log.i("CID", "Recieving: " + parsedMessage);
+				//Log.i("CID", "Recieving: " + parsedMessage);
 				switch (parsedMessage[1]) {
 					case "goForward":
 						goForwardLocal();
@@ -1117,71 +1115,83 @@ public class DocumentActivity extends Activity
 
 		View v = getCurrentFocus();
 			if (y >= (canvasH - pageView.bitmapH) / 2f && y <= ((canvasH - pageView.bitmapH) / 2f) + pageView.bitmapH) {
-				Log.i("CID","Canvas H " + canvasH + " bitmap " + pageView.bitmapH + " " + (canvasH - pageView.bitmapH) / 2f + " " + y);
-				float percX;
-				float percY;
+				//Log.i("CID","Canvas H " + canvasH + " bitmap " + pageView.bitmapH + " " + (canvasH - pageView.bitmapH) / 2f + " " + y);
 
-				float horizontalOffset = (canvasW - pageView.bitmapW) / 2f;
-				float verticalOffset = (canvasH - pageView.bitmapH) / 2f;
-
-				//float horizontalOffset = pageView.scrollX;
-				//float verticalOffset = pageView.scrollY;
-
-				percX = ((x - horizontalOffset) / pageView.bitmapW);
-				percY = ((y - verticalOffset) / pageView.bitmapH);
-
-				if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale != 1f){
-					horizontalOffset = (pageView.canvasW - pageView.bitmapW);
-					x = x - horizontalOffset * pageView.viewScale;
+				if((y < actionBar.getHeight() || y > canvasH - actionBar.getHeight()) && actionBar.getVisibility() == View.VISIBLE) {
+					//clicking on menu bars, ignoring touch for drawing
 				}
-				else if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale == 1f){
-					//horizontalOffset = (pageView.canvasH - pageView.bitmapH);
-					y = y - horizontalOffset;
-				}
-				if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale != 1f){
-					verticalOffset = (pageView.canvasH - pageView.bitmapH);
-					y = y - verticalOffset * pageView.viewScale;
-				}
-				else if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale == 1f){
-					//verticalOffset = (pageView.canvasH - pageView.bitmapH);
-					y = y - verticalOffset;
-				}
+				else{
+					//clicking on bitmap, drawing
 
-				percX = (x + pageView.scrollX) / pageView.bitmapW;
-				percY = (y + pageView.scrollY) / pageView.bitmapH;
+					float percX;
+					float percY;
 
-				Log.i("CID", toolsVisible + " " + menuVisible);
-				if (!menuVisible && !toolsVisible) {
+					float horizontalOffset = (canvasW - pageView.bitmapW) / 2f;
+					float verticalOffset = (canvasH - pageView.bitmapH) / 2f;
 
-					if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 100) {
-						switch (event.getAction()) {
-							case MotionEvent.ACTION_DOWN:
-								if (annotationsVisible) {
+					//float horizontalOffset = pageView.scrollX;
+					//float verticalOffset = pageView.scrollY;
 
-									drawOnScreenLocal("ACTION_DOWN", x, y);
-									RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color, isTrail);
-								}
+					//percX = ((x - horizontalOffset) / pageView.bitmapW);
+					//percY = ((y - verticalOffset) / pageView.bitmapH);
 
-								break;
-							case MotionEvent.ACTION_MOVE:
-								if (annotationsVisible) {
-									drawOnScreenLocal("ACTION_MOVE", x, y);
-									RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color, isTrail);
-								}
-								break;
-							case MotionEvent.ACTION_UP:
+					if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale != 1f){
+						horizontalOffset = (pageView.canvasW - pageView.bitmapW);
+						x = x - horizontalOffset * pageView.viewScale;
+					}
+					else if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale == 1f){
+						//horizontalOffset = (pageView.canvasH - pageView.bitmapH);
+						y = y - horizontalOffset;
+					}
+					if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale != 1f){
+						verticalOffset = (pageView.canvasH - pageView.bitmapH);
+						y = y - verticalOffset * pageView.viewScale;
+					}
+					else if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale == 1f){
+						//verticalOffset = (pageView.canvasH - pageView.bitmapH);
+						y = y - verticalOffset;
+					}
 
-								if (annotationsVisible) {
-									drawOnScreenLocal("ACTION_UP", x, y);
-									RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color, isTrail);
-								}
+					percX = (x + pageView.scrollX) / pageView.bitmapW;
+					percY = (y + pageView.scrollY) / pageView.bitmapH;
 
-								startTime = System.currentTimeMillis();
-								break;
+					//Log.i("CID", toolsVisible + " " + menuVisible);
+					if (!menuVisible && !toolsVisible) {
+						if (event.getPointerCount() == 2) {
+							fitPaintViews();
+							startTime = System.currentTimeMillis();
 						}
-					} else if (event.getPointerCount() == 2) {
-						fitPaintViews();
-						startTime = System.currentTimeMillis();
+						//get number of fingers on screen and filter, this is a way to filter pinch to zoom mistakingly drawing
+						else if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 20) {
+							switch (event.getAction()) {
+								case MotionEvent.ACTION_DOWN:
+									if (annotationsVisible) {
+
+										drawOnScreenLocal("ACTION_DOWN", x, y);
+										RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color, isTrail);
+									}
+
+									break;
+								case MotionEvent.ACTION_MOVE:
+									if (annotationsVisible) {
+										drawOnScreenLocal("ACTION_MOVE", x, y);
+										RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color, isTrail);
+									}
+									break;
+								case MotionEvent.ACTION_UP:
+
+									if (annotationsVisible) {
+										drawOnScreenLocal("ACTION_UP", x, y);
+										RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color, isTrail);
+									}
+
+									startTime = System.currentTimeMillis();
+									break;
+							}
+						} else if (event.getPointerCount() == 2) {
+							fitPaintViews();
+							startTime = System.currentTimeMillis();
+						}
 					}
 				}
 		}
@@ -1225,7 +1235,7 @@ public class DocumentActivity extends Activity
 
 		//record actions in file for remote save data
 		paintViews.get(paintViews.indexOf(pv)).actionPages.get(currentPage).add(action + "," + x + "," + y + ";");
-		Log.i("CID", pv.ipAddress.toString());
+		//Log.i("CID", pv.ipAddress.toString());
 
 		float percX;
 		float percY;
@@ -1236,15 +1246,15 @@ public class DocumentActivity extends Activity
 		percX = (x * pageView.bitmapW) + horizontalOffset;
 		percY = (y * pageView.bitmapH) + verticalOffset;
 
-		Log.i("CID", "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " horizontalOffset " + horizontalOffset + " verticalOffset " + verticalOffset + " isTrail " + isLineTrail);
-		Log.i("CID", ip.toString());
+		//Log.i("CID", "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " horizontalOffset " + horizontalOffset + " verticalOffset " + verticalOffset + " isTrail " + isLineTrail);
+		//Log.i("CID", ip.toString());
 
 		switch(action) {
 			case "ACTION_DOWN":
 				if (annotationsVisible) {
 					pv.currentColor = recvColor;
 					pv.strokeWidth = recvStrokeWidth;
-					Log.i("CID", Float.toString(percX - pageView.offsetX)  + " " + Float.toString(percY - pageView.offsetY));
+					//Log.i("CID", Float.toString(percX - pageView.offsetX)  + " " + Float.toString(percY - pageView.offsetY));
 					pv.touchStart(percX - pageView.offsetX, percY - pageView.offsetY);
 					pv.invalidate();
 				}

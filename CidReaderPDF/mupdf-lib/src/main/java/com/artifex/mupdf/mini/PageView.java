@@ -314,7 +314,7 @@ public class PageView extends View implements
 		offsetX = x;
 		offsetY = y;
 		actionListener.fitPaintViews();
-        Log.i("CID", "Page canvasW " + canvasW + " Page canvasH " + canvasH + " bitmapW " + bitmapW + " bitmapH " + bitmapH);
+        //Log.i("CID", "Page canvasW " + canvasW + " Page canvasH " + canvasH + " bitmapW " + bitmapW + " bitmapH " + bitmapH);
 		canvas.translate(x, y);
 		canvas.scale(viewScale, viewScale);
 		canvas.drawBitmap(bitmap, 0, 0, null);
