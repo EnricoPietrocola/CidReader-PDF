@@ -1147,6 +1147,9 @@ public class DocumentActivity extends Activity
 					y = y - verticalOffset;
 				}
 
+				percX = (x + pageView.scrollX) / pageView.bitmapW;
+				percY = (y + pageView.scrollY) / pageView.bitmapH;
+
 				Log.i("CID", toolsVisible + " " + menuVisible);
 				if (!menuVisible && !toolsVisible) {
 

@@ -231,7 +231,7 @@ public class PaintView extends View {
         mX = x;
         mY = y;
     }
-    
+
     public void touchMove(float x, float y) {
         if (viewScale == 1f){
         }
