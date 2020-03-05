@@ -10,6 +10,7 @@
     <application>
         <activity
             android:name=".DocumentActivity"
+            android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize|keyboardHidden"
             android:label="MuPDF mini">
             <intent-filter>
