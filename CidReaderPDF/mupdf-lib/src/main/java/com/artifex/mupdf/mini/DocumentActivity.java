@@ -1141,7 +1141,7 @@ public class DocumentActivity extends Activity
 					}
 					else if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale == 1f){
 						//horizontalOffset = (pageView.canvasH - pageView.bitmapH);
-						y = y - horizontalOffset;
+						x = x - horizontalOffset;
 					}
 					if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale != 1f){
 						verticalOffset = (pageView.canvasH - pageView.bitmapH);
@@ -1235,19 +1235,9 @@ public class DocumentActivity extends Activity
 
 		//record actions in file for remote save data
 		paintViews.get(paintViews.indexOf(pv)).actionPages.get(currentPage).add(action + "," + x + "," + y + ";");
-		//Log.i("CID", pv.ipAddress.toString());
 
-		float percX;
-		float percY;
-
-		float horizontalOffset = (canvasW - pageView.bitmapW) / 2f;
-		float verticalOffset = (canvasH - pageView.bitmapH) / 2f;
-
-		percX = (x * pageView.bitmapW) + horizontalOffset;
-		percY = (y * pageView.bitmapH) + verticalOffset;
-
-		//Log.i("CID", "Recieved percX " + percX + " percY " + percY + " x " + x + " y " + y + " horizontalOffset " + horizontalOffset + " verticalOffset " + verticalOffset + " isTrail " + isLineTrail);
-		//Log.i("CID", ip.toString());
+		x = (x * pageView.bitmapW) - pageView.scrollX;
+		y = (y * pageView.bitmapH) - pageView.scrollY;
 
 		switch(action) {
 			case "ACTION_DOWN":
@@ -1255,13 +1245,13 @@ public class DocumentActivity extends Activity
 					pv.currentColor = recvColor;
 					pv.strokeWidth = recvStrokeWidth;
 					//Log.i("CID", Float.toString(percX - pageView.offsetX)  + " " + Float.toString(percY - pageView.offsetY));
-					pv.touchStart(percX - pageView.offsetX, percY - pageView.offsetY);
+					pv.touchStart(x, y);
 					pv.invalidate();
 				}
 				break;
 			case "ACTION_MOVE":
 				if (annotationsVisible) {
-					pv.touchMove(percX - pageView.offsetX, percY - pageView.offsetY);
+					pv.touchMove(x, y);
 					pv.invalidate();
 				}
 				break;
