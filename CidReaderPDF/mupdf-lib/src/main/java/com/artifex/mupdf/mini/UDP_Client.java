@@ -13,6 +13,7 @@ public class UDP_Client {
     private AsyncTask<Void, Void, Void> async_cient;
     public String Message;
     public InetAddress addr;
+    public int port = 12777;
 
     @SuppressLint("NewApi")
     public void Send() {
@@ -28,7 +29,7 @@ public class UDP_Client {
                     //addr = InetAddress.getByName("192.168.1.153");
                     ds = new DatagramSocket();
                     DatagramPacket dp;
-                    dp = new DatagramPacket(Message.getBytes(), Message.length(), addr, 12777 ); //original port was 12777
+                    dp = new DatagramPacket(Message.getBytes(), Message.length(), addr, port); //original port was 12777
                     ds.setBroadcast(true);
                     ds.send(dp);
                     //Log.i("tag", "sending data " + Message);

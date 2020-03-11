@@ -20,6 +20,7 @@ public class UDP_Server
 {
     private AsyncTask<Void, Void, Void> async;
     private boolean Server_aktiv = true;
+    public int port = 12777;
 
     @SuppressLint({"NewApi", "StaticFieldLeak"})
     public void runUdpServer(final Context context)
@@ -35,7 +36,7 @@ public class UDP_Server
 
                 try
                 {
-                    ds = new DatagramSocket(12777);
+                    ds = new DatagramSocket(port);
 
                     while(Server_aktiv)
                     {

@@ -29,6 +29,7 @@ import android.widget.LinearLayout;
 import android.widget.ListAdapter;
 import android.widget.ListView;
 import android.widget.RelativeLayout;
+import android.widget.TextView;
 import android.widget.Toast;
 
 
@@ -39,6 +40,7 @@ public class MainActivity extends AppCompatActivity {
     public static LinearLayout item;
     public Uri file;
     public EditText ipText;
+    private EditText portText;
 
     @Override
     protected void onCreate(Bundle savedInstanceState) {
@@ -48,14 +50,32 @@ public class MainActivity extends AppCompatActivity {
         mainContext = getApplicationContext();
         item = new LinearLayout(mainContext);
         ipText = new EditText(mainContext);
+        portText = new EditText(mainContext);
         item.setOrientation(LinearLayout.VERTICAL);
         setContentView(item);
 
         //IP INPUT TEXT FIELD
+        LinearLayout.LayoutParams labelTextLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        final TextView ipAddressTitle = new TextView(mainContext);
+        ipAddressTitle.setText("IP Address");
+        ipAddressTitle.setLayoutParams(labelTextLayoutParams);
+        item.addView(ipAddressTitle);
+
         LinearLayout.LayoutParams ipTextLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         ipText.setLayoutParams(ipTextLayoutParams);
         ipText.setText("192.168.1.1");
         item.addView(ipText);
+
+        //IP INPUT TEXT FIELD
+        final TextView connectionsTitle = new TextView(mainContext);
+        connectionsTitle.setText("Port");
+        connectionsTitle.setLayoutParams(labelTextLayoutParams);
+        item.addView(connectionsTitle);
+
+        LinearLayout.LayoutParams portTextLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+        portText.setLayoutParams(portTextLayoutParams);
+        portText.setText("12777");
+        item.addView(portText);
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -73,7 +93,12 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        CreatePDFList();
+        //IP INPUT TEXT FIELD
+        final TextView documentsTitle = new TextView(mainContext);
+        documentsTitle.setText("Documents");
+        documentsTitle.setLayoutParams(labelTextLayoutParams);
+        item.addView(documentsTitle);
+        createPDFList();
     }
 
     @Override
@@ -103,7 +128,7 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
-    public void CreatePDFList(){
+    public void createPDFList(){
         String path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS).getPath();
 
         File directory = new File(path);
@@ -139,7 +164,7 @@ public class MainActivity extends AppCompatActivity {
                         String itemClicked = String.valueOf(parent.getItemAtPosition(position));
                         Toast.makeText(MainActivity.this, itemClicked, Toast.LENGTH_LONG).show();
 
-                        ConnectAndOpenPDF(ipText);
+                        connectAndOpenPDF(ipText);
 
                         startMUPDFActivityFromDownloads(itemClicked);
                     }
@@ -147,7 +172,7 @@ public class MainActivity extends AppCompatActivity {
         );
     }
 
-    public void ConnectAndOpenPDF(EditText ipText){
+    public void connectAndOpenPDF(EditText ipText){
         if (checkSelfPermission(Manifest.permission.INTERNET)
                 != PackageManager.PERMISSION_GRANTED) {
 
