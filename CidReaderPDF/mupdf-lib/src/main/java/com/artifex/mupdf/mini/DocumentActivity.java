@@ -42,6 +42,7 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewDebug;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -165,6 +166,10 @@ public class DocumentActivity extends Activity
 	protected FrameLayout paintViewLayout;
 	private ArrayList<PaintView> paintViews = new ArrayList<>();
 	private boolean annotationsVisible = true;
+	private ListView connectionsList;
+	private ArrayList<String> connections;
+	private ListAdapter connectionsListAdapter;
+
 
 	@SuppressLint("WrongViewCast")
 	public void onCreate(Bundle savedInstanceState) {
@@ -387,22 +392,25 @@ public class DocumentActivity extends Activity
 		connectionsTitle.setLayoutParams(part);
 		menuLayout.addView(connectionsTitle);
 
-		ArrayList<String> connections = new ArrayList<>();
-		for (int i = 0; i < connectedAddresses.size(); i++)
-		{
-			String connection = connectedAddresses.get(i).toString();
-			connections.add(connection);
-		}
+
 
 		//need to be visualized and put on top of everything
+		connections = new ArrayList<>();
+		for (int i = 0; i < connectedAddresses.size(); i++) {
+			String connection = connectedAddresses.get(i).toString();
+			Log.i("CID", "Connected ip address: " + connection);
+			connections.add(connection);
+		}
+		//updateConnectionList();
 
-		ListAdapter connectionsListAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_list_item_1, connections);
+		connectionsListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, connections);
 
-		final ListView connectionsList = new ListView(mainContext);
+		connectionsList = new ListView(mainContext);
 		LinearLayout.LayoutParams connectionsListLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 		connectionsList.setLayoutParams(part);
 		connectionsList.setAdapter(connectionsListAdapter);
 		menuLayout.addView(connectionsList);
+
 
 		connectionsList.setOnItemClickListener(
 				new AdapterView.OnItemClickListener() {
@@ -419,11 +427,11 @@ public class DocumentActivity extends Activity
 		menuButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				menuVisible = !menuVisible;
-
 				if(menuVisible) {
 					menuLayout.setVisibility(view.VISIBLE);
 					pageView.setVisibility(View.INVISIBLE);
 					switchAnnotations();
+					updateConnectionList();
 				}
 				else{
 					menuLayout.setVisibility(view.INVISIBLE);
@@ -511,6 +519,16 @@ public class DocumentActivity extends Activity
 				layoutPopupMenu.show();
 			}
 		});
+	}
+
+	private void updateConnectionList() {
+		connections.clear();
+		for (int i = 0; i < connectedAddresses.size(); i++) {
+			String connection = connectedAddresses.get(i).toString();
+			Log.i("CID", "Connected ip address: " + connection);
+			connections.add(connection);
+			((ArrayAdapter<String>) connectionsListAdapter).notifyDataSetChanged();
+		}
 	}
 
 	public void toggleAnnotationInteraction(){
@@ -1025,6 +1043,7 @@ public class DocumentActivity extends Activity
 
 		if (!connectedAddresses.contains(ip)) {
 			connectedAddresses.add(ip);
+			updateConnectionList();
 			//create a new paintview with new connected IP as ID
 			createRemoteGraphics(ip);
 		}
@@ -1199,7 +1218,8 @@ public class DocumentActivity extends Activity
 						}
 					}
 				}
-		}
+
+			}
 		boolean ret = super.dispatchTouchEvent(event);
 		return ret;
 	}
