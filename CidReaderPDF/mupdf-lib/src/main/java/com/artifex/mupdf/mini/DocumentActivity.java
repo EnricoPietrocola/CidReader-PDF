@@ -340,7 +340,7 @@ public class DocumentActivity extends Activity
 			public void onClick(View v) {
 				PaintView pv = paintViews.get(0);
 				pv.deleteLastPath();
-				RPCUndoLastEdit(currentPage);
+				RemoteUndoLastEdit(currentPage);
 			}
 		});
 
@@ -1001,9 +1001,9 @@ public class DocumentActivity extends Activity
 		}
 	}
 
-	public String[] RPCParse(String RPCMessage){
+	public String[] RemoteParse(String RemoteMessage){
 		String[] splitMessage;
-		splitMessage = RPCMessage.split(",");
+		splitMessage = RemoteMessage.split(",");
 		String _temp = "";
 
 		for (int i = 0; i < splitMessage.length; i++){
@@ -1046,7 +1046,7 @@ public class DocumentActivity extends Activity
 				}
 
 				//do operations with received message
-				String[] parsedMessage = RPCParse(newString);
+				String[] parsedMessage = RemoteParse(newString);
 
 				InetAddress ip = null;
 				try {
@@ -1168,21 +1168,21 @@ public class DocumentActivity extends Activity
 									if (annotationsVisible) {
 
 										drawOnScreenLocal("ACTION_DOWN", x, y);
-										RPCDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color, isTrail);
+										RemoteDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color, isTrail);
 									}
 
 									break;
 								case MotionEvent.ACTION_MOVE:
 									if (annotationsVisible) {
 										drawOnScreenLocal("ACTION_MOVE", x, y);
-										RPCDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color, isTrail);
+										RemoteDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color, isTrail);
 									}
 									break;
 								case MotionEvent.ACTION_UP:
 
 									if (annotationsVisible) {
 										drawOnScreenLocal("ACTION_UP", x, y);
-										RPCDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color, isTrail);
+										RemoteDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color, isTrail);
 									}
 
 									startTime = System.currentTimeMillis();
@@ -1277,21 +1277,21 @@ public class DocumentActivity extends Activity
 	}
 
 	//this is the online part
-	private void RPCprintOnScreen(int x, int y){
+	private void RemotePrintOnScreen(int x, int y){
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
 		udpClient.Message = "printOnScreen," + x + "," + y;
 		udpClient.Send();
 	}
 
-	private void RPCDrawOnScren(String event, float x, float y, int strokeWidth, int color, boolean isLineTrail){
+	private void RemoteDrawOnScren(String event, float x, float y, int strokeWidth, int color, boolean isLineTrail){
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
 		udpClient.Message = "drawOnScreen," + event + "," + x + "," + y + "," + strokeWidth + "," + color + "," + isLineTrail;
 		udpClient.Send();
 	}
 
-	private void RPCUndoLastEdit(int pageNumber){
+	private void RemoteUndoLastEdit(int pageNumber){
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
 		udpClient.Message = "undo," + pageNumber;
