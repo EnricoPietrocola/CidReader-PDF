@@ -32,6 +32,8 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Document;
+
 
 public class MainActivity extends AppCompatActivity {
     protected final int PERMISSION_REQUEST = 42;
@@ -54,7 +56,7 @@ public class MainActivity extends AppCompatActivity {
         item.setOrientation(LinearLayout.VERTICAL);
         setContentView(item);
 
-        //IP INPUT TEXT FIELD
+        //ip input text field
         LinearLayout.LayoutParams labelTextLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
         final TextView ipAddressTitle = new TextView(mainContext);
         ipAddressTitle.setText("IP Address");
@@ -66,7 +68,7 @@ public class MainActivity extends AppCompatActivity {
         ipText.setText("192.168.1.1");
         item.addView(ipText);
 
-        //IP INPUT TEXT FIELD
+        //port input text field
         final TextView connectionsTitle = new TextView(mainContext);
         connectionsTitle.setText("Port");
         connectionsTitle.setLayoutParams(labelTextLayoutParams);
@@ -93,11 +95,13 @@ public class MainActivity extends AppCompatActivity {
             return;
         }
 
-        //IP INPUT TEXT FIELD
+        //documents label and list
         final TextView documentsTitle = new TextView(mainContext);
         documentsTitle.setText("Documents");
         documentsTitle.setLayoutParams(labelTextLayoutParams);
         item.addView(documentsTitle);
+
+
         createPDFList();
     }
 
@@ -116,7 +120,7 @@ public class MainActivity extends AppCompatActivity {
 
                 } else {
 
-                    // permission denied, boo! Disable the
+                    // permission denied. Disable the
                     // functionality that depends on this permission.
                     Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
                 }
@@ -191,6 +195,7 @@ public class MainActivity extends AppCompatActivity {
         }
         try {
             DocumentActivity.ipTargetAddress = InetAddress.getByName(ipText.getText().toString());
+            DocumentActivity.port = Integer.parseInt(portText.getText().toString());
         } catch (UnknownHostException e) {
             e.printStackTrace();
         }

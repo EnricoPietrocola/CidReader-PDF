@@ -140,6 +140,7 @@ public class DocumentActivity extends Activity
 	public static RelativeLayout item;
 	public Context mainContext;
 	public static InetAddress ipTargetAddress;
+	public static int port = 12777;
 	public TextView pointer;
 	public ArrayList<InetAddress> connectedAddresses = new ArrayList<>();
 	protected View hideAllButton;
@@ -194,6 +195,7 @@ public class DocumentActivity extends Activity
 		layoutSetup();
 
 		UDP_Server udpServer = new UDP_Server();
+		udpServer.port = port;
 		udpServer.runUdpServer(mainContext);
 
         registerReceiver(broadcastReceiver, new IntentFilter("Main.MESSAGE_RECEIVED"));
@@ -963,6 +965,7 @@ public class DocumentActivity extends Activity
 
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.addr = ipTargetAddress;
+			udpClient.port = port;
 			//udpClient.Message = "goBackward";
 			udpClient.Message = "goToPage," + (currentPage);
 			udpClient.Send();
@@ -975,6 +978,7 @@ public class DocumentActivity extends Activity
 
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.addr = ipTargetAddress;
+			udpClient.port = port;
 			//udpClient.Message = "goForward";
 			udpClient.Message = "goToPage," + (currentPage);
 			udpClient.Send();
@@ -986,6 +990,7 @@ public class DocumentActivity extends Activity
 
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
+		udpClient.port = port;
 		udpClient.Message = "goToPage," + p;
 		udpClient.Send();
 	}
@@ -1280,6 +1285,7 @@ public class DocumentActivity extends Activity
 	private void RemotePrintOnScreen(int x, int y){
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
+		udpClient.port = port;
 		udpClient.Message = "printOnScreen," + x + "," + y;
 		udpClient.Send();
 	}
@@ -1287,6 +1293,7 @@ public class DocumentActivity extends Activity
 	private void remoteDrawOnScren(String event, float x, float y, int strokeWidth, int color, boolean isLineTrail){
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
+		udpClient.port = port;
 		udpClient.Message = "drawOnScreen," + event + "," + x + "," + y + "," + strokeWidth + "," + color + "," + isLineTrail;
 		udpClient.Send();
 	}
@@ -1294,6 +1301,7 @@ public class DocumentActivity extends Activity
 	private void remoteUndoLastEdit(int pageNumber){
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
+		udpClient.port = port;
 		udpClient.Message = "undo," + pageNumber;
 		udpClient.Send();
 	}
