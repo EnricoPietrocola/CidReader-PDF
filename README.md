@@ -10,9 +10,6 @@ Community Page https://www.reddit.com/r/CidReaderPDF/
 
 ![Video example](https://www.youtube.com/watch?v=5DPnnhvZc1Q)
 
-Right now Cid features:
-* UDP connectivity trhough IP address
-
 Video example for a CidReader-PDF session
 https://www.youtube.com/watch?v=5DPnnhvZc1Q
 
@@ -31,5 +28,21 @@ https://github.com/skydoves/ColorPickerView
 * Annotation layer is based on Ssaurel's FingerPath object to store touch data and draw strokes
 https://gist.github.com/ssaurel/747c5c591f783450a30925543ba93c10
 https://medium.com/@ssaurel/learn-to-create-a-paint-application-for-android-5b16968063f8
+
+Right now Cid features:
+* Connectivity with other users through UDP sockets
+* PDF, XPS, OpenXPS, CBZ, EPUB, and FictionBook 2 rendering
+* Syncronized annotations to highlight or draw with a finger or a smart pen
+* Syncronized page turning
+* Color picker
+* Hide/show annotations easily
+* A menu of connected users
+* Fast rendering, works on old devices
+* Platform: Android
+
+Being planned:
+* A Web Version using WebRTC + Pdf.js
+* Save/Load annotation files
+* Easy to use multi-node connections
 
 AGPL License
