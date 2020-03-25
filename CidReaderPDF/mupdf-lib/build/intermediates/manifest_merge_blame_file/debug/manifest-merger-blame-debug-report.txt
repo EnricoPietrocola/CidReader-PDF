@@ -19,86 +19,88 @@
 11-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:8:22-64
 12
 13    <application>
-13-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:10:5-45:19
+13-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:10:5-46:19
 14        <activity
-14-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:11:9-41:20
+14-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:11:9-42:20
 15            android:name="com.artifex.mupdf.mini.DocumentActivity"
 15-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:12:13-45
 16            android:configChanges="orientation|screenSize|keyboardHidden"
-16-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:13:13-74
-17            android:label="MuPDF mini" >
-17-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:14:13-39
-18            <intent-filter>
-18-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:15:13-27:29
-19                <action android:name="android.intent.action.VIEW" /> <!-- this was VIEW -->
-19-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:16:17-69
-19-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:16:25-66
-20
-21                <category android:name="android.intent.category.DEFAULT" />
-21-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:18:17-76
-21-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:18:27-73
-22                <category android:name="android.intent.category.BROWSABLE" />
-22-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:19:17-78
-22-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:19:27-75
-23
-24                <data android:mimeType="application/pdf" />
-24-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-24-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:23-57
-25                <data android:mimeType="application/vnd.ms-xpsdocument" />
-25-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-25-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:23-57
-26                <data android:mimeType="application/oxps" />
-26-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-26-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:23-57
-27                <data android:mimeType="application/x-cbz" />
-27-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-27-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:23-57
-28                <data android:mimeType="application/epub+zip" />
-28-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-28-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:23-57
-29                <data android:mimeType="text/xml" />
-29-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-29-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:23-57
-30            </intent-filter>
-31            <intent-filter>
-31-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:28:13-40:29
-32                <action android:name="android.intent.action.VIEW" />
-32-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:16:17-69
-32-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:16:25-66
-33
-34                <category android:name="android.intent.category.DEFAULT" />
-34-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:18:17-76
-34-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:18:27-73
-35                <category android:name="android.intent.category.BROWSABLE" />
-35-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:19:17-78
-35-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:19:27-75
-36
-37                <data android:pathPattern=".*\\.pdf" />
-37-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-37-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:34:23-53
-38                <data android:pathPattern=".*\\.xps" />
-38-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-38-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:34:23-53
-39                <data android:pathPattern=".*\\.oxps" />
-39-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-39-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:34:23-53
-40                <data android:pathPattern=".*\\.cbz" />
-40-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-40-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:34:23-53
-41                <data android:pathPattern=".*\\.epub" />
-41-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-41-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:34:23-53
-42                <data android:pathPattern=".*\\.fb2" />
-42-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:21:17-60
-42-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:34:23-53
-43            </intent-filter>
-44        </activity>
-45        <activity
-45-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:42:9-44:86
-46            android:name="com.artifex.mupdf.mini.OutlineActivity"
-46-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:43:13-44
-47            android:configChanges="orientation|screenSize|keyboardHidden" />
-47-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:44:13-74
-48    </application>
-49
-50</manifest>
+16-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:14:13-74
+17            android:label="MuPDF mini"
+17-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:15:13-39
+18            android:screenOrientation="portrait" >
+18-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:13:13-49
+19            <intent-filter>
+19-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:16:13-28:29
+20                <action android:name="android.intent.action.VIEW" /> <!-- this was VIEW -->
+20-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:17:17-69
+20-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:17:25-66
+21
+22                <category android:name="android.intent.category.DEFAULT" />
+22-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:19:17-76
+22-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:19:27-73
+23                <category android:name="android.intent.category.BROWSABLE" />
+23-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:20:17-78
+23-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:20:27-75
+24
+25                <data android:mimeType="application/pdf" />
+25-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+25-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:23-57
+26                <data android:mimeType="application/vnd.ms-xpsdocument" />
+26-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+26-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:23-57
+27                <data android:mimeType="application/oxps" />
+27-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+27-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:23-57
+28                <data android:mimeType="application/x-cbz" />
+28-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+28-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:23-57
+29                <data android:mimeType="application/epub+zip" />
+29-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+29-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:23-57
+30                <data android:mimeType="text/xml" />
+30-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+30-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:23-57
+31            </intent-filter>
+32            <intent-filter>
+32-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:29:13-41:29
+33                <action android:name="android.intent.action.VIEW" />
+33-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:17:17-69
+33-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:17:25-66
+34
+35                <category android:name="android.intent.category.DEFAULT" />
+35-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:19:17-76
+35-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:19:27-73
+36                <category android:name="android.intent.category.BROWSABLE" />
+36-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:20:17-78
+36-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:20:27-75
+37
+38                <data android:pathPattern=".*\\.pdf" />
+38-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+38-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:35:23-53
+39                <data android:pathPattern=".*\\.xps" />
+39-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+39-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:35:23-53
+40                <data android:pathPattern=".*\\.oxps" />
+40-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+40-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:35:23-53
+41                <data android:pathPattern=".*\\.cbz" />
+41-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+41-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:35:23-53
+42                <data android:pathPattern=".*\\.epub" />
+42-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+42-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:35:23-53
+43                <data android:pathPattern=".*\\.fb2" />
+43-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:22:17-60
+43-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:35:23-53
+44            </intent-filter>
+45        </activity>
+46        <activity
+46-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:43:9-45:86
+47            android:name="com.artifex.mupdf.mini.OutlineActivity"
+47-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:44:13-44
+48            android:configChanges="orientation|screenSize|keyboardHidden" />
+48-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml:45:13-74
+49    </application>
+50
+51</manifest>

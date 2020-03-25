@@ -376,6 +376,8 @@ public class DocumentActivity extends Activity
 		//Save button exec
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+				Log.i("CID", "Save button pressed ");
+
 				if (currentPage > 0) {
 					for (int i = 0; i < paintViews.size(); i++) {
 						//paintViews.get(i).saveCurrentPage(currentPage); //this is for png save
@@ -1399,80 +1401,7 @@ public class DocumentActivity extends Activity
 		}
 	}
 
-	/*protected void writeToFile(String projectName ,final String id) {
-		String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/" + projectName;
-		File dir = new File(file_path);
 
-		if (!dir.exists()) {
-			dir.mkdirs();
-		}
-
-		//for each pv, save each page with a different name
-		for(int j = 0; j < paintViews.size(); j++) {
-			PaintView pv = paintViews.get(j);
-			for (int i = 0; i < pv.actionPages.size(); i++) {
-
-				File file = new File(dir, "annotation_" + id + "_" + i + ".txt");
-
-				if (!file.exists()) {
-					try {
-						file.createNewFile();
-					} catch (IOException e) {
-						e.printStackTrace();
-					}
-				}
-
-				try {
-					fOut = new FileOutputStream(file);
-				} catch (FileNotFoundException e) {
-					e.printStackTrace();
-				}
-
-				Iterator<String> iterator = pv.actionPages.get(i).iterator();
-
-				while (iterator.hasNext()) {
-					String fp = iterator.next();
-//                mPaint.setColor(fp.color);
-//                mPaint.setStrokeWidth(fp.strokeWidth);
-//                mPaint.setMaskFilter(null);
-//
-//                if (fp.emboss) {
-//                    mPaint.setMaskFilter(mEmboss);
-//                }
-//                else if (fp.blur) {
-//                    mPaint.setMaskFilter(mBlur);
-//                }
-//
-//				if (fp.isFading){
-//					fp.time -= 1;
-//					mPaint.setAlpha((int)fp.time);
-//					if (fp.time <= 0){
-//						iterator.remove(fp);
-//						invalidate();
-//					}
-//				}
-					try {
-						fOut.write(fp.getBytes());
-					} catch (IOException e) {
-						Log.e("Exception", "File write failed: " + e.toString());
-					}
-				}
-
-				try {
-					fOut.flush();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-				try {
-					fOut.close();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
-
-			}
-		}
-	}
-*/
 	protected String readFromFile(Context context) {
 
 		String ret = "";

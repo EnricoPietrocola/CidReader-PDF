@@ -434,7 +434,7 @@ public class PaintView extends View {
     }
 
     protected void writeToFile(final String id, final String folderName) {
-
+        Log.i("CID", "Saving to file ");
         String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + folderName + "/";
         File dir = new File(file_path);
 
@@ -443,6 +443,7 @@ public class PaintView extends View {
         }
 
         for (int i = 0; i < page.size(); i++) {
+
 
             File file = new File(dir, "annotation_" + id + "_" + i + ".txt");
 
