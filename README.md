@@ -5,6 +5,7 @@ It is created to help Networked Music students and performers to interact on mus
 Works with UDP sockets and on any modern android tablet.
 
 ![Paper/Description page](http://enricopietrocola.com/cidreader/)
+
 ![Community Page](https://www.reddit.com/r/CidReaderPDF/)
 
 How to use:
@@ -56,13 +57,15 @@ What is missing but would be great:
 
 While the NAT traversal solution is discussed, a simple way to connect through NATs that has been tested it by using ZeroTier https://www.zerotier.com/ (open source Hamachi-like app with an android app). It add some latency but it's acceptable for common uses.
 
-Contributing
+Contributing, main pieces of code:
 
 ![MainActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/app/src/main/java/com/pietrocola/enrico/CidMainMenu/MainActivity.java) is the main menu, this is where you setup connection and scroll documents.
 
 ![DocumentActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) is the main document part of code. Here you manage document, annotaion, touch, global variables, instances of paintviews with connections (![original mupdf-mini version](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) .
 
 ![PageView.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PageView.java) is where PDF pages are managed (slightly edited version of the original from ![MuPDF mini](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/PageView.java)).
+
+![PaintView](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PaintView.java) is the annotation class, it stores strokes for each page. Each user owns an instance of PaintView in  DocumentActivity (each user has a layer to draw on).
 
 License
 AGPL License
