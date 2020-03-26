@@ -9,7 +9,7 @@ Community Page https://www.reddit.com/r/CidReaderPDF/
 How to use:
 
 - Set the IP address of the device you would like to connect with
-- Clicking on a document you would like to open will start communication and open the first page
+- Clicking on a document you would like to open will start communication and open the first page (at the moment the app is only  listing documents in the downloads folder) 
 - Drag your finger on a page to draw, if the other device has the app open, annotation data and current page will be synchronized
 
 ![ExampleImage](https://media.giphy.com/media/UvWuE9d1LzedVJLtGz/giphy.gif)
