@@ -25,6 +25,7 @@ https://trello.com/b/FIkBy6M9/ciddev
 
 * CidReaderPDF is based on the MuPDF renderer by Artifex:
 https://mupdf.com/
+In particular the version development started from, is the ![Mupdf Android Mini Viewer](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini)
 
 * In particular the Android SDK that can be found here:
 https://mupdf.com/downloads/
@@ -61,8 +62,12 @@ What is missing but would be great:
 While the NAT traversal solution is discussed, a simple way to connect through NATs that has been tested it by using ZeroTier https://www.zerotier.com/ (open source Hamachi-like app with an android app). It add some latency but it's acceptable for common uses.
 
 Contributing
-![MainActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/app/src/main/java/com/pietrocola/enrico/CidMainMenu/MainActivity.java) is the main menu, this is where you setup connection and scroll documents
-DocumentActivity.java is 
+
+![MainActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/app/src/main/java/com/pietrocola/enrico/CidMainMenu/MainActivity.java) is the main menu, this is where you setup connection and scroll documents.
+
+![DocumentActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) is the main document part of code. Here you manage document, annotaion, touch, global variables, instances of paintviews with connections (![original mupdf-mini version](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) .
+
+![PageView.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PageView.java) is where PDF pages are managed (slightly edited version of the original from ![MuPDF mini](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/PageView.java)).
 
 License
 AGPL License
