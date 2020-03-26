@@ -60,5 +60,9 @@ What is missing but would be great:
 
 While the NAT traversal solution is discussed, a simple way to connect through NATs that has been tested it by using ZeroTier https://www.zerotier.com/ (open source Hamachi-like app with an android app). It add some latency but it's acceptable for common uses.
 
+Contributing
+![MainActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/app/src/main/java/com/pietrocola/enrico/CidMainMenu/MainActivity.java) is the main menu, this is where you setup connection and scroll documents
+DocumentActivity.java is 
+
 License
 AGPL License
