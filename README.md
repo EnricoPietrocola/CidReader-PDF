@@ -8,8 +8,7 @@ Community Page https://www.reddit.com/r/CidReaderPDF/
 
 How to use:
 
-- Allow internal storage
-- Set IP address of the device you would like to connect
+- Set the IP address of the device you would like to connect with
 - Clicking on a document you would like to open will start communication and open the first page
 - Drag your finger on a page to draw, if the other device has the app open, annotation data and current page will be synchronized
 
