@@ -44,5 +44,6 @@ Being planned:
 * A Web Version using WebRTC + Pdf.js
 * Save/Load annotation files
 * Easy to use multi-node connections
+* Customizable permissions on users
 
 AGPL License
