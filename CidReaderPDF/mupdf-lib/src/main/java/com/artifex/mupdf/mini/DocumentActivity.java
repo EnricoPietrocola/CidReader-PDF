@@ -170,7 +170,6 @@ public class DocumentActivity extends Activity
 	private ArrayList<String> connections;
 	private ListAdapter connectionsListAdapter;
 
-
 	@SuppressLint("WrongViewCast")
 	public void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
@@ -376,12 +375,32 @@ public class DocumentActivity extends Activity
 		//Save button exec
 		saveButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
+
+				projectName = projectText.getText().toString();
+
 				Log.i("CID", "Save button pressed ");
+
+				if (checkSelfPermission(Manifest.permission.WRITE_EXTERNAL_STORAGE)
+						!= PackageManager.PERMISSION_GRANTED) {
+
+					// Should we show an explanation?
+					if (shouldShowRequestPermissionRationale(
+							Manifest.permission.WRITE_EXTERNAL_STORAGE)) {
+					}
+
+					requestPermissions(new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE},
+							3);
+
+					// MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+					// app-defined int constant
+					return;
+				}
+
 
 				if (currentPage >= 0) {
 					for (int i = 0; i < paintViews.size(); i++) {
 						//paintViews.get(i).saveCurrentPage(currentPage); //this is for png save
-						paintViews.get(i).writeToFile(Integer.toString(currentPage), projectText.getText().toString());
+						paintViews.get(i).writeToFile(Integer.toString(currentPage), projectName);
 						//writeToFile(projectText.getText().toString(), Integer.toString(currentPage));
 					}
 				}
@@ -521,6 +540,38 @@ public class DocumentActivity extends Activity
 				layoutPopupMenu.show();
 			}
 		});
+	}
+
+	@Override
+	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+		switch (requestCode) {
+			case 1 : {
+				// If request is cancelled, the result arrays are empty.
+				if (grantResults.length > 0 && grantResults[0] == PackageManager.PERMISSION_GRANTED) {
+
+					// permission was granted, yay! Do the
+					// contacts-related task you need to do.
+					Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
+					finish();
+					if (currentPage >= 0) {
+						for (int i = 0; i < paintViews.size(); i++) {
+							//paintViews.get(i).saveCurrentPage(currentPage); //this is for png save
+							paintViews.get(i).writeToFile(Integer.toString(currentPage), projectName);
+							//writeToFile(projectText.getText().toString(), Integer.toString(currentPage));
+						}
+					}
+				} else {
+
+					// permission denied. Disable the
+					// functionality that depends on this permission.
+					Toast.makeText(getApplicationContext(), "Permission denied", Toast.LENGTH_SHORT).show();
+				}
+				return;
+			}
+
+			// other 'case' lines to check for other
+			// permissions this app might request
+		}
 	}
 
 	private void updateConnectionList() {

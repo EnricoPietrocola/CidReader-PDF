@@ -435,24 +435,45 @@ public class PaintView extends View {
 
     protected void writeToFile(final String id, final String folderName) {
         Log.i("CID", "Saving to file ");
-        String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + folderName + "/";
+
+        //there's something wrong here, with either permissions or names
+        String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + folderName /*+ "/"*/;
+        //String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/";
+
+        Log.i("CID", "Trying to access folder " + file_path);
+
         File dir = new File(file_path);
 
         if (!dir.exists()) {
+            Log.i("CID", "Dir doesn't exist");
             dir.mkdirs();
+        }
+        else{
+            Log.i("CID", "Dir exists");
         }
 
         for (int i = 0; i < page.size(); i++) {
 
+            if (dir != null){
+                Log.i("CID", "Dir is " + dir);
+            }
+            else{
+                Log.i("CID", "no dir");
+            }
 
             File file = new File(dir, "annotation_" + id + "_" + i + ".txt");
 
             if (!file.exists()) {
+                Log.i("CID", "File doesn't exist");
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
                     e.printStackTrace();
                 }
+            }
+            else{
+                Log.i("CID", "File exists");
+
             }
 
             try {
@@ -485,14 +506,21 @@ public class PaintView extends View {
                     }
                 }
                 try {
-                    fOut.write((fp.path.toString().getBytes()));
-                }
+                    //if any of these is null the app crashes
+                    if (fOut != null) {
+                        fOut.write((fp.path.toString().getBytes()));
+                        }
+                    else{
+                        Log.i("CID","fOut is null");
+                    }
+
+                    }
                 catch (IOException e) {
                     Log.e("Exception", "File write failed: " + e.toString());
                 }
             }
 
-            try {
+            /*try {
                 fOut.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -502,7 +530,7 @@ public class PaintView extends View {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-
+            */
         }
     }
 
