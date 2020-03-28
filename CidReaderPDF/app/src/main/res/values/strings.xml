@@ -91,4 +91,9 @@
         "when a user tries to pick up one of cards.\n\n"
     </string>
     <string name="action_settings">Settings</string>
+    <string name="about">About</string>
+    <string name="action_about" />
+    <string name="about1">about</string>
+    <string name="about2">About</string>
+    <string name="Settings">Settings</string>
 </resources>

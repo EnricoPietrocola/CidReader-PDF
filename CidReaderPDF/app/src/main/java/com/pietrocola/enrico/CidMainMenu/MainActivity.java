@@ -2,6 +2,8 @@ package com.pietrocola.enrico.CidMainMenu;
 
 import android.Manifest;
 import android.app.Activity;
+
+import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.artifex.mupdf.mini.DocumentActivity;
@@ -16,11 +18,16 @@ import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 import android.os.Environment;
+
+import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.content.pm.PackageManager;
 import android.util.Log;
+import android.view.Menu;
+import android.view.MenuItem;
 import android.view.View;
+import android.view.ViewDebug;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -101,8 +108,46 @@ public class MainActivity extends AppCompatActivity {
         documentsTitle.setLayoutParams(labelTextLayoutParams);
         item.addView(documentsTitle);
 
-
         createPDFList();
+
+        /*Toolbar toolbar = findViewById(R.id.toolbar);
+        setSupportActionBar(toolbar);
+        ActionBar actionBar = getSupportActionBar();
+         */
+    }
+
+    @Override
+    public boolean onCreateOptionsMenu(Menu menu) {
+        // Inflate the menu; this adds items to the action bar if it is present.
+        super.onCreateOptionsMenu(menu);
+        getMenuInflater().inflate(R.menu.menu_document_list, menu);
+        return true;
+    }
+
+    @Override
+    public boolean onOptionsItemSelected(MenuItem item) {
+        // Handle action bar item clicks here. The action bar will
+        // automatically handle clicks on the Home/Up button, so long
+        // as you specify a parent activity in AndroidManifest.xml.
+        switch (item.getItemId()) {
+            // Some action here
+            case R.id.action_about:
+                //about stuff
+                Log.i("CID", "About");
+                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/EnricoPietrocola/CidReader-PDF"));
+                startActivity(browserIntent);
+                break;
+
+            /*case R.id.action_settings:
+                //about stuff
+                Log.i("CID", "Settings");
+                break;
+             */
+            default:
+                //Log.i("CID", Integer.toString(item.getItemId()));
+                break;
+        }
+        return true;
     }
 
     @Override

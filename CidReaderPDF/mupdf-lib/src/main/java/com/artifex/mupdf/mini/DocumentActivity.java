@@ -378,7 +378,7 @@ public class DocumentActivity extends Activity
 			public void onClick(View v) {
 				Log.i("CID", "Save button pressed ");
 
-				if (currentPage > 0) {
+				if (currentPage >= 0) {
 					for (int i = 0; i < paintViews.size(); i++) {
 						//paintViews.get(i).saveCurrentPage(currentPage); //this is for png save
 						paintViews.get(i).writeToFile(Integer.toString(currentPage), projectText.getText().toString());
