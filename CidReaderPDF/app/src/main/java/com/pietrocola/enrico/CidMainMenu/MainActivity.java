@@ -192,7 +192,8 @@ public class MainActivity extends AppCompatActivity {
             if(     filepath.endsWith(".PDF") ||
                     filepath.endsWith(".pdf")||
                     filepath.endsWith(".jpg")||
-                    filepath.endsWith(".JPG"))
+                    filepath.endsWith(".JPG")||
+                    filepath.endsWith(".txt")) //this has to become an xml cid file or something similar
             {
                 names.add(filepath);
             }
@@ -251,6 +252,7 @@ public class MainActivity extends AppCompatActivity {
                 (Environment.DIRECTORY_DOWNLOADS);
         File file = new File(dir, fileName);
         Uri uri = Uri.fromFile(file);
+        DocumentActivity.fileLocation = uri.toString();
         startMuPDFActivity(uri);
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);

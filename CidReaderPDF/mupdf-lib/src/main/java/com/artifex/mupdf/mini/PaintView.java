@@ -436,11 +436,14 @@ public class PaintView extends View {
     protected void writeToFile(final String id, final String folderName) {
         Log.i("CID", "Saving to file ");
 
+        String project_file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" ;
         String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + folderName /*+ "/"*/;
 
         Log.i("CID", "Trying to access folder " + file_path);
 
         File dir = new File(file_path);
+        File project_dir = new File(project_file_path);
+
 
         if (!dir.exists()) {
             Log.i("CID", "Dir doesn't exist");
@@ -450,12 +453,20 @@ public class PaintView extends View {
             Log.i("CID", "Dir exists");
         }
 
-        File mainFile = new File(dir,id + "_project.txt");
+        if (!project_dir.exists()) {
+            Log.i("CID", "Project Dir doesn't exist");
+            project_dir.mkdirs();
+        }
+        else{
+            Log.i("CID", "project Dir exists");
+        }
+        //create a project file to store which pdf was opened and where are the annotation files
+        File projectFile = new File(project_dir, folderName + "_project.txt");
 
-        if (!mainFile.exists()) {
+        if (!projectFile.exists()) {
             Log.i("CID", "File doesn't exist");
             try {
-                mainFile.createNewFile();
+                projectFile.createNewFile();
             } catch (IOException e) {
                 e.printStackTrace();
             }
@@ -466,9 +477,21 @@ public class PaintView extends View {
         }
 
         try {
-            fOut = new FileOutputStream(mainFile);
+            fOut = new FileOutputStream(projectFile);
         } catch (FileNotFoundException e) {
             e.printStackTrace();
+        }
+
+        try {
+            //if any of these is null the app crashes
+            if (fOut != null) {
+                fOut.write(DocumentActivity.fileLocation.getBytes());
+            }
+            else{
+            }
+        }
+        catch (IOException e) {
+            Log.e("Exception", "File write failed: " + e.toString());
         }
 
         for (int i = 0; i < page.size(); i++) {
@@ -534,14 +557,13 @@ public class PaintView extends View {
                     else{
                         Log.i("CID","fOut is null");
                     }
-
-                    }
+                }
                 catch (IOException e) {
                     Log.e("Exception", "File write failed: " + e.toString());
                 }
             }
 
-            /*try {
+            try {
                 fOut.flush();
             } catch (IOException e) {
                 e.printStackTrace();
@@ -551,7 +573,6 @@ public class PaintView extends View {
             } catch (IOException e) {
                 e.printStackTrace();
             }
-            */
         }
     }
 

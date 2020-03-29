@@ -169,6 +169,7 @@ public class DocumentActivity extends Activity
 	private ListView connectionsList;
 	private ArrayList<String> connections;
 	private ListAdapter connectionsListAdapter;
+	public static String fileLocation;
 
 	@SuppressLint("WrongViewCast")
 	public void onCreate(Bundle savedInstanceState) {
@@ -406,6 +407,8 @@ public class DocumentActivity extends Activity
 				}
 			}
 		});
+
+
 
 		//List of connections to be filled
 		final TextView connectionsTitle = new TextView(mainContext);
