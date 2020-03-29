@@ -343,7 +343,7 @@ public class PaintView extends View {
         invalidate();
     }
 
-    public void saveFirstPage(final String id){
+    /*public void saveFirstPage(final String id){
         new Thread(new Runnable() {
             public void run() {
                 for (int i = 0; i < page.size(); i++) {
@@ -403,7 +403,7 @@ public class PaintView extends View {
                             fp.time -= 1;
                             mPaint.setAlpha((int)fp.time);
                             if (fp.time <= 0){
-                                iterator.remove(/*fp*/);
+                                iterator.remove(*//*fp*//*);
                                 invalidate();
                             }
                         }
@@ -431,14 +431,12 @@ public class PaintView extends View {
                 }
             }
         }).start();
-    }
+    }*/
 
     protected void writeToFile(final String id, final String folderName) {
         Log.i("CID", "Saving to file ");
 
-        //there's something wrong here, with either permissions or names
         String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + folderName /*+ "/"*/;
-        //String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/";
 
         Log.i("CID", "Trying to access folder " + file_path);
 
@@ -452,14 +450,36 @@ public class PaintView extends View {
             Log.i("CID", "Dir exists");
         }
 
-        for (int i = 0; i < page.size(); i++) {
+        File mainFile = new File(dir,id + "_project.txt");
 
+        if (!mainFile.exists()) {
+            Log.i("CID", "File doesn't exist");
+            try {
+                mainFile.createNewFile();
+            } catch (IOException e) {
+                e.printStackTrace();
+            }
+        }
+        else{
+            Log.i("CID", "File exists");
+
+        }
+
+        try {
+            fOut = new FileOutputStream(mainFile);
+        } catch (FileNotFoundException e) {
+            e.printStackTrace();
+        }
+
+        for (int i = 0; i < page.size(); i++) {
+            /*
             if (dir != null){
                 Log.i("CID", "Dir is " + dir);
             }
             else{
                 Log.i("CID", "no dir");
             }
+            */
 
             File file = new File(dir, "annotation_" + id + "_" + i + ".txt");
 
@@ -508,6 +528,7 @@ public class PaintView extends View {
                 try {
                     //if any of these is null the app crashes
                     if (fOut != null) {
+                        Log.i("CID", "hey!");
                         fOut.write((fp.path.toString().getBytes()));
                         }
                     else{

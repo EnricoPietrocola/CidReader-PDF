@@ -611,7 +611,7 @@ public class DocumentActivity extends Activity
 		PaintView pv;
 		for(int i = 0; i < paintViews.size(); i++) {
 			pv = paintViews.get(i);
-			pv.saveFirstPage(Integer.toString(i));
+			//pv.saveFirstPage(Integer.toString(i));
 		}
 	}
 
