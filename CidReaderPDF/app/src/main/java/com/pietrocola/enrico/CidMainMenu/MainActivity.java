@@ -10,9 +10,14 @@ import com.artifex.mupdf.mini.DocumentActivity;
 
 import android.content.Intent;
 import android.net.Uri;
+
+import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.IOException;
 import java.io.InputStream;
+import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
@@ -213,10 +218,34 @@ public class MainActivity extends AppCompatActivity {
                     public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
                         String itemClicked = String.valueOf(parent.getItemAtPosition(position));
                         Toast.makeText(MainActivity.this, itemClicked, Toast.LENGTH_LONG).show();
+                        Log.i("CID", "test");
 
-                        connectAndOpenPDF(ipText);
 
-                        startMUPDFActivityFromDownloads(itemClicked);
+
+
+
+                        if(itemClicked.endsWith(".txt")){
+                            String uri;
+                            String project_file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" ;
+                            //Log.i("CID", "path is is " + project_file_path + fileName);
+                            uri = project_file_path + itemClicked;
+
+                            Log.i("CID", "clicked on " + itemClicked);
+
+                            String _content = readFromFile(mainContext, uri);
+
+                            Log.i("CID", "file content " + _content);
+
+                            connectAndOpenPDF(ipText);
+                            startMUPDFActivityFromStringLocation(_content);
+                        }
+                        else {
+                            connectAndOpenPDF(ipText);
+                            startMUPDFActivityFromDownloads(itemClicked);
+                        }
+
+
+
                     }
                 }
         );
@@ -247,13 +276,35 @@ public class MainActivity extends AppCompatActivity {
         }
     }
 
+    //use this function to access data so that when we switch from download folder to a better suited one we have to only change this
+    public Uri getUriFromFileName(String fileName){
+        File dir = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS);
+        File file = new File(dir, fileName);
+        Uri uri = Uri.fromFile(file);
+        Log.i("CID", "uri is " + uri);
+        return uri;
+    }
+
     public void startMUPDFActivityFromDownloads(String fileName){
-        File dir = Environment.getExternalStoragePublicDirectory
+        /*File dir = Environment.getExternalStoragePublicDirectory
                 (Environment.DIRECTORY_DOWNLOADS);
         File file = new File(dir, fileName);
         Uri uri = Uri.fromFile(file);
+        */
+        Uri uri = getUriFromFileName(fileName);
+        DocumentActivity.fileLocation = uri.toString();
+
+        startMuPDFActivity(uri);
+
+        if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
+            ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
+    }
+
+    public void startMUPDFActivityFromStringLocation(String fileName){
+        Uri uri = Uri.parse(new File(fileName).toString());
         DocumentActivity.fileLocation = uri.toString();
         startMuPDFActivity(uri);
+
         if (ContextCompat.checkSelfPermission(this, Manifest.permission.READ_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED)
             ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.READ_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
     }
@@ -286,5 +337,43 @@ public class MainActivity extends AppCompatActivity {
         intent.setType("application/pdf");
 
         startActivityForResult(intent, READ_REQUEST_CODE);
+    }
+
+    protected String readFromFile(Context context, String file) {
+
+        String ret = "error";
+        Log.i("CID", "readFromFile");
+        try {
+            //InputStream inputStream = context.openFileInput(file);
+            Log.i("CID", "trying to create inputStream");
+
+            FileInputStream inputStream = new FileInputStream (file);
+            Log.i("CID", "inputStream created with file " + file);
+
+
+            if ( inputStream != null ) {
+
+                Log.i("CID", "inputStream created");
+
+                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
+                String receiveString = "";
+                StringBuilder stringBuilder = new StringBuilder();
+
+                while ( (receiveString = bufferedReader.readLine()) != null ) {
+                    stringBuilder.append(receiveString);
+                }
+                inputStream.close();
+                ret = stringBuilder.toString();
+                inputStream.close();
+            }
+        }
+        catch (FileNotFoundException e) {
+            Log.e("login activity", "File not found: " + e.toString());
+        } catch (IOException e) {
+            Log.e("login activity", "Can not read file: " + e.toString());
+        }
+
+        return ret;
     }
 }
