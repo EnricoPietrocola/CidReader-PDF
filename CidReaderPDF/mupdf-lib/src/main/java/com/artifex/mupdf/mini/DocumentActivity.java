@@ -32,12 +32,14 @@ import android.os.Bundle;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 
+import android.os.Environment;
 import android.os.Handler;
 import android.text.Editable;
 import android.text.TextWatcher;
 import android.text.method.PasswordTransformationMethod;
 import android.util.DisplayMetrics;
 import android.util.Log;
+import android.util.Xml;
 import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
@@ -68,6 +70,7 @@ import android.view.Menu;
 import android.view.MenuInflater;
 
 import java.io.BufferedReader;
+import java.io.File;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.InputStreamReader;
@@ -75,6 +78,7 @@ import java.net.UnknownHostException;
 import java.net.InetAddress;
 
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.Stack;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
@@ -82,6 +86,8 @@ import java.io.IOException;
 
 
 import android.widget.RelativeLayout.LayoutParams;
+
+import org.xmlpull.v1.XmlSerializer;
 
 public class DocumentActivity extends Activity
 {
@@ -170,6 +176,7 @@ public class DocumentActivity extends Activity
 	private ArrayList<String> connections;
 	private ListAdapter connectionsListAdapter;
 	public static String fileLocation;
+	protected String appVersion = "0.1";
 
 	@SuppressLint("WrongViewCast")
 	public void onCreate(Bundle savedInstanceState) {
@@ -398,13 +405,15 @@ public class DocumentActivity extends Activity
 				}
 
 
-				if (currentPage >= 0) {
-					for (int i = 0; i < paintViews.size(); i++) {
+				//if (currentPage >= 0) {
+					//for (int i = 0; i < paintViews.size(); i++) {
 						//paintViews.get(i).saveCurrentPage(currentPage); //this is for png save
-						paintViews.get(i).writeToFile(Integer.toString(currentPage), projectName);
+						//paintViews.get(i).writeToFile(Integer.toString(currentPage), projectName);
+						writeToFile(Integer.toString(currentPage), projectName);
+
 						//writeToFile(projectText.getText().toString(), Integer.toString(currentPage));
-					}
-				}
+					//}
+				//}
 			}
 		});
 
@@ -556,13 +565,15 @@ public class DocumentActivity extends Activity
 					// contacts-related task you need to do.
 					Toast.makeText(getApplicationContext(), "Permission granted", Toast.LENGTH_SHORT).show();
 					finish();
-					if (currentPage >= 0) {
-						for (int i = 0; i < paintViews.size(); i++) {
+					//if (currentPage >= 0) {
+						//for (int i = 0; i < paintViews.size(); i++) {
 							//paintViews.get(i).saveCurrentPage(currentPage); //this is for png save
-							paintViews.get(i).writeToFile(Integer.toString(currentPage), projectName);
-							//writeToFile(projectText.getText().toString(), Integer.toString(currentPage));
-						}
-					}
+							//paintViews.get(i).writeToFile(Integer.toString(currentPage), projectName);
+					writeToFile(Integer.toString(currentPage), projectName);
+
+					//writeToFile(projectText.getText().toString(), Integer.toString(currentPage));
+						//}
+					//}
 				} else {
 
 					// permission denied. Disable the
@@ -1485,5 +1496,90 @@ public class DocumentActivity extends Activity
 
 		return ret;
 	}
+
+	protected void writeToFile(final String id, final String folderName) {
+
+		String project_file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" ;
+
+		//there might not be a need for a folder, everything could be saved on a single xml
+
+		File newxmlfile = new File(project_file_path + folderName + "_project.crxml");
+		try{
+			newxmlfile.createNewFile();
+		}catch(IOException e){
+			Log.e("IOException", "exception in createNewFile() method");
+		}
+		//we have to bind the new file with a FileOutputStream
+		FileOutputStream fileos = null;
+		try{
+			fileos = new FileOutputStream(newxmlfile);
+		}catch(FileNotFoundException e){
+			Log.e("FileNotFoundException", "can't create FileOutputStream");
+		}
+		//we create a XmlSerializer in order to write xml data
+		XmlSerializer serializer = Xml.newSerializer();
+		try {
+			//we set the FileOutputStream as output for the serializer, using UTF-8 encoding
+			serializer.setOutput(fileos, "UTF-8");
+			//Write <?xml declaration with encoding (if encoding not null) and standalone flag (if standalone not null)
+			serializer.startDocument(null, Boolean.valueOf(true));
+			//set indentation option
+			serializer.setFeature("http://xmlpull.org/v1/doc/features.html#indent-output", true);
+			//start a tag called "root"
+			serializer.startTag(null, "root");
+
+			serializer.startTag(null, "appVersion");
+			serializer.text(appVersion);
+			serializer.endTag(null, "appVersion");
+
+			serializer.startTag(null, "document");
+			serializer.text(DocumentActivity.fileLocation);
+			serializer.endTag(null, "document");
+
+
+			serializer.startTag(null, "annotation");
+			for (int i = 0; i < paintViews.size(); i++) {
+
+				serializer.startTag(null, "user");
+				serializer.startTag(null, "address");
+				serializer.text(paintViews.get(i).ipAddress.toString());
+				serializer.endTag(null, "address");
+
+				for (int j = 0; j < paintViews.get(i).actionPages.size(); j++) {
+
+					serializer.startTag(null, "page");
+					serializer.attribute(null, "pageNumber", Integer.toString(j));
+
+					for (int l = 0; l < paintViews.get(i).actionPages.get(j).size(); l++) {
+
+						serializer.startTag(null, "path");
+
+						//still needs color, size and other attributes
+						serializer.text(paintViews.get(i).actionPages.get(j).get(l));
+						serializer.endTag(null, "path");
+						//}
+					}
+
+
+					serializer.endTag(null, "page");
+				}
+				serializer.endTag(null, "user");
+			}
+			serializer.endTag(null, "annotation");
+
+			serializer.endTag(null, "root");
+			serializer.endDocument();
+			//write xml data into the FileOutputStream
+			serializer.flush();
+			//finally we close the file stream
+			fileos.close();
+
+		} catch (Exception e) {
+			Log.e("Exception","error occurred while creating xml file");
+		}
+
+
+	}
+
 
 }

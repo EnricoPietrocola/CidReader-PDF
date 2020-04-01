@@ -1,9 +1,7 @@
 package com.pietrocola.enrico.CidMainMenu;
 
 import android.Manifest;
-import android.app.Activity;
 
-import androidx.appcompat.app.ActionBar;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.artifex.mupdf.mini.DocumentActivity;
@@ -15,8 +13,8 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileInputStream;
 import java.io.FileNotFoundException;
+import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
@@ -24,15 +22,14 @@ import java.util.ArrayList;
 
 import android.os.Environment;
 
-import androidx.appcompat.widget.Toolbar;
 import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.content.pm.PackageManager;
 import android.util.Log;
+import android.util.Xml;
 import android.view.Menu;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewDebug;
 import android.widget.AdapterView;
 import android.widget.ArrayAdapter;
 import android.widget.EditText;
@@ -44,7 +41,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
-import org.w3c.dom.Document;
+import org.xmlpull.v1.XmlSerializer;
 
 
 public class MainActivity extends AppCompatActivity {
@@ -225,6 +222,7 @@ public class MainActivity extends AppCompatActivity {
 
 
                         if(itemClicked.endsWith(".crxml")){
+
                             String uri;
                             String project_file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" ;
                             //Log.i("CID", "path is is " + project_file_path + fileName);
@@ -236,8 +234,8 @@ public class MainActivity extends AppCompatActivity {
 
                             Log.i("CID", "file content " + _content);
 
-                            connectAndOpenPDF(ipText);
-                            startMUPDFActivityFromStringLocation(_content);
+                            //connectAndOpenPDF(ipText);
+                            //startMUPDFActivityFromStringLocation(_content);
                         }
                         else {
                             connectAndOpenPDF(ipText);
@@ -343,16 +341,18 @@ public class MainActivity extends AppCompatActivity {
 
         String ret = "error";
         Log.i("CID", "readFromFile");
+
         try {
             //InputStream inputStream = context.openFileInput(file);
             Log.i("CID", "trying to create inputStream");
 
-            FileInputStream inputStream = new FileInputStream (file);
+            FileInputStream inputStream = new FileInputStream(file);
             Log.i("CID", "inputStream created with file " + file);
 
 
             if ( inputStream != null ) {
 
+                //XmlParser.parse(inputStream);
                 Log.i("CID", "inputStream created");
 
                 InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
@@ -376,4 +376,7 @@ public class MainActivity extends AppCompatActivity {
 
         return ret;
     }
+
+
+
 }

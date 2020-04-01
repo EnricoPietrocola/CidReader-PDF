@@ -15,10 +15,13 @@ import androidx.core.app.ActivityCompat;
 import androidx.core.content.ContextCompat;
 import android.util.AttributeSet;
 import android.util.Log;
+import android.util.Xml;
 import android.view.GestureDetector;
 import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Scroller;
+
+import org.xmlpull.v1.XmlSerializer;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -30,6 +33,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.Iterator;
+import java.util.List;
 
 
 public class PaintView extends View {
@@ -230,6 +234,8 @@ public class PaintView extends View {
         mPath.moveTo(x, y);
         mX = x;
         mY = y;
+
+        //actionPages.get(pageNum).add("TouchStart");
     }
 
     public void touchMove(float x, float y) {
@@ -343,209 +349,6 @@ public class PaintView extends View {
         invalidate();
     }
 
-    /*public void saveFirstPage(final String id){
-        new Thread(new Runnable() {
-            public void run() {
-                for (int i = 0; i < page.size(); i++) {
-                    setDrawingCacheEnabled(true);
-                    String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/CidReader/";
-                    File dir = new File(file_path);
-
-                    //Log.i("CID", file_path);
-
-                    if (!dir.exists()) {
-                        dir.mkdirs();
-                    }
-
-                    File file = new File(dir, "annotation_" + id + "_" + i + ".png");
-
-                    if (!file.exists()) {
-                        try {
-                            file.createNewFile();
-                        } catch (IOException e) {
-                            e.printStackTrace();
-                        }
-                    }
-
-                    //Log.i("CID", file.toString());
-
-                    try {
-                        //Log.i("CID", "fOut = new FileOutPutStream(file)");
-                        fOut = new FileOutputStream(file);
-                    } catch (FileNotFoundException e) {
-                        //Log.e("CID", "something went wrong with fOut = new FileOutputStream(file)");
-                        e.printStackTrace();
-                    }
-
-                    //Log.i("CID", Integer.toString(bitmaps.size()));
-
-
-                    Iterator<FingerPath> iterator = page.get(i).iterator();
-
-                    Bitmap _Bitmap = Bitmap.createBitmap(mBitmap.getWidth(), mBitmap.getHeight(), Bitmap.Config.ARGB_8888);
-
-                    Canvas _canvas = new Canvas(_Bitmap);
-
-                    while(iterator.hasNext()){
-                        FingerPath fp = iterator.next();
-                        mPaint.setColor(fp.color);
-                        mPaint.setStrokeWidth(fp.strokeWidth);
-                        mPaint.setMaskFilter(null);
-
-                        if (fp.emboss) {
-                            mPaint.setMaskFilter(mEmboss);
-                        }
-                        else if (fp.blur) {
-                            mPaint.setMaskFilter(mBlur);
-                        }
-
-                        if (fp.isFading){
-                            fp.time -= 1;
-                            mPaint.setAlpha((int)fp.time);
-                            if (fp.time <= 0){
-                                iterator.remove(*//*fp*//*);
-                                invalidate();
-                            }
-                        }
-
-                        _canvas.drawPath(fp.path, mPaint);
-                    }
-
-                    _Bitmap.compress(Bitmap.CompressFormat.PNG, 100, fOut);
-
-                    try {
-                        //Log.i("CID", "fOut.flush()");
-                        fOut.flush();
-                    } catch (IOException e) {
-                        //Log.e("CID", "something went wrong with fOut.flush");
-                        e.printStackTrace();
-                    }
-                    try {
-                        //Log.i("CID", "fOut.close()");
-                        fOut.close();
-                    } catch (IOException e) {
-                        //Log.e("CID", "something went wrong with fOut.close");
-                        e.printStackTrace();
-                    }
-
-                }
-            }
-        }).start();
-    }*/
-
-    protected void writeToFile(final String id, final String folderName) {
-        String project_file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" ;
-
-        //there might not be a need for a folder, everything could be saved on a single xml
-        String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + folderName /*+ "/"*/;
-
-        File dir = new File(file_path);
-        File project_dir = new File(project_file_path);
-
-
-        if (!dir.exists()) {
-            dir.mkdirs();
-        }
-        else{
-        }
-
-        if (!project_dir.exists()) {
-            project_dir.mkdirs();
-        }
-        else{
-        }
-        //create a project file to store which pdf was opened and where are the annotation files
-        File projectFile = new File(project_dir, folderName + "_project.crxml");
-
-        if (!projectFile.exists()) {
-            try {
-                projectFile.createNewFile();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-        else{
-
-        }
-
-        try {
-            fOut = new FileOutputStream(projectFile);
-        } catch (FileNotFoundException e) {
-            e.printStackTrace();
-        }
-
-        try {
-            //if any of these is null the app crashes
-            if (fOut != null) {
-                fOut.write(DocumentActivity.fileLocation.getBytes());
-            }
-            else{
-            }
-        }
-        catch (IOException e) {
-            Log.e("Exception", "File write failed: " + e.toString());
-        }
-
-        for (int i = 0; i < page.size(); i++) {
-
-
-            File file = new File(dir, "annotation_" + id + "_" + i + ".crxml");
-
-            if (!file.exists()) {
-                try {
-                    file.createNewFile();
-                } catch (IOException e) {
-                    e.printStackTrace();
-                }
-            }
-            else{
-
-            }
-
-            try {
-                fOut = new FileOutputStream(file);
-            } catch (FileNotFoundException e) {
-                e.printStackTrace();
-            }
-
-            Iterator<FingerPath> iterator = page.get(i).iterator();
-
-            while(iterator.hasNext()){
-                FingerPath fp = iterator.next();
-
-                if (fp.isFading){
-                    fp.time -= 1;
-                    mPaint.setAlpha((int)fp.time);
-                    if (fp.time <= 0){
-                        iterator.remove(/*fp*/);
-                        invalidate();
-                    }
-                }
-                try {
-                    if (fOut != null) {
-                        fOut.write((fp.path.toString().getBytes()));
-                        }
-                    else{
-                    }
-                }
-                catch (IOException e) {
-                }
-            }
-
-            try {
-                fOut.flush();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-            try {
-                fOut.close();
-            } catch (IOException e) {
-                e.printStackTrace();
-            }
-        }
-    }
-
-
 
     protected void initActionPages(int pageCount){
         //initialize actionPages, a list of lists of strings, actions log into it for saving/loading/undo functionalities
@@ -554,4 +357,5 @@ public class PaintView extends View {
             actionPages.add(new ArrayList<String>());
         }
     }
+
 }
