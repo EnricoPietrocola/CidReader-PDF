@@ -434,37 +434,30 @@ public class PaintView extends View {
     }*/
 
     protected void writeToFile(final String id, final String folderName) {
-        Log.i("CID", "Saving to file ");
-
         String project_file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" ;
-        String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + folderName /*+ "/"*/;
 
-        Log.i("CID", "Trying to access folder " + file_path);
+        //there might not be a need for a folder, everything could be saved on a single xml
+        String file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" + folderName /*+ "/"*/;
 
         File dir = new File(file_path);
         File project_dir = new File(project_file_path);
 
 
         if (!dir.exists()) {
-            Log.i("CID", "Dir doesn't exist");
             dir.mkdirs();
         }
         else{
-            Log.i("CID", "Dir exists");
         }
 
         if (!project_dir.exists()) {
-            Log.i("CID", "Project Dir doesn't exist");
             project_dir.mkdirs();
         }
         else{
-            Log.i("CID", "project Dir exists");
         }
         //create a project file to store which pdf was opened and where are the annotation files
-        File projectFile = new File(project_dir, folderName + "_project.txt");
+        File projectFile = new File(project_dir, folderName + "_project.crxml");
 
         if (!projectFile.exists()) {
-            Log.i("CID", "File doesn't exist");
             try {
                 projectFile.createNewFile();
             } catch (IOException e) {
@@ -472,7 +465,6 @@ public class PaintView extends View {
             }
         }
         else{
-            Log.i("CID", "File exists");
 
         }
 
@@ -495,19 +487,11 @@ public class PaintView extends View {
         }
 
         for (int i = 0; i < page.size(); i++) {
-            /*
-            if (dir != null){
-                Log.i("CID", "Dir is " + dir);
-            }
-            else{
-                Log.i("CID", "no dir");
-            }
-            */
 
-            File file = new File(dir, "annotation_" + id + "_" + i + ".txt");
+
+            File file = new File(dir, "annotation_" + id + "_" + i + ".crxml");
 
             if (!file.exists()) {
-                Log.i("CID", "File doesn't exist");
                 try {
                     file.createNewFile();
                 } catch (IOException e) {
@@ -515,7 +499,6 @@ public class PaintView extends View {
                 }
             }
             else{
-                Log.i("CID", "File exists");
 
             }
 
@@ -529,17 +512,7 @@ public class PaintView extends View {
 
             while(iterator.hasNext()){
                 FingerPath fp = iterator.next();
-                /*mPaint.setColor(fp.color);
-                mPaint.setStrokeWidth(fp.strokeWidth);
-                mPaint.setMaskFilter(null);
 
-                if (fp.emboss) {
-                    mPaint.setMaskFilter(mEmboss);
-                }
-                else if (fp.blur) {
-                    mPaint.setMaskFilter(mBlur);
-                }
-                */
                 if (fp.isFading){
                     fp.time -= 1;
                     mPaint.setAlpha((int)fp.time);
@@ -549,17 +522,13 @@ public class PaintView extends View {
                     }
                 }
                 try {
-                    //if any of these is null the app crashes
                     if (fOut != null) {
-                        Log.i("CID", "hey!");
                         fOut.write((fp.path.toString().getBytes()));
                         }
                     else{
-                        Log.i("CID","fOut is null");
                     }
                 }
                 catch (IOException e) {
-                    Log.e("Exception", "File write failed: " + e.toString());
                 }
             }
 
@@ -576,35 +545,7 @@ public class PaintView extends View {
         }
     }
 
-    protected String readFromFile(Context context) {
 
-        String ret = "";
-
-        try {
-            InputStream inputStream = context.openFileInput("config.txt");
-
-            if ( inputStream != null ) {
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                }
-
-                inputStream.close();
-                ret = stringBuilder.toString();
-            }
-        }
-        catch (FileNotFoundException e) {
-            Log.e("login activity", "File not found: " + e.toString());
-        } catch (IOException e) {
-            Log.e("login activity", "Can not read file: " + e.toString());
-        }
-
-        return ret;
-    }
 
     protected void initActionPages(int pageCount){
         //initialize actionPages, a list of lists of strings, actions log into it for saving/loading/undo functionalities

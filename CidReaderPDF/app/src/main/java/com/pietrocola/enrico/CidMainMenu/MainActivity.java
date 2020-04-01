@@ -198,7 +198,7 @@ public class MainActivity extends AppCompatActivity {
                     filepath.endsWith(".pdf")||
                     filepath.endsWith(".jpg")||
                     filepath.endsWith(".JPG")||
-                    filepath.endsWith(".txt")) //this has to become an xml cid file or something similar
+                    filepath.endsWith(".crxml"))
             {
                 names.add(filepath);
             }
@@ -224,7 +224,7 @@ public class MainActivity extends AppCompatActivity {
 
 
 
-                        if(itemClicked.endsWith(".txt")){
+                        if(itemClicked.endsWith(".crxml")){
                             String uri;
                             String project_file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" ;
                             //Log.i("CID", "path is is " + project_file_path + fileName);
