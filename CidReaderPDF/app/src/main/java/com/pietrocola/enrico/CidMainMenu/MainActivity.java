@@ -5,6 +5,7 @@ import android.Manifest;
 import androidx.appcompat.app.AppCompatActivity;
 import android.os.Bundle;
 import com.artifex.mupdf.mini.DocumentActivity;
+import com.artifex.mupdf.mini.XmlParser;
 
 import android.content.Intent;
 import android.net.Uri;
@@ -41,6 +42,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 
@@ -217,10 +219,6 @@ public class MainActivity extends AppCompatActivity {
                         Toast.makeText(MainActivity.this, itemClicked, Toast.LENGTH_LONG).show();
                         Log.i("CID", "test");
 
-
-
-
-
                         if(itemClicked.endsWith(".crxml")){
 
                             String uri;
@@ -230,9 +228,11 @@ public class MainActivity extends AppCompatActivity {
 
                             Log.i("CID", "clicked on " + itemClicked);
 
-                            String _content = readFromFile(mainContext, uri);
+                            //String _content = readFromFile(mainContext, uri);
+                            readFromFile(mainContext, uri);
+                            //Log.i("CID", "file uri " + uri);
 
-                            Log.i("CID", "file content " + _content);
+                            //Log.i("CID", "file content " + _content);
 
                             //connectAndOpenPDF(ipText);
                             //startMUPDFActivityFromStringLocation(_content);
@@ -352,10 +352,10 @@ public class MainActivity extends AppCompatActivity {
 
             if ( inputStream != null ) {
 
-                //XmlParser.parse(inputStream);
-                Log.i("CID", "inputStream created");
+                XmlParser.parse(inputStream);
 
-                InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
+                //Log.i("CID", "inputStream created");
+                /*InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
                 BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
                 String receiveString = "";
                 StringBuilder stringBuilder = new StringBuilder();
@@ -363,20 +363,21 @@ public class MainActivity extends AppCompatActivity {
                 while ( (receiveString = bufferedReader.readLine()) != null ) {
                     stringBuilder.append(receiveString);
                 }
-                inputStream.close();
-                ret = stringBuilder.toString();
-                inputStream.close();
+                //inputStream.close();
+                //ret = stringBuilder.toString();
+                //inputStream.close();
+
+                 */
             }
         }
         catch (FileNotFoundException e) {
             Log.e("login activity", "File not found: " + e.toString());
         } catch (IOException e) {
             Log.e("login activity", "Can not read file: " + e.toString());
+        } catch (XmlPullParserException e) {
+            e.printStackTrace();
         }
 
         return ret;
     }
-
-
-
 }
