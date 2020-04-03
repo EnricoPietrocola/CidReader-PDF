@@ -15,7 +15,7 @@ public class XmlParser {
         // We don't use namespaces
         private static final String ns = null;
 
-        public static List parse(InputStream in) throws XmlPullParserException, IOException {
+        public static List parseSession(InputStream in) throws XmlPullParserException, IOException {
             try {
 
                 XmlPullParser parser = Xml.newPullParser();
@@ -24,37 +24,53 @@ public class XmlParser {
                 parser.setInput(in, null);
                 parser.nextTag();
                 //Log.i("CID", documentLocation);
-                return readFeed(parser);
-                //return null; //readText(parser);
+                return readSessionProject(parser);
             } finally {
                 in.close();
             }
         }
 
-    private static List readFeed(XmlPullParser parser) throws XmlPullParserException, IOException {
-        //List entries = new ArrayList();
+    private static List readSessionProject(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List data = new ArrayList();
 
-        //parser.require(XmlPullParser.START_TAG, ns, "root");
-
-        //parser.require(XmlPullParser.START_TAG, ns, "document");
-        //String documentLocation = readText(parser);
-        //parser.require(XmlPullParser.END_TAG, ns, "document");
         String document = null;
         String appVersion = null;
-        String annotation = null;
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
                 continue;
             }
             String name = parser.getName();
-            Log.i("CID", "I have " + name);
+
+            if (name.equals("appVersion")) {
+                appVersion = readText(parser);
+                data.add(appVersion);
+            } else if (name.equals("document")) {
+                document = readText(parser);
+                data.add(document);
+            } else {
+                skip(parser);
+            }
+        }
+        Log.i("CID", "appVersion is : " + appVersion);
+        Log.i("CID", "Document is here: " + document);
+        //return entries;
+        return data;
+    }
+
+    private static List readSessionData(XmlPullParser parser) throws XmlPullParserException, IOException {
+        List annotationData = new ArrayList();
+
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String name = parser.getName();
 
             // Starts by looking for the entry tag
             if (name.equals("appVersion")) {
-                appVersion = readText(parser);
             }
             else if (name.equals("document")) {
-                document = readText(parser);
             }
             else if(name.equals("annotation")){
                 while (parser.next() != XmlPullParser.END_TAG) {
@@ -69,7 +85,6 @@ public class XmlParser {
                                 continue;
                             }
                             name = parser.getName();
-                            Log.i("CID", "Now we have " + name);
 
                             if (name.equals("address")) {
                                 Log.i("CID", readText(parser));
@@ -81,7 +96,6 @@ public class XmlParser {
                                         continue;
                                     }
                                     name = parser.getName();
-                                    Log.i("CID", "Now we have " + name);
                                     if(name.equals("path")){
                                         Log.i("CID", "path " + readText(parser));
                                     }
@@ -98,14 +112,10 @@ public class XmlParser {
                 skip(parser);
             }
         }
-        //return entries;
-        Log.i("CID", "appVersion is : " + appVersion);
-        Log.i("CID", "Document is here: " + document);
-        return null;
-        }
+        return annotationData;
+    }
 
-
-    // Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them off
+        // Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them off
 // to their respective "read" methods for processing. Otherwise, skips the tag.
     private static Entry readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
 

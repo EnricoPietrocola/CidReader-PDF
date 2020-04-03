@@ -20,6 +20,7 @@ import java.io.InputStreamReader;
 import java.net.InetAddress;
 import java.net.UnknownHostException;
 import java.util.ArrayList;
+import java.util.List;
 
 import android.os.Environment;
 
@@ -228,14 +229,14 @@ public class MainActivity extends AppCompatActivity {
 
                             Log.i("CID", "clicked on " + itemClicked);
 
-                            //String _content = readFromFile(mainContext, uri);
-                            readFromFile(mainContext, uri);
+                            String _content = readFromFile(mainContext, uri);
+                            //_content = readFromFile(mainContext, uri);
                             //Log.i("CID", "file uri " + uri);
 
                             //Log.i("CID", "file content " + _content);
 
                             //connectAndOpenPDF(ipText);
-                            //startMUPDFActivityFromStringLocation(_content);
+                            startMUPDFActivityFromStringLocation(_content);
                         }
                         else {
                             connectAndOpenPDF(ipText);
@@ -351,23 +352,13 @@ public class MainActivity extends AppCompatActivity {
 
 
             if ( inputStream != null ) {
+                List data; // = new ArrayList();
+                data = XmlParser.parseSession(inputStream);
 
-                XmlParser.parse(inputStream);
+                Log.i("CID", "appVersion " + data.get(0));
+                Log.i("CID", "document " + data.get(1));
 
-                //Log.i("CID", "inputStream created");
-                /*InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-                BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-                String receiveString = "";
-                StringBuilder stringBuilder = new StringBuilder();
-
-                while ( (receiveString = bufferedReader.readLine()) != null ) {
-                    stringBuilder.append(receiveString);
-                }
-                //inputStream.close();
-                //ret = stringBuilder.toString();
-                //inputStream.close();
-
-                 */
+                ret = data.get(1).toString();
             }
         }
         catch (FileNotFoundException e) {
