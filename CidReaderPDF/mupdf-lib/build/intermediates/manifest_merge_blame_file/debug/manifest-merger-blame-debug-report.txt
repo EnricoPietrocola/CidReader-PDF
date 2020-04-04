@@ -5,7 +5,7 @@
 5    <uses-sdk
 6        android:minSdkVersion="23"
 6-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml
-7        android:targetSdkVersion="25" />
+7        android:targetSdkVersion="26" />
 7-->D:\repoGarr1\CidReaderPDF\mupdf-lib\src\main\AndroidManifest.xml
 8
 9    <uses-permission android:name="android.permission.READ_EXTERNAL_STORAGE" />

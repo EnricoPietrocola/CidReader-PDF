@@ -8,6 +8,8 @@ import org.xmlpull.v1.XmlPullParserException;
 
 import java.io.IOException;
 import java.io.InputStream;
+import java.lang.reflect.Array;
+import java.net.InetAddress;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -15,7 +17,7 @@ public class XmlParser {
         // We don't use namespaces
         private static final String ns = null;
 
-        public static List parseSession(InputStream in) throws XmlPullParserException, IOException {
+        public static ArrayList<String> parseSession(InputStream in) throws XmlPullParserException, IOException {
             try {
 
                 XmlPullParser parser = Xml.newPullParser();
@@ -30,8 +32,9 @@ public class XmlParser {
             }
         }
 
-    private static List readSessionProject(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List data = new ArrayList();
+    //read pdf document location and application version it was created with
+    private static ArrayList<String> readSessionProject(XmlPullParser parser) throws XmlPullParserException, IOException {
+        ArrayList<String> data = new ArrayList();
 
         String document = null;
         String appVersion = null;
@@ -57,9 +60,139 @@ public class XmlParser {
         return data;
     }
 
-    private static List readSessionData(XmlPullParser parser) throws XmlPullParserException, IOException {
-        List annotationData = new ArrayList();
+    public static ArrayList<ArrayList<String>> parseSessionData(InputStream in) throws XmlPullParserException, IOException {
+        try {
 
+            XmlPullParser parser = Xml.newPullParser();
+
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in, null);
+            parser.nextTag();
+            //Log.i("CID", documentLocation);
+            return readSessionData(parser);
+        } finally {
+            in.close();
+        }
+    }
+
+    //read session annotation data
+    private static ArrayList<ArrayList<String>> readSessionData(XmlPullParser parser) throws XmlPullParserException, IOException {
+
+        //a page is an array of actions, a paintview
+        ArrayList<ArrayList<String>> annotationData = new ArrayList<>();
+
+        /*for (int i = 0; i < pageCount; i++){
+            Log.i("CID", Integer.toString(pageCount));
+            annotationData.add(new ArrayList<String>());
+        }*/
+        parser.require(XmlPullParser.START_TAG, ns, "root");
+
+        while (parser.next() != XmlPullParser.END_TAG) {
+            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                continue;
+            }
+            String tag = parser.getName();
+            //Log.i("CID", "1 loop " + tag);
+            // Starts by looking for the entry tag
+            if(tag.equals("annotation")){
+
+                while (parser.next() != XmlPullParser.END_TAG) {
+                    if (parser.getEventType() != XmlPullParser.START_TAG) {
+                        continue;
+                    }
+                    tag = parser.getName();
+
+                    //Log.i("CID", "2 loop " + tag);
+
+
+                    if (tag.equals("user")) {   //a user is a paintview in cidreader, both local or remote
+
+                        while (parser.next() != XmlPullParser.END_TAG) {
+
+                            if (parser.getEventType() != XmlPullParser.START_TAG) {
+                                continue;
+                            }
+                            tag = parser.getName();
+                            //Log.i("CID", "3 loop " + tag);
+
+                            if (tag.equals("address")) {
+                                readText(parser);
+                            }
+
+                            else if(tag.equals("page")){  //access page, based on attribute "pageNumber", choose which annotation page to fill with paths using local/remoteDrawOnScreen
+
+                                //initialize page data
+                                ArrayList<String> pageData = new ArrayList<>();
+
+                                //Log.i("CID", "page number " + parser.getAttributeValue(ns, "pageNumber"));
+
+                                while (parser.next() != XmlPullParser.END_TAG) {
+                                    if (parser.getEventType() != XmlPullParser.START_TAG) {
+                                        continue;
+                                    }
+                                    tag = parser.getName();
+
+                                    //Log.i("CID", "4 loop " + tag);
+                                    //Log.i("CID", tag + readText(parser));
+
+
+                                    if(tag.equals("action")){ //single action added to actionlist
+                                        //Log.i("CID", tag + " " + readText(parser));
+
+                                        pageData.add(readText(parser));
+                                        Log.i("CID", pageData.get(pageData.size() - 1));
+                                    }
+                                    else{
+                                        skip(parser);
+                                    }
+
+                                }
+
+                                annotationData.add(pageData);
+                            }
+                           /*else{
+                                skip(parser);
+                            }*/
+                        }
+
+                    }
+                    /*else{
+                        skip(parser);
+                    }*/
+                }
+
+            }
+            else {
+                skip(parser);
+            }
+        }
+        return annotationData;
+    }
+
+    public static ArrayList<String> parseSessionAddresses(InputStream in) throws XmlPullParserException, IOException {
+        try {
+
+            XmlPullParser parser = Xml.newPullParser();
+
+            parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
+            parser.setInput(in, null);
+            parser.nextTag();
+            //Log.i("CID", documentLocation);
+            return readSessionAddresses(parser);
+        } finally {
+            in.close();
+        }
+    }
+
+    private static ArrayList<String> readSessionAddresses(XmlPullParser parser) throws XmlPullParserException, IOException {
+
+        //a page is an array of actions, a paintview
+        ArrayList<String> addresses = new ArrayList<>();
+
+        /*for (int i = 0; i < pageCount; i++){
+            Log.i("CID", Integer.toString(pageCount));
+            annotationData.add(new ArrayList<String>());
+        }*/
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -68,41 +201,24 @@ public class XmlParser {
             String name = parser.getName();
 
             // Starts by looking for the entry tag
-            if (name.equals("appVersion")) {
-            }
-            else if (name.equals("document")) {
-            }
-            else if(name.equals("annotation")){
+            if(name.equals("annotation")){
                 while (parser.next() != XmlPullParser.END_TAG) {
                     if (parser.getEventType() != XmlPullParser.START_TAG) {
                         continue;
                     }
                     name = parser.getName();
 
-                    if (name.equals("user")) {
+                    if (name.equals("user")) {   //a user is a paintview in cidreader, both local or remote
                         while (parser.next() != XmlPullParser.END_TAG) {
                             if (parser.getEventType() != XmlPullParser.START_TAG) {
                                 continue;
                             }
                             name = parser.getName();
+                            Log.i("CID", readText(parser));
 
                             if (name.equals("address")) {
+                                addresses.add(readText(parser));
                                 Log.i("CID", readText(parser));
-                            }
-                            else if(name.equals("page")){
-                                Log.i("CID", "page number " + parser.getAttributeValue(ns, "pageNumber"));
-                                while (parser.next() != XmlPullParser.END_TAG) {
-                                    if (parser.getEventType() != XmlPullParser.START_TAG) {
-                                        continue;
-                                    }
-                                    name = parser.getName();
-                                    if(name.equals("path")){
-                                        Log.i("CID", "path " + readText(parser));
-                                    }
-                                    else{
-                                        skip(parser);
-                                    }
-                                }
                             }
                         }
                     }
@@ -112,12 +228,12 @@ public class XmlParser {
                 skip(parser);
             }
         }
-        return annotationData;
+        return addresses;
     }
 
         // Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them off
 // to their respective "read" methods for processing. Otherwise, skips the tag.
-    private static Entry readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static XmlData readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
 
             Log.i("CID", "is this called? DOCUMENT");
         parser.require(XmlPullParser.START_TAG, ns, "annotation");
@@ -140,7 +256,7 @@ public class XmlParser {
                 skip(parser);
             }
         }
-        return new Entry(document, summary, link);
+        return new XmlData(document, summary, link);
     }
 
     // For the tags title and summary, extracts their text values.
@@ -158,7 +274,9 @@ public class XmlParser {
             throw new IllegalStateException();
         }
         int depth = 1;
+
         while (depth != 0) {
+            //Log.i("CID", "depth "+ depth + " tag " + parser.getName());
             switch (parser.next()) {
                 case XmlPullParser.END_TAG:
                     depth--;

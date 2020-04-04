@@ -2,14 +2,8 @@ package com.artifex.mupdf.mini;
 
 import com.artifex.mupdf.fitz.*;
 import com.artifex.mupdf.fitz.android.*;
-import com.skydoves.colorpickerview.ActionMode;
-import com.skydoves.colorpickerview.ColorEnvelope;
-import com.skydoves.colorpickerview.ColorPickerDialog;
 import com.skydoves.colorpickerview.ColorPickerView;
-import com.skydoves.colorpickerview.listeners.ColorEnvelopeListener;
 import com.skydoves.colorpickerview.listeners.ColorListener;
-import com.skydoves.colorpickerview.listeners.ColorPickerViewListener;
-import com.skydoves.colorpickerview.BuildConfig;
 import com.skydoves.colorpickerview.sliders.AlphaSlideBar;
 import com.skydoves.colorpickerview.sliders.BrightnessSlideBar;
 
@@ -44,7 +38,6 @@ import android.view.KeyEvent;
 import android.view.LayoutInflater;
 import android.view.MenuItem;
 import android.view.View;
-import android.view.ViewDebug;
 import android.view.Window;
 import android.view.WindowManager;
 import android.view.inputmethod.EditorInfo;
@@ -62,23 +55,20 @@ import android.widget.PopupMenu;
 import android.widget.RelativeLayout;
 import android.widget.SeekBar;
 import android.widget.Switch;
-import android.widget.TextClock;
 import android.widget.TextView;
 import android.widget.Toast;
 import android.view.MotionEvent;
 import android.view.Menu;
 import android.view.MenuInflater;
 
-import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
-import java.io.InputStreamReader;
 import java.net.UnknownHostException;
 import java.net.InetAddress;
 
 import java.util.ArrayList;
-import java.util.Iterator;
 import java.util.Stack;
 import java.io.InputStream;
 import java.io.ByteArrayOutputStream;
@@ -87,6 +77,7 @@ import java.io.IOException;
 
 import android.widget.RelativeLayout.LayoutParams;
 
+import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
 public class DocumentActivity extends Activity
@@ -141,8 +132,6 @@ public class DocumentActivity extends Activity
 	protected Stack<Integer> history;
 	protected boolean wentBack;
 
-	//CID Variables
-	private LayoutInflater inflater;
 	private View view;
 	public static RelativeLayout item;
 	public Context mainContext;
@@ -172,11 +161,14 @@ public class DocumentActivity extends Activity
 	protected FrameLayout paintViewLayout;
 	private ArrayList<PaintView> paintViews = new ArrayList<>();
 	private boolean annotationsVisible = true;
-	private ListView connectionsList;
 	private ArrayList<String> connections;
 	private ListAdapter connectionsListAdapter;
 	public static String fileLocation;
+	public static String projectFileLocation;
+
+
 	protected String appVersion = "0.1";
+
 
 	@SuppressLint("WrongViewCast")
 	public void onCreate(Bundle savedInstanceState) {
@@ -438,7 +430,7 @@ public class DocumentActivity extends Activity
 
 		connectionsListAdapter = new ArrayAdapter<>(this, android.R.layout.simple_list_item_1, connections);
 
-		connectionsList = new ListView(mainContext);
+		ListView connectionsList = new ListView(mainContext);
 		LinearLayout.LayoutParams connectionsListLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.MATCH_PARENT);
 		connectionsList.setLayoutParams(part);
 		connectionsList.setAdapter(connectionsListAdapter);
@@ -552,10 +544,11 @@ public class DocumentActivity extends Activity
 				layoutPopupMenu.show();
 			}
 		});
+
 	}
 
 	@Override
-	public void onRequestPermissionsResult(int requestCode, String permissions[], int[] grantResults) {
+	public void onRequestPermissionsResult(int requestCode, String[] permissions, int[] grantResults) {
 		switch (requestCode) {
 			case 1 : {
 				// If request is cancelled, the result arrays are empty.
@@ -611,7 +604,8 @@ public class DocumentActivity extends Activity
 	}
 
 	public void layoutSetup(){
-		inflater = (LayoutInflater)getSystemService(Context.LAYOUT_INFLATER_SERVICE);
+		//CID Variables
+		LayoutInflater inflater = (LayoutInflater) getSystemService(Context.LAYOUT_INFLATER_SERVICE);
 		view = inflater.inflate(R.layout.document_activity, null);
 		item = (RelativeLayout ) view.findViewById(R.id.mainRelativeLayout);
 		setContentView(item);
@@ -667,6 +661,7 @@ public class DocumentActivity extends Activity
 					askPassword(R.string.dlog_password_message);
 				else {
 					loadDocument();
+
 				}
 			}
 		});
@@ -1112,7 +1107,7 @@ public class DocumentActivity extends Activity
 			connectedAddresses.add(ip);
 			updateConnectionList();
 			//create a new paintview with new connected IP as ID
-			createRemoteGraphics(ip);
+			createRemoteGraphics(ip.toString());
 		}
 		return splitMessage;
 	}
@@ -1166,10 +1161,10 @@ public class DocumentActivity extends Activity
 						printOnScreenLocal(Integer.parseInt(parsedMessage[2]), Integer.parseInt(parsedMessage[3]));
 						break;
 					case "drawOnScreen":
-						drawOnScreenRemote(ip, parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]), Integer.parseInt(parsedMessage[5]), Integer.parseInt(parsedMessage[6]), Boolean.parseBoolean(parsedMessage[7]));
+						drawOnScreenRemote(ip.toString(), parsedMessage[2], Float.parseFloat(parsedMessage[3]), Float.parseFloat(parsedMessage[4]), Integer.parseInt(parsedMessage[5]), Integer.parseInt(parsedMessage[6]), Boolean.parseBoolean(parsedMessage[7]));
 						break;
 					case "undo":
-						PaintView pv = findPaintViewByIpAddress(ip);
+						PaintView pv = findPaintViewByIpAddress(ip.toString());
 						pv.deleteLastPath();
 						//pv.deleteLastPathOnPage(Integer.parseInt(parsedMessage[2]));
 						break;
@@ -1294,7 +1289,7 @@ public class DocumentActivity extends Activity
 	public void drawOnScreenLocal(String action, float x, float y){
 
 		//record actions in file for local save data
-		paintViews.get(0).actionPages.get(currentPage).add(action + "," + Float.toString(x) + "," + Float.toString(y) + ";");
+		paintViews.get(0).actionPages.get(currentPage).add(action + "," + x + "," + y+ ";");
 
 		switch(action) {
 			//if ACTION DOWN happens outside of bounds, there will be now touchstart but there will be a touchMove
@@ -1321,7 +1316,7 @@ public class DocumentActivity extends Activity
 		}
 	}
 
-	public void drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail){
+	public void drawOnScreenRemote(String ip, String action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail){
 
 		PaintView pv = findPaintViewByIpAddress(ip);
 
@@ -1356,7 +1351,7 @@ public class DocumentActivity extends Activity
 		}
 	}
 
-	PaintView findPaintViewByIpAddress(InetAddress ip){
+	PaintView findPaintViewByIpAddress(String ip){
 		PaintView paintView = null;
 		for (int i = 0; i < paintViews.size(); i++){
 			if(paintViews.get(i).ipAddress.equals(ip)){
@@ -1403,7 +1398,7 @@ public class DocumentActivity extends Activity
 	public void createLocalGraphics(InetAddress ip){
 		PaintView pv = new PaintView(mainContext);
 		paintViews.add(pv);
-		paintViews.get(0).ipAddress = ip;
+		paintViews.get(0).ipAddress = ip.toString();
 		FrameLayout.LayoutParams paintViewLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
@@ -1415,14 +1410,14 @@ public class DocumentActivity extends Activity
 		fitPaintViews();
 	}
 
-	public void createRemoteGraphics(InetAddress ip){
+	public void createRemoteGraphics(String ip){
 		PaintView pv = new PaintView(mainContext);
 		pv.ipAddress = ip;
 		FrameLayout.LayoutParams paintViewLayoutParams = new FrameLayout.LayoutParams(LayoutParams.MATCH_PARENT, LayoutParams.MATCH_PARENT);
 		DisplayMetrics metrics = new DisplayMetrics();
 		getWindowManager().getDefaultDisplay().getMetrics(metrics);
 		pv.setLayoutParams(paintViewLayoutParams);
-		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + String.valueOf(pageCount));
+		Log.i("PaintView", "FROM DOCUMENT PAGECOUNT = " + pageCount);
 		pv.init(pageView.bitmapW, pageView.bitmapH, pageCount);
 		paintViewLayout.addView(pv);
 		paintViews.add(pv);
@@ -1463,11 +1458,15 @@ public class DocumentActivity extends Activity
 				e.printStackTrace();
 			}
 			localInitialized = true;
+
+			if(projectFileLocation != null) { //if we're loading a pre-existing session
+				readAnnotationData(projectFileLocation);
+			}
 		}
 	}
 
 
-	protected String readFromFile(Context context) {
+	/*protected String readFromFile(Context context) {
 
 		String ret = "";
 
@@ -1495,7 +1494,7 @@ public class DocumentActivity extends Activity
 		}
 
 		return ret;
-	}
+	}*/
 
 	protected void writeToFile(final String id, final String folderName) {
 
@@ -1552,11 +1551,11 @@ public class DocumentActivity extends Activity
 
 					for (int l = 0; l < paintViews.get(i).actionPages.get(j).size(); l++) {
 
-						serializer.startTag(null, "path");
+						serializer.startTag(null, "action");
 
 						//still needs color, size and other attributes
 						serializer.text(paintViews.get(i).actionPages.get(j).get(l));
-						serializer.endTag(null, "path");
+						serializer.endTag(null, "action");
 						//}
 					}
 
@@ -1581,5 +1580,71 @@ public class DocumentActivity extends Activity
 
 	}
 
+	protected void readAnnotationData(String projectFileLocation){
+		//XmlParser.parseSessionData();
+
+		String ret = "error";
+
+		//ArrayList actionPages;// = new ArrayList<>();
+		 ArrayList<ArrayList<ArrayList<String>>> actionPages = new ArrayList<>();
+
+
+		try {
+			//InputStream inputStream = context.openFileInput(file);
+			FileInputStream addressInputStream = new FileInputStream(projectFileLocation);
+			ArrayList<String> addresses = XmlParser.parseSessionAddresses(addressInputStream);
+
+				for (int i = 0; i < addresses.size(); i++) {
+
+					FileInputStream inputStream = new FileInputStream(projectFileLocation);
+					//instantiate with previous saved data a paintview for each previous user
+
+					createRemoteGraphics(addresses.get(i));
+					//createRemoteGraphics(getInetAddressByName(addresses.get(i)));
+
+					actionPages.add(XmlParser.parseSessionData(inputStream)); //store session data
+
+					Log.i("CID", "Number of pages " + actionPages.get(i).size());
+
+					//get each page for chosen user
+					for (int j = 0; j < actionPages.get(i).size(); j++) { //iterate through each page of selected user in the session
+
+						if (i == 0) {
+							//local graphics
+							//get each action for chosen page
+
+							for (int l = 0; l < actionPages.get(i).get(j).size(); l++) { //iterate through each action of selected page (item 0 is always Local paintview)
+
+								//Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
+								//drawOnScreenRemote(getInetAddressByName(addresses.get(i)), Action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail)
+
+							}
+						} else { //remote graphics
+
+							//get each action for chosen page
+							for (int l = 0; l < actionPages.get(i).get(j).size(); l++) { //iterate through each action of selected page (all other items in list are always remote paintviews)
+
+								//Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
+								//drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail)
+
+							}
+						}
+						//ret = data.get(1).toString();
+						//paintViews.get(0).actionPages.add(actionPages.get(0).get(0));
+						//Log.i("CID", actionPages.get(0).get(0).get(i));
+					}
+				}
+
+		}
+		catch (FileNotFoundException e) {
+			Log.e("login activity", "File not found: " + e.toString());
+		} catch (IOException e) {
+			Log.e("login activity", "Can not read file: " + e.toString());
+		} catch (XmlPullParserException e) {
+			e.printStackTrace();
+		}
+
+		//return ret;
+	}
 
 }

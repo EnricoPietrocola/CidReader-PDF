@@ -43,6 +43,7 @@ import android.widget.RelativeLayout;
 import android.widget.TextView;
 import android.widget.Toast;
 
+import org.w3c.dom.Document;
 import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
 
@@ -236,6 +237,7 @@ public class MainActivity extends AppCompatActivity {
                             //Log.i("CID", "file content " + _content);
 
                             //connectAndOpenPDF(ipText);
+                            DocumentActivity.projectFileLocation = uri;
                             startMUPDFActivityFromStringLocation(_content);
                         }
                         else {

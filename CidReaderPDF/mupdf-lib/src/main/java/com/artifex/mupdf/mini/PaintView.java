@@ -42,7 +42,7 @@ public class PaintView extends View {
     public static int BRUSH_SIZE = 5;
     public static final int DEFAULT_COLOR = Color.RED;
     public static final int DEFAULT_BG_COLOR = Color.TRANSPARENT;
-    public InetAddress ipAddress;
+    public String ipAddress;
     private static final float TOUCH_TOLERANCE = 4;
     private float mX, mY;
     private Path mPath;
@@ -353,7 +353,7 @@ public class PaintView extends View {
     protected void initActionPages(int pageCount){
         //initialize actionPages, a list of lists of strings, actions log into it for saving/loading/undo functionalities
         for (int i = 0; i < pageCount; i++){
-            Log.i("CID", Integer.toString(pageCount));
+            //Log.i("CID", Integer.toString(pageCount));
             actionPages.add(new ArrayList<String>());
         }
     }
