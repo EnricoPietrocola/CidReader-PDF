@@ -1253,21 +1253,24 @@ public class DocumentActivity extends Activity
 								case MotionEvent.ACTION_DOWN:
 									if (annotationsVisible) {
 
-										drawOnScreenLocal("ACTION_DOWN", x, y);
+										//drawOnScreenLocal("ACTION_DOWN", x, y);
+										drawOnScreenLocal("ACTION_DOWN", percX, percY);
 										remoteDrawOnScren("ACTION_DOWN", percX, percY, strokeWidth, color, isTrail);
 									}
 
 									break;
 								case MotionEvent.ACTION_MOVE:
 									if (annotationsVisible) {
-										drawOnScreenLocal("ACTION_MOVE", x, y);
+										//drawOnScreenLocal("ACTION_MOVE", x, y);
+										drawOnScreenLocal("ACTION_MOVE", percX, percY);
 										remoteDrawOnScren("ACTION_MOVE", percX, percY, strokeWidth, color, isTrail);
 									}
 									break;
 								case MotionEvent.ACTION_UP:
 
 									if (annotationsVisible) {
-										drawOnScreenLocal("ACTION_UP", x, y);
+										//drawOnScreenLocal("ACTION_UP", x, y);
+										drawOnScreenLocal("ACTION_UP", percX, percY);
 										remoteDrawOnScren("ACTION_UP", percX, percY, strokeWidth, color, isTrail);
 									}
 
@@ -1289,7 +1292,10 @@ public class DocumentActivity extends Activity
 	public void drawOnScreenLocal(String action, float x, float y){
 
 		//record actions in file for local save data
-		paintViews.get(0).actionPages.get(currentPage).add(action + "," + x + "," + y+ ";");
+		paintViews.get(0).actionPages.get(currentPage).add(action + "," + x + "," + y + ";");
+
+		x = (x * pageView.bitmapW) - pageView.scrollX;
+		y = (y * pageView.bitmapH) - pageView.scrollY;
 
 		switch(action) {
 			//if ACTION DOWN happens outside of bounds, there will be now touchstart but there will be a touchMove
@@ -1615,7 +1621,7 @@ public class DocumentActivity extends Activity
 
 							for (int l = 0; l < actionPages.get(i).get(j).size(); l++) { //iterate through each action of selected page (item 0 is always Local paintview)
 
-								//Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
+								Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
 								//drawOnScreenRemote(getInetAddressByName(addresses.get(i)), Action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail)
 
 							}
@@ -1624,7 +1630,7 @@ public class DocumentActivity extends Activity
 							//get each action for chosen page
 							for (int l = 0; l < actionPages.get(i).get(j).size(); l++) { //iterate through each action of selected page (all other items in list are always remote paintviews)
 
-								//Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
+								Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
 								//drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail)
 
 							}

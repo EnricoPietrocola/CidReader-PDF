@@ -140,7 +140,7 @@ public class XmlParser {
                                         //Log.i("CID", tag + " " + readText(parser));
 
                                         pageData.add(readText(parser));
-                                        Log.i("CID", pageData.get(pageData.size() - 1));
+                                        //Log.i("CID", pageData.get(pageData.size() - 1));
                                     }
                                     else{
                                         skip(parser);
