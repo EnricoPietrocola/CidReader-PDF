@@ -47,7 +47,7 @@ public class PaintView extends View {
     private float mX, mY;
     private Path mPath;
     public Paint mPaint;
-    private ArrayList<FingerPath> paths = new ArrayList<>();
+    //private ArrayList<FingerPath> paths = new ArrayList<>();
     public int currentColor;
     private int backgroundColor = DEFAULT_BG_COLOR;
     public int strokeWidth;
@@ -122,7 +122,9 @@ public class PaintView extends View {
 
         //multipage system
         for (int i = 0; i < pageCount; i++){
-            page.add(new ArrayList<FingerPath>());
+            Log.i("CID", "Initializing undo buffer");
+            ArrayList<FingerPath> _singlePage = new ArrayList<>();
+            page.add(_singlePage);
             //bitmaps.add(Bitmap.createScaledBitmap(mBitmap, width, height, false));
         }
         initActionPages(pageCount);
@@ -160,7 +162,7 @@ public class PaintView extends View {
 
     public void clear() {
         mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        paths.clear();
+        page.get(pageNum).clear();
         normal();
         invalidate();
     }
@@ -178,7 +180,10 @@ public class PaintView extends View {
 
         startTime = System.currentTimeMillis();
 
-        Iterator<FingerPath> iterator = paths.iterator();
+        Log.i("CID", "PageNumberPaintView " + pageNum + " " + "pages length " + page.size());
+        ArrayList<FingerPath> _page = page.get(pageNum);
+
+        Iterator<FingerPath> iterator = _page.iterator();
         while(iterator.hasNext()){
             FingerPath fp = iterator.next();
             mPaint.setColor(fp.color);
@@ -213,7 +218,7 @@ public class PaintView extends View {
         postInvalidateOnAnimation();
     }
 
-    public void touchStart(float x, float y) {
+    public void touchStart(int pageNumber, float x, float y) {
         touchStarted = true;
 
         Log.i("CID", "PV is recieving " + x + " " + y);
@@ -231,7 +236,7 @@ public class PaintView extends View {
 
         mPath = new Path();
         FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth,  mPath);
-        paths.add(fp);
+        page.get(pageNumber).add(fp);
         mPath.reset();
         mPath.moveTo(x, y);
         mX = x;
@@ -271,7 +276,7 @@ public class PaintView extends View {
         try {
             mPath.lineTo(mX, mY);
             //get the path being drawn
-            FingerPath fp = paths.get(paths.size() - 1);
+            FingerPath fp = page.get(pageNum).get(page.get(pageNum).size() - 1);
             fp.isFading = isFading;
         }
         catch (Exception e) {
@@ -281,7 +286,7 @@ public class PaintView extends View {
     }
 
     public void saveCurrentPage(int currentPage){
-        page.set(currentPage, new ArrayList<>(paths)); //_paths
+        page.set(currentPage, new ArrayList<>(page.get(pageNum))); //_paths
     }
 
     //for each pdf page we create a path array item to record touch interaction (annotation drawings)
@@ -289,14 +294,13 @@ public class PaintView extends View {
         pageNum = pageNumber;
 
         if(page.get(pageNumber) != null){
-            clear();  //This clears pages for turning page effect
-            paths = new ArrayList<FingerPath>(page.get(pageNumber));
+            //clear();  //This clears pages for turning page effect
+            //paths = new ArrayList<FingerPath>(page.get(pageNumber));
             invalidate();
         }
         else {
             //Log.i("PaintView","Page is null");
         }
-
     }
 
     public float focusX;
@@ -327,9 +331,9 @@ public class PaintView extends View {
 
     public void deleteLastPath(){
 
-        if(paths.size() > 0) {
+        if(page.get(pageNum).size() > 0) {
             //Log.i("CID", "Undo, path's size " + paths.size());
-            paths.remove(paths.get(paths.size() - 1));
+            page.get(pageNum).remove(page.get(pageNum).get(page.get(pageNum).size() - 1));
             //Log.i("CID", "Undo, path's size " + paths.size());
         }
         else{
