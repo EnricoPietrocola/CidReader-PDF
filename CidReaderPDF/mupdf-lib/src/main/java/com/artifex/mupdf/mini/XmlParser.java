@@ -233,7 +233,7 @@ public class XmlParser {
 
         // Parses the contents of an entry. If it encounters a title, summary, or link tag, hands them off
 // to their respective "read" methods for processing. Otherwise, skips the tag.
-    private static XmlData readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
+   /* private static XmlData readEntry(XmlPullParser parser) throws XmlPullParserException, IOException {
 
             Log.i("CID", "is this called? DOCUMENT");
         parser.require(XmlPullParser.START_TAG, ns, "annotation");
@@ -257,7 +257,7 @@ public class XmlParser {
             }
         }
         return new XmlData(document, summary, link);
-    }
+    }*/
 
     // For the tags title and summary, extracts their text values.
     private static String readText(XmlPullParser parser) throws IOException, XmlPullParserException {

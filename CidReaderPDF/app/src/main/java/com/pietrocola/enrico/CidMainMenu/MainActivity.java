@@ -236,7 +236,7 @@ public class MainActivity extends AppCompatActivity {
 
                             //Log.i("CID", "file content " + _content);
 
-                            //connectAndOpenPDF(ipText);
+                            connectAndOpenPDF(ipText);
                             DocumentActivity.projectFileLocation = uri;
                             startMUPDFActivityFromStringLocation(_content);
                         }

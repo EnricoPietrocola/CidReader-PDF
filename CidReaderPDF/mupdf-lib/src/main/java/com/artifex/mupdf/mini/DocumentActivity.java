@@ -144,7 +144,7 @@ public class DocumentActivity extends Activity
 	protected View scrollButton;
 
 	protected Switch trailSwitch;
-	protected static boolean isTrail;
+	protected static boolean isTrail = false;
 
 	protected int color = Color.BLUE;
 	protected int strokeWidth = 5;
@@ -331,6 +331,11 @@ public class DocumentActivity extends Activity
 			public void onClick(View v) {
 				fitPage = !fitPage;
 				loadPage();
+
+				//THIS MUST BE REMOVED WHEN LOAD FROM XML IS FINISHED
+				if(projectFileLocation != null) { //if we're loading a pre-existing session
+					readAnnotationData(projectFileLocation);
+				}
 			}
 		});
 
@@ -1241,6 +1246,9 @@ public class DocumentActivity extends Activity
 					percX = (x + pageView.scrollX) / pageView.bitmapW;
 					percY = (y + pageView.scrollY) / pageView.bitmapH;
 
+					Log.i("CID", "recieving " + percX + " " + percY);
+
+
 					//Log.i("CID", toolsVisible + " " + menuVisible);
 					if (!menuVisible && !toolsVisible) {
 						if (event.getPointerCount() == 2) {
@@ -1291,9 +1299,10 @@ public class DocumentActivity extends Activity
 
 	public void drawOnScreenLocal(String action, float x, float y){
 
-		//record actions in file for local save data
-		paintViews.get(0).actionPages.get(currentPage).add(action + "," + x + "," + y + ";");
+		Log.i("CID", "Drawonscreen received " + action + "," + x + "," + y);
+		paintViews.get(0).actionPages.get(currentPage).add(action + "," + x + "," + y);
 
+		//record actions in file for local save data
 		x = (x * pageView.bitmapW) - pageView.scrollX;
 		y = (y * pageView.bitmapH) - pageView.scrollY;
 
@@ -1325,9 +1334,9 @@ public class DocumentActivity extends Activity
 	public void drawOnScreenRemote(String ip, String action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail){
 
 		PaintView pv = findPaintViewByIpAddress(ip);
-
+		Log.i("CID", "Drawonscreen received " + action + "," + x + "," + y);
 		//record actions in file for remote save data
-		paintViews.get(paintViews.indexOf(pv)).actionPages.get(currentPage).add(action + "," + x + "," + y + ";");
+		paintViews.get(paintViews.indexOf(pv)).actionPages.get(currentPage).add(action + "," + x + "," + y);
 
 		x = (x * pageView.bitmapW) - pageView.scrollX;
 		y = (y * pageView.bitmapH) - pageView.scrollY;
@@ -1414,6 +1423,10 @@ public class DocumentActivity extends Activity
 		pv.strokeWidth = strokeWidth;
 		paintViewLayout.addView(paintViews.get(0));
 		fitPaintViews();
+
+		if(projectFileLocation != null) { //if we're loading a pre-existing session
+			readAnnotationData(projectFileLocation);
+		}
 	}
 
 	public void createRemoteGraphics(String ip){
@@ -1465,9 +1478,7 @@ public class DocumentActivity extends Activity
 			}
 			localInitialized = true;
 
-			if(projectFileLocation != null) { //if we're loading a pre-existing session
-				readAnnotationData(projectFileLocation);
-			}
+
 		}
 	}
 
@@ -1620,6 +1631,17 @@ public class DocumentActivity extends Activity
 							//get each action for chosen page
 
 							for (int l = 0; l < actionPages.get(i).get(j).size(); l++) { //iterate through each action of selected page (item 0 is always Local paintview)
+								String[] parsedActionMessage = parseAction(actionPages.get(i).get(j).get(l));
+								/*for(int y = 0; y < parsedStuff.length; y++){
+									Log.i("CID", parsedStuff[y]);
+								}*/
+								String action = parsedActionMessage[0];
+								float x = Float.parseFloat(parsedActionMessage[1]);
+								float y = Float.parseFloat(parsedActionMessage[2]);
+								//x = (x * pageView.bitmapW) - pageView.scrollX;
+								//y = (y * pageView.bitmapH) - pageView.scrollY;
+
+								drawOnScreenLocal(action, x, y);
 
 								Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
 								//drawOnScreenRemote(getInetAddressByName(addresses.get(i)), Action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail)
@@ -1629,7 +1651,17 @@ public class DocumentActivity extends Activity
 
 							//get each action for chosen page
 							for (int l = 0; l < actionPages.get(i).get(j).size(); l++) { //iterate through each action of selected page (all other items in list are always remote paintviews)
+								String[] parsedActionMessage = parseAction(actionPages.get(i).get(j).get(l));
+								/*for(int y = 0; y < parsedStuff.length; y++){
+									Log.i("CID", parsedStuff[y]);
+								}*/
+								String action = parsedActionMessage[0];
+								float x = Float.parseFloat(parsedActionMessage[1]);
+								float y = Float.parseFloat(parsedActionMessage[2]);
+								//x = (x * pageView.bitmapW) - pageView.scrollX;
+								//y = (y * pageView.bitmapH) - pageView.scrollY;
 
+								drawOnScreenLocal(action, x, y);
 								Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
 								//drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail)
 
@@ -1650,7 +1682,21 @@ public class DocumentActivity extends Activity
 			e.printStackTrace();
 		}
 
+		/*String[] parsedStuff = parseAction("ACTION_MOVE,0.43780518,0.62586266");
+		for(int i = 0; i < parsedStuff.length; i++){
+		 	Log.i("CID", parsedStuff[i]);
+		}*/
 		//return ret;
 	}
+	public String[] parseAction(String actionMessage){
+		String[] splitMessage;
+		splitMessage = actionMessage.split(",");
+		String _temp = "";
 
+		for (int i = 0; i < splitMessage.length; i++){
+			_temp += splitMessage[i] + " ";
+		}
+
+		return splitMessage;
+	}
 }
