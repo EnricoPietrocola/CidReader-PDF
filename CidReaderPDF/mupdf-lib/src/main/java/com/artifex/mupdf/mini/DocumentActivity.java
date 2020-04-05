@@ -1258,7 +1258,7 @@ public class DocumentActivity extends Activity
 									if (annotationsVisible) {
 
 										//drawOnScreenLocal("ACTION_DOWN", x, y);
-										drawOnScreenLocal("ACTION_DOWN", currentPage, percX, percY);
+										drawOnScreenLocal("ACTION_DOWN", currentPage, percX, percY, strokeWidth, color, isTrail);
 										remoteDrawOnScren("ACTION_DOWN", currentPage, percX, percY, strokeWidth, color, isTrail);
 									}
 
@@ -1266,7 +1266,7 @@ public class DocumentActivity extends Activity
 								case MotionEvent.ACTION_MOVE:
 									if (annotationsVisible) {
 										//drawOnScreenLocal("ACTION_MOVE", x, y);
-										drawOnScreenLocal("ACTION_MOVE", currentPage, percX, percY);
+										drawOnScreenLocal("ACTION_MOVE", currentPage, percX, percY, strokeWidth, color, isTrail);
 										remoteDrawOnScren("ACTION_MOVE", currentPage, percX, percY, strokeWidth, color, isTrail);
 									}
 									break;
@@ -1274,7 +1274,7 @@ public class DocumentActivity extends Activity
 
 									if (annotationsVisible) {
 										//drawOnScreenLocal("ACTION_UP", x, y);
-										drawOnScreenLocal("ACTION_UP", currentPage, percX, percY);
+										drawOnScreenLocal("ACTION_UP", currentPage, percX, percY, strokeWidth, color, isTrail);
 										remoteDrawOnScren("ACTION_UP", currentPage, percX, percY, strokeWidth, color, isTrail);
 									}
 
@@ -1293,10 +1293,10 @@ public class DocumentActivity extends Activity
 		return ret;
 	}
 
-	public void drawOnScreenLocal(String action, int pageNumber, float x, float y){
+	public void drawOnScreenLocal(String action, int pageNumber, float x, float y, int strokeWidth, int color, boolean isTrail){
 
-		Log.i("CID", "Drawonscreen received " + action + "," + x + "," + y);
-		paintViews.get(0).actionPages.get(pageNumber).add(action + "," + x + "," + y);
+		//Log.i("CID", "Drawonscreen received " + action + "," + x + "," + y);
+		paintViews.get(0).actionPages.get(pageNumber).add(action + "," + pageNumber + "," + x + "," + y + "," + strokeWidth + "," + color + "," + isTrail);
 
 		//record actions in file for local save data
 		x = (x * pageView.bitmapW) - pageView.scrollX;
@@ -1330,9 +1330,10 @@ public class DocumentActivity extends Activity
 	public void drawOnScreenRemote(String ip, String action, int pageNumber, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail){
 
 		PaintView pv = findPaintViewByIpAddress(ip);
-		Log.i("CID", "Drawonscreen received " + action + "," + x + "," + y);
+		//Log.i("CID", "Drawonscreen received " + action + "," + x + "," + y);
 		//record actions in file for remote save data
-		paintViews.get(paintViews.indexOf(pv)).actionPages.get(pageNumber).add(action + "," + pageNumber + "," + x + "," + y);
+		//paintViews.get(paintViews.indexOf(pv)).actionPages.get(pageNumber).add(action + "," + pageNumber + "," + x + "," + y);
+		paintViews.get(paintViews.indexOf(pv)).actionPages.get(pageNumber).add(action + "," + pageNumber + "," + x + "," + y + "," + recvStrokeWidth + "," + recvColor + "," + isLineTrail);
 
 		x = (x * pageView.bitmapW) - pageView.scrollX;
 		y = (y * pageView.bitmapH) - pageView.scrollY;
@@ -1632,14 +1633,19 @@ public class DocumentActivity extends Activity
 									Log.i("CID", parsedStuff[y]);
 								}*/
 								String action = parsedActionMessage[0];
-								float x = Float.parseFloat(parsedActionMessage[1]);
-								float y = Float.parseFloat(parsedActionMessage[2]);
+								int pageNumber = Integer.parseInt(parsedActionMessage[1]);
+								float x = Float.parseFloat(parsedActionMessage[2]);
+								float y = Float.parseFloat(parsedActionMessage[3]);
+								int strokeWidth = Integer.parseInt(parsedActionMessage[4]);
+								int color = Integer.parseInt(parsedActionMessage[5]);
+								boolean isTrail = Boolean.parseBoolean(parsedActionMessage[6]);
+
 								//x = (x * pageView.bitmapW) - pageView.scrollX;
 								//y = (y * pageView.bitmapH) - pageView.scrollY;
 
-								drawOnScreenLocal(action, j, x, y);
+								drawOnScreenLocal(action, j, x, y, strokeWidth, color, isTrail);
 
-								//Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
+								Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
 								//drawOnScreenRemote(getInetAddressByName(addresses.get(i)), Action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail)
 
 							}
@@ -1652,13 +1658,18 @@ public class DocumentActivity extends Activity
 									Log.i("CID", parsedStuff[y]);
 								}*/
 								String action = parsedActionMessage[0];
-								float x = Float.parseFloat(parsedActionMessage[1]);
-								float y = Float.parseFloat(parsedActionMessage[2]);
+								int pageNumber = Integer.parseInt(parsedActionMessage[1]);
+								float x = Float.parseFloat(parsedActionMessage[2]);
+								float y = Float.parseFloat(parsedActionMessage[3]);
+								int strokeWidth = Integer.parseInt(parsedActionMessage[4]);
+								int color = Integer.parseInt(parsedActionMessage[5]);
+								boolean isTrail = Boolean.parseBoolean(parsedActionMessage[6]);
+
 								//x = (x * pageView.bitmapW) - pageView.scrollX;
 								//y = (y * pageView.bitmapH) - pageView.scrollY;
 
-								drawOnScreenLocal(action, j, x, y);
-								//Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
+								drawOnScreenLocal(action, j, x, y, strokeWidth, color, isTrail);
+								Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
 								//drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail)
 
 							}
