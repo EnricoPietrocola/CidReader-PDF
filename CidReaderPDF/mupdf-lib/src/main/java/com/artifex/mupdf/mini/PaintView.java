@@ -72,7 +72,7 @@ public class PaintView extends View {
     protected int annotationWidth, annotationHeight;
     //protected ArrayList<Bitmap> bitmaps = new ArrayList<Bitmap>();
     protected FileOutputStream fOut = null;
-    protected Integer pageNum;
+    protected Integer pageNum = 0;
     protected boolean touchStarted;
 
     //added for multipage support
@@ -180,7 +180,7 @@ public class PaintView extends View {
 
         startTime = System.currentTimeMillis();
 
-        Log.i("CID", "PageNumberPaintView " + pageNum + " " + "pages length " + page.size());
+        //Log.i("CID", "PageNumberPaintView " + pageNum + " " + "pages length " + page.size());
         ArrayList<FingerPath> _page = page.get(pageNum);
 
         Iterator<FingerPath> iterator = _page.iterator();

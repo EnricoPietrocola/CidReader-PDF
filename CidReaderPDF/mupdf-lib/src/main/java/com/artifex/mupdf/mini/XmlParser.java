@@ -60,7 +60,7 @@ public class XmlParser {
         return data;
     }
 
-    public static ArrayList<ArrayList<String>> parseSessionData(InputStream in) throws XmlPullParserException, IOException {
+    public static ArrayList<ArrayList<ArrayList<String>>> parseSessionData(InputStream in) throws XmlPullParserException, IOException {
         try {
 
             XmlPullParser parser = Xml.newPullParser();
@@ -76,10 +76,10 @@ public class XmlParser {
     }
 
     //read session annotation data
-    private static ArrayList<ArrayList<String>> readSessionData(XmlPullParser parser) throws XmlPullParserException, IOException {
+    private static ArrayList<ArrayList<ArrayList<String>>> readSessionData(XmlPullParser parser) throws XmlPullParserException, IOException {
 
         //a page is an array of actions, a paintview
-        ArrayList<ArrayList<String>> annotationData = new ArrayList<>();
+        ArrayList<ArrayList<ArrayList<String>>> annotationData = new ArrayList<>();
 
         /*for (int i = 0; i < pageCount; i++){
             Log.i("CID", Integer.toString(pageCount));
@@ -107,6 +107,8 @@ public class XmlParser {
 
                     if (tag.equals("user")) {   //a user is a paintview in cidreader, both local or remote
 
+                        ArrayList<ArrayList<String>> userData = new ArrayList<>();
+
                         while (parser.next() != XmlPullParser.END_TAG) {
 
                             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -118,6 +120,9 @@ public class XmlParser {
                             if (tag.equals("address")) {
                                 readText(parser);
                             }
+
+                            //MANCA IL CONCETTO DI USER PER CUI LE PAGINE CHE LUI CREA SONO TUTTE SEQUENZIALI INDIFFERENTEMENTE DALLO USER
+
 
                             else if(tag.equals("page")){  //access page, based on attribute "pageNumber", choose which annotation page to fill with paths using local/remoteDrawOnScreen
 
@@ -148,12 +153,14 @@ public class XmlParser {
 
                                 }
 
-                                annotationData.add(pageData);
+                                userData.add(pageData);
                             }
                            /*else{
                                 skip(parser);
                             }*/
                         }
+                        Log.i("CID", "ADDING USER DATA");
+                        annotationData.add(userData);
 
                     }
                     /*else{
@@ -177,6 +184,7 @@ public class XmlParser {
             parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
             parser.setInput(in, null);
             parser.nextTag();
+
             //Log.i("CID", documentLocation);
             return readSessionAddresses(parser);
         } finally {
@@ -193,6 +201,7 @@ public class XmlParser {
             Log.i("CID", Integer.toString(pageCount));
             annotationData.add(new ArrayList<String>());
         }*/
+        parser.require(XmlPullParser.START_TAG, ns, "root");
 
         while (parser.next() != XmlPullParser.END_TAG) {
             if (parser.getEventType() != XmlPullParser.START_TAG) {
@@ -214,19 +223,30 @@ public class XmlParser {
                                 continue;
                             }
                             name = parser.getName();
-                            Log.i("CID", readText(parser));
+                            //Log.i("CID", readText(parser));
 
                             if (name.equals("address")) {
                                 addresses.add(readText(parser));
-                                Log.i("CID", readText(parser));
+                                //Log.i("CID", readText(parser));
+                            }
+                            else {
+                                skip(parser);
                             }
                         }
                     }
+                    else {
+                        skip(parser);
+                    }
+
                 }
+
             }
             else {
                 skip(parser);
             }
+        }
+        for(int i = 0; i < addresses.size(); i++){
+            Log.i("CID", "ADDRESS " + i + " is " + addresses.get(i));
         }
         return addresses;
     }
