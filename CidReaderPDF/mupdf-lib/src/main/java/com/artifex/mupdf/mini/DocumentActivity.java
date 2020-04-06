@@ -138,7 +138,7 @@ public class DocumentActivity extends Activity
 	public static InetAddress ipTargetAddress;
 	public static int port = 12777;
 	public TextView pointer;
-	public ArrayList<InetAddress> connectedAddresses = new ArrayList<>();
+	public ArrayList<String> connectedAddresses = new ArrayList<>();
 	protected View hideAllButton;
 	protected View undoButton;
 	protected View scrollButton;
@@ -179,7 +179,7 @@ public class DocumentActivity extends Activity
 			InetAddress addr = InetAddress.getByAddress(ipAddr);
 			localHost = InetAddress.getByAddress(localHostByteArray);
 
-			connectedAddresses.add(addr);
+			connectedAddresses.add(addr.toString());
 		}
 		catch (UnknownHostException e) {
 			e.printStackTrace();
@@ -1104,8 +1104,8 @@ public class DocumentActivity extends Activity
 			e.printStackTrace();
 		}
 
-		if (!connectedAddresses.contains(ip)) {
-			connectedAddresses.add(ip);
+		if (!connectedAddresses.contains(ip.toString())) {
+			connectedAddresses.add(ip.toString());
 			updateConnectionList();
 			//create a new paintview with new connected IP as ID
 			Log.e("CID", "CREATING REMOTE PV FOR " + ip.toString());
@@ -1617,7 +1617,12 @@ public class DocumentActivity extends Activity
 
 					//instantiate with previous saved data a paintview for each previous user
 					Log.i("CID", "CREATING REMOTE GRAPHICS FOR " + addresses.get(i));
-					createRemoteGraphics(addresses.get(i));
+
+					if (!connectedAddresses.contains(addresses.get(i))) {
+						connectedAddresses.add(addresses.get(i));
+						updateConnectionList();
+						createRemoteGraphics(addresses.get(i));
+					}
 					//createRemoteGraphics(getInetAddressByName(addresses.get(i)));
 
 
