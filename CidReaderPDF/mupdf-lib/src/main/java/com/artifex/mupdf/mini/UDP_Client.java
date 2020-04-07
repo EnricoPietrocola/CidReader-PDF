@@ -10,13 +10,13 @@ import android.util.Log;
 import java.net.InetAddress;
 
 public class UDP_Client {
-    private AsyncTask<Void, Void, Void> async_cient;
-    public String Message;
-    public InetAddress addr;
-    public int port = 12777;
+    private static AsyncTask<Void, Void, Void> async_cient;
+    public static String Message;
+    public static InetAddress addr;
+    public static int port = 12777;
 
     @SuppressLint("NewApi")
-    public void Send() {
+    public static void Send() {
 
         async_cient = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -48,7 +48,7 @@ public class UDP_Client {
             }
         };
 
-        if (Build.VERSION.SDK_INT >= 11)
+        if (Build.VERSION.SDK_INT >= 23)
             async_cient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else async_cient.execute();
     }

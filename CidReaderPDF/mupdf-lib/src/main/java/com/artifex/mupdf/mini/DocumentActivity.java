@@ -444,6 +444,7 @@ public class DocumentActivity extends Activity
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						//do things with connected ips
 						String itemClicked = String.valueOf(parent.getItemAtPosition(position));
+						syncAnnotationsToIp(itemClicked,  paintViews);
 						Log.i("CID", "Clicked on " + itemClicked);
 					}
 				}
@@ -1715,5 +1716,45 @@ public class DocumentActivity extends Activity
 		}
 
 		return splitMessage;
+	}
+
+	//tool to sync annotations to somebody that just connected
+	public void syncAnnotationsToIp(String ip, ArrayList<PaintView> paintViews){
+		for (int i = 0; i < paintViews.size(); i++){
+			//create remote paintview with IP HERE
+			//THIS WILL NEED A NEW FUNCTION
+			Log.i("CID", "FOR IP " + paintViews.get(i).ipAddress);
+
+			//get pages
+			for(int j = 0; j < paintViews.get(i).actionPages.size(); j++) {
+				//draw stuff paintViews.get(i).actionPages.get(j)
+
+				//get page
+				for(int l = 0; l < paintViews.get(i).actionPages.get(j).size(); l++){
+
+					Log.i("CID", "SyncAction " + paintViews.get(i).actionPages.get(j).get(l));
+					//String[] parsedActionMessage = parseAction(paintViews.get(i).actionPages.get(j).get(l));
+								/*for(int y = 0; y < parsedStuff.length; y++){
+									Log.i("CID", parsedStuff[y]);
+								}*/
+					/*String action = parsedActionMessage[0];
+					int pageNumber = Integer.parseInt(parsedActionMessage[1]);
+					float x = Float.parseFloat(parsedActionMessage[2]);
+					float y = Float.parseFloat(parsedActionMessage[3]);
+					int strokeWidth = Integer.parseInt(parsedActionMessage[4]);
+					int color = Integer.parseInt(parsedActionMessage[5]);
+					boolean isTrail = Boolean.parseBoolean(parsedActionMessage[6]);*/
+					syncDrawOnScreen(paintViews.get(i).actionPages.get(j).get(l));
+				}
+			}
+		}
+	}
+
+	private void syncDrawOnScreen(String action){
+		UDP_Client udpClient = new UDP_Client();
+		udpClient.addr = ipTargetAddress;
+		udpClient.port = port;
+		udpClient.Message = "drawOnScreen," + action;
+		udpClient.Send();
 	}
 }
