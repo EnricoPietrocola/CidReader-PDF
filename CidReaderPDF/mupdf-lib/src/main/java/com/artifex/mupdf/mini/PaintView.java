@@ -221,7 +221,7 @@ public class PaintView extends View {
     public void touchStart(int pageNumber, float x, float y) {
         touchStarted = true;
 
-        Log.i("CID", "PV is recieving " + x + " " + y);
+        //Log.i("CID", "PV is recieving " + x + " " + y);
 
         if (viewScale == 1f){
         }

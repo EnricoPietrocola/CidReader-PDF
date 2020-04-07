@@ -159,7 +159,7 @@ public class DocumentActivity extends Activity
 	protected ColorPickerView colorPickerView;
 	protected LinearLayout toolsLayout;
 	protected FrameLayout paintViewLayout;
-	private ArrayList<PaintView> paintViews = new ArrayList<>();
+	public ArrayList<PaintView> paintViews = new ArrayList<>();
 	private boolean annotationsVisible = true;
 	private ArrayList<String> connections;
 	private ListAdapter connectionsListAdapter;
@@ -443,9 +443,17 @@ public class DocumentActivity extends Activity
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						//do things with connected ips
+
 						String itemClicked = String.valueOf(parent.getItemAtPosition(position));
-						syncAnnotationsToIp(itemClicked,  paintViews);
-						Log.i("CID", "Clicked on " + itemClicked);
+
+
+						SyncUDP runner = new SyncUDP();
+						int sleepTime = 1;
+						runner.execute(sleepTime, itemClicked, paintViews);
+
+
+						//syncAnnotationsToIp(itemClicked,  paintViews);
+
 					}
 				}
 		);
@@ -1245,9 +1253,6 @@ public class DocumentActivity extends Activity
 					percX = (x + pageView.scrollX) / pageView.bitmapW;
 					percY = (y + pageView.scrollY) / pageView.bitmapH;
 
-					Log.i("CID", "recieving " + percX + " " + percY);
-
-
 					//Log.i("CID", toolsVisible + " " + menuVisible);
 					if (!menuVisible && !toolsVisible) {
 						if (event.getPointerCount() == 2) {
@@ -1721,17 +1726,26 @@ public class DocumentActivity extends Activity
 
 	//tool to sync annotations to somebody that just connected
 	public void syncAnnotationsToIp(String ip, ArrayList<PaintView> paintViews){
+
+
+
 		for (int i = 0; i < paintViews.size(); i++){
 			//create remote paintview with IP HERE
 			//THIS WILL NEED A NEW FUNCTION
 			Log.i("CID", "FOR IP " + paintViews.get(i).ipAddress);
 
 			//get pages
+			/*startTime = System.currentTimeMillis();
+			if(System.currentTimeMillis() - startTime > 10) {
+
+			}*/
+
 			for(int j = 0; j < paintViews.get(i).actionPages.size(); j++) {
 				//draw stuff paintViews.get(i).actionPages.get(j)
 
 				//get page
 				for(int l = 0; l < paintViews.get(i).actionPages.get(j).size(); l++){
+
 
 					Log.i("CID", "SyncAction " + paintViews.get(i).actionPages.get(j).get(l));
 					//String[] parsedActionMessage = parseAction(paintViews.get(i).actionPages.get(j).get(l));
@@ -1746,6 +1760,7 @@ public class DocumentActivity extends Activity
 					int color = Integer.parseInt(parsedActionMessage[5]);
 					boolean isTrail = Boolean.parseBoolean(parsedActionMessage[6]);*/
 					syncDrawOnScreen(paintViews.get(i).actionPages.get(j).get(l));
+
 				}
 			}
 		}
