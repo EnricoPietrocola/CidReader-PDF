@@ -19,8 +19,11 @@ import org.w3c.dom.Document;
 
 public class UDP_Server
 {
-    private boolean Server_aktiv = true;
+    private boolean Server_active = true;
     public int port = 12777;
+
+    public String _previousAction = "";
+    public String action = "";
 
     @SuppressLint({"NewApi", "StaticFieldLeak"})
     public void runUdpServer(final Context context)
@@ -35,13 +38,23 @@ public class UDP_Server
                 try {
                     ds = new DatagramSocket(port);
 
-                    while (Server_aktiv) {
+                    while (Server_active) {
                         ds.receive(dp);
-                        Log.i("myServer", "Server Received " + dp.getAddress().toString() + new String(lMsg, StandardCharsets.UTF_8));
-                        Intent i = new Intent();
-                        i.setAction("Main.MESSAGE_RECEIVED");
-                        i.putExtra("Main.MESSAGE_STRING", dp.getAddress().toString() + "," + new String(lMsg, 0, dp.getLength()));
-                        context.getApplicationContext().sendBroadcast(i);
+                        action = new String(lMsg, 0, dp.getLength());
+                        //Log.i("tag", "Server Received " + dp.getAddress().toString() + " " + new String(lMsg, StandardCharsets.UTF_8));
+                        if(!action.equals(_previousAction)) {
+                            Log.i("tag", "Server Received " + dp.getAddress().toString() + "," + action);
+                            Intent i = new Intent();
+                            i.setAction("Main.MESSAGE_RECEIVED");
+                            i.putExtra("Main.MESSAGE_STRING", dp.getAddress().toString() + "," + action);
+                            context.getApplicationContext().sendBroadcast(i);
+                        }
+                        else{
+                            //discard doubles
+                            //Log.i("tag", "MESSAGE WAS THE SAME " + new String(lMsg, 0, dp.getLength()));
+                        }
+                        _previousAction = action;
+
                     }
                 } catch (Exception e) {
                     Log.i("tag", "DIO NOT Launch Server");
@@ -60,12 +73,12 @@ public class UDP_Server
             }
         };
 
-        if (Build.VERSION.SDK_INT >= 11) async.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        if (Build.VERSION.SDK_INT >= 23) async.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else async.execute();
     }
 
     public void stop_UDP_Server()
     {
-        Server_aktiv = false;
+        Server_active = false;
     }
 }

@@ -10,13 +10,13 @@ import android.util.Log;
 import java.net.InetAddress;
 
 public class UDP_Client {
-    private static AsyncTask<Void, Void, Void> async_cient;
+    private AsyncTask<Void, Void, Void> async_cient;
     public static String Message;
     public static InetAddress addr;
     public static int port = 12777;
 
     @SuppressLint("NewApi")
-    public static void Send() {
+    public void Send() {
 
         async_cient = new AsyncTask<Void, Void, Void>() {
             @Override
@@ -25,8 +25,6 @@ public class UDP_Client {
 
                 try {
                     //Log.i("tag", "preparing udp");
-                    //Message = "asd";
-                    //addr = InetAddress.getByName("192.168.1.153");
                     ds = new DatagramSocket();
                     DatagramPacket dp;
                     dp = new DatagramPacket(Message.getBytes(), Message.length(), addr, port); //original port was 12777
@@ -52,4 +50,6 @@ public class UDP_Client {
             async_cient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
         else async_cient.execute();
     }
+
+
 }

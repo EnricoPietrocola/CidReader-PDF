@@ -1112,6 +1112,7 @@ public class DocumentActivity extends Activity
 			Log.e("CID", "CREATING REMOTE PV FOR " + ip.toString());
 			createRemoteGraphics(ip.toString());
 		}
+
 		return splitMessage;
 	}
 
@@ -1254,7 +1255,7 @@ public class DocumentActivity extends Activity
 							startTime = System.currentTimeMillis();
 						}
 						//get number of fingers on screen and filter, this is a way to filter pinch to zoom mistakingly drawing
-						else if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 20) {
+						else if (event.getPointerCount() == 1 && System.currentTimeMillis() - startTime > 2) {
 							switch (event.getAction()) {
 								case MotionEvent.ACTION_DOWN:
 									if (annotationsVisible) {
@@ -1757,4 +1758,5 @@ public class DocumentActivity extends Activity
 		udpClient.Message = "drawOnScreen," + action;
 		udpClient.Send();
 	}
+
 }
