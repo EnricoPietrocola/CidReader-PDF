@@ -11,9 +11,9 @@ import java.net.InetAddress;
 
 public class UDP_Client {
     private AsyncTask<Void, Void, Void> async_cient;
-    public static String Message;
-    public static InetAddress addr;
-    public static int port = 12777;
+    public  String Message;
+    public  InetAddress addr;
+    public  int port = 12777;
 
     @SuppressLint("NewApi")
     public void Send() {

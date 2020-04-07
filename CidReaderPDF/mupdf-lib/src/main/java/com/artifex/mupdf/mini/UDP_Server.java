@@ -3,7 +3,7 @@ package com.artifex.mupdf.mini;
 import java.net.DatagramPacket;
 import java.net.DatagramSocket;
 import java.net.InetAddress;
-import java.nio.charset.StandardCharsets;
+//import java.nio.charset.StandardCharsets;
 
 import android.annotation.SuppressLint;
 import android.content.Context;
@@ -24,11 +24,13 @@ public class UDP_Server
 
     public String _previousAction = "";
     public String action = "";
+    private AsyncTask<Void, Void, Void> async;
 
     @SuppressLint({"NewApi", "StaticFieldLeak"})
     public void runUdpServer(final Context context)
     {
-        AsyncTask<Void, Void, Void> async = new AsyncTask<Void, Void, Void>() {
+
+        async = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 byte[] lMsg = new byte[4096];
