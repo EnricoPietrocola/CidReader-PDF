@@ -42,11 +42,12 @@ Right now Cid features:
 * Hide/show annotations easily
 * A menu of connected users
 * Fast rendering, works on old devices
+* Save/Load annotation files
+* Update new users by sending them all annotations at realtime
 * Platform: Android
 
 Being planned:
 * A Web Version using WebRTC + Pdf.js
-* Save/Load annotation files
 * Easy to use multi-node connections
 * Customizable permissions on users
 
