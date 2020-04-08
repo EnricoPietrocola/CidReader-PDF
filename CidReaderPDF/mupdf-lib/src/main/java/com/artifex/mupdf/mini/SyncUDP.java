@@ -63,7 +63,7 @@ public class SyncUDP extends AsyncTask<Object, String, String> {
     @Override
     protected void onProgressUpdate(String... text) {
     }
-    
+
     private void syncDrawOnScreen(String action){
         UDP_Client udpClient = new UDP_Client();
         udpClient.addr = DocumentActivity.ipTargetAddress;

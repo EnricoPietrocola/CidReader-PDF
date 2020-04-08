@@ -397,16 +397,8 @@ public class DocumentActivity extends Activity
 					return;
 				}
 
+				writeToFile(Integer.toString(currentPage), projectName);
 
-				//if (currentPage >= 0) {
-					//for (int i = 0; i < paintViews.size(); i++) {
-						//paintViews.get(i).saveCurrentPage(currentPage); //this is for png save
-						//paintViews.get(i).writeToFile(Integer.toString(currentPage), projectName);
-						writeToFile(Integer.toString(currentPage), projectName);
-
-						//writeToFile(projectText.getText().toString(), Integer.toString(currentPage));
-					//}
-				//}
 			}
 		});
 
@@ -417,8 +409,6 @@ public class DocumentActivity extends Activity
 		connectionsTitle.setText("Connections");
 		connectionsTitle.setLayoutParams(part);
 		menuLayout.addView(connectionsTitle);
-
-
 
 		//need to be visualized and put on top of everything
 		connections = new ArrayList<>();
@@ -443,16 +433,11 @@ public class DocumentActivity extends Activity
 					@Override
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						//do things with connected ips
-
 						String itemClicked = String.valueOf(parent.getItemAtPosition(position));
-
 
 						SyncUDP runner = new SyncUDP();
 						int sleepTime = 1;
 						runner.execute(sleepTime, itemClicked, paintViews);
-
-
-						//syncAnnotationsToIp(itemClicked,  paintViews);
 
 					}
 				}
@@ -619,18 +604,6 @@ public class DocumentActivity extends Activity
 		view = inflater.inflate(R.layout.document_activity, null);
 		item = (RelativeLayout ) view.findViewById(R.id.mainRelativeLayout);
 		setContentView(item);
-	}
-
-	public void saveAnnotationFiles(){
-		if (ContextCompat.checkSelfPermission(this, Manifest.permission.WRITE_EXTERNAL_STORAGE) == PackageManager.PERMISSION_DENIED) {
-			ActivityCompat.requestPermissions(this, new String[]{Manifest.permission.WRITE_EXTERNAL_STORAGE}, PERMISSION_REQUEST);
-		}
-
-		PaintView pv;
-		for(int i = 0; i < paintViews.size(); i++) {
-			pv = paintViews.get(i);
-			//pv.saveFirstPage(Integer.toString(i));
-		}
 	}
 
 	public void onPageViewSizeChanged(int w, int h) {
@@ -1056,7 +1029,6 @@ public class DocumentActivity extends Activity
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.addr = ipTargetAddress;
 			udpClient.port = port;
-			//udpClient.Message = "goBackward";
 			udpClient.Message = "goToPage," + (currentPage);
 			udpClient.Send();
 		}
@@ -1069,7 +1041,6 @@ public class DocumentActivity extends Activity
 			UDP_Client udpClient = new UDP_Client();
 			udpClient.addr = ipTargetAddress;
 			udpClient.port = port;
-			//udpClient.Message = "goForward";
 			udpClient.Message = "goToPage," + (currentPage);
 			udpClient.Send();
 		}
@@ -1124,12 +1095,11 @@ public class DocumentActivity extends Activity
 		return splitMessage;
 	}
 
+	private String currentMessage;
 
-	/////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
-	private String newString;
+	private String previousMessage = "";
 
 	BroadcastReceiver broadcastReceiver;
-
 	{
 		broadcastReceiver = new BroadcastReceiver() {
 			@Override
@@ -1138,13 +1108,16 @@ public class DocumentActivity extends Activity
 				Bundle messagesReceived = intent.getExtras();
 
 				if (messagesReceived == null) {
-					newString = null;
+					currentMessage = null;
 				} else {
-					newString = messagesReceived.getString("Main.MESSAGE_STRING");
+					currentMessage = messagesReceived.getString("Main.MESSAGE_STRING");
 				}
 
 				//do operations with received message
-				String[] parsedMessage = remoteParse(newString);
+				String[] parsedMessage = remoteParse(currentMessage);
+
+
+				if(!currentMessage.equals(previousMessage) || parsedMessage[1].equals("undo")){
 
 				InetAddress ip = null;
 				try {
@@ -1158,7 +1131,7 @@ public class DocumentActivity extends Activity
 				//parsedMessage[1] is the command
 				//the others are the command's parameters
 				///////////////////////////////////////////////////////////////////////////////////////////
-				//Log.i("CID", "Recieving: " + parsedMessage);
+				//Log.i("CID", "Receiving: " + parsedMessage);
 				switch (parsedMessage[1]) {
 					case "goForward":
 						goForwardLocal();
@@ -1183,6 +1156,12 @@ public class DocumentActivity extends Activity
 					default:
 						//default
 				}
+				}
+				else{
+					//discard doubles
+					//Log.i("tag", "MESSAGE WAS THE SAME " + new String(lMsg, 0, dp.getLength()));
+				}
+				previousMessage = currentMessage;
 			}
 		};
 	}
@@ -1213,32 +1192,23 @@ public class DocumentActivity extends Activity
 
 		View v = getCurrentFocus();
 			if (y >= (canvasH - pageView.bitmapH) / 2f && y <= ((canvasH - pageView.bitmapH) / 2f) + pageView.bitmapH) {
-				//Log.i("CID","Canvas H " + canvasH + " bitmap " + pageView.bitmapH + " " + (canvasH - pageView.bitmapH) / 2f + " " + y);
 
 				if((y < actionBar.getHeight() || y > canvasH - actionBar.getHeight()) && actionBar.getVisibility() == View.VISIBLE) {
 					//clicking on menu bars, ignoring touch for drawing
 				}
 				else{
 					//clicking on bitmap, drawing
-
 					float percX;
 					float percY;
 
 					float horizontalOffset = (canvasW - pageView.bitmapW) / 2f;
 					float verticalOffset = (canvasH - pageView.bitmapH) / 2f;
 
-					//float horizontalOffset = pageView.scrollX;
-					//float verticalOffset = pageView.scrollY;
-
-					//percX = ((x - horizontalOffset) / pageView.bitmapW);
-					//percY = ((y - verticalOffset) / pageView.bitmapH);
-
 					if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale != 1f){
 						horizontalOffset = (pageView.canvasW - pageView.bitmapW);
 						x = x - horizontalOffset * pageView.viewScale;
 					}
 					else if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale == 1f){
-						//horizontalOffset = (pageView.canvasH - pageView.bitmapH);
 						x = x - horizontalOffset;
 					}
 					if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale != 1f){
@@ -1246,7 +1216,6 @@ public class DocumentActivity extends Activity
 						y = y - verticalOffset * pageView.viewScale;
 					}
 					else if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale == 1f){
-						//verticalOffset = (pageView.canvasH - pageView.bitmapH);
 						y = y - verticalOffset;
 					}
 
@@ -1265,7 +1234,6 @@ public class DocumentActivity extends Activity
 								case MotionEvent.ACTION_DOWN:
 									if (annotationsVisible) {
 
-										//drawOnScreenLocal("ACTION_DOWN", x, y);
 										drawOnScreenLocal("ACTION_DOWN", currentPage, percX, percY, strokeWidth, color, isTrail);
 										remoteDrawOnScren("ACTION_DOWN", currentPage, percX, percY, strokeWidth, color, isTrail);
 									}
@@ -1273,7 +1241,6 @@ public class DocumentActivity extends Activity
 									break;
 								case MotionEvent.ACTION_MOVE:
 									if (annotationsVisible) {
-										//drawOnScreenLocal("ACTION_MOVE", x, y);
 										drawOnScreenLocal("ACTION_MOVE", currentPage, percX, percY, strokeWidth, color, isTrail);
 										remoteDrawOnScren("ACTION_MOVE", currentPage, percX, percY, strokeWidth, color, isTrail);
 									}
@@ -1281,7 +1248,6 @@ public class DocumentActivity extends Activity
 								case MotionEvent.ACTION_UP:
 
 									if (annotationsVisible) {
-										//drawOnScreenLocal("ACTION_UP", x, y);
 										drawOnScreenLocal("ACTION_UP", currentPage, percX, percY, strokeWidth, color, isTrail);
 										remoteDrawOnScren("ACTION_UP", currentPage, percX, percY, strokeWidth, color, isTrail);
 									}
@@ -1303,7 +1269,6 @@ public class DocumentActivity extends Activity
 
 	public void drawOnScreenLocal(String action, int pageNumber, float x, float y, int strokeWidth, int color, boolean isTrail){
 
-		//Log.i("CID", "Drawonscreen received " + action + "," + x + "," + y);
 		paintViews.get(0).actionPages.get(pageNumber).add(action + "," + pageNumber + "," + x + "," + y + "," + strokeWidth + "," + color + "," + isTrail);
 
 		//record actions in file for local save data
@@ -1322,7 +1287,7 @@ public class DocumentActivity extends Activity
 				break;
 			case "ACTION_MOVE":
 				if (annotationsVisible) {
-					paintViews.get(0).touchMove(x /*- pageView.offsetX*/, y /*- pageView.offsetY*/);
+					paintViews.get(0).touchMove(x, y);
 					paintViews.get(0).invalidate();
 				}
 				break;
@@ -1338,9 +1303,7 @@ public class DocumentActivity extends Activity
 	public void drawOnScreenRemote(String ip, String action, int pageNumber, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail){
 
 		PaintView pv = findPaintViewByIpAddress(ip);
-		//Log.i("CID", "Drawonscreen received " + action + "," + x + "," + y);
 		//record actions in file for remote save data
-		//paintViews.get(paintViews.indexOf(pv)).actionPages.get(pageNumber).add(action + "," + pageNumber + "," + x + "," + y);
 		paintViews.get(paintViews.indexOf(pv)).actionPages.get(pageNumber).add(action + "," + pageNumber + "," + x + "," + y + "," + recvStrokeWidth + "," + recvColor + "," + isLineTrail);
 
 		x = (x * pageView.bitmapW) - pageView.scrollX;
@@ -1383,7 +1346,6 @@ public class DocumentActivity extends Activity
 		return paintView;
 	}
 
-	//this is the online part
 	private void RemotePrintOnScreen(int x, int y){
 		UDP_Client udpClient = new UDP_Client();
 		udpClient.addr = ipTargetAddress;
@@ -1487,37 +1449,6 @@ public class DocumentActivity extends Activity
 		}
 	}
 
-
-	/*protected String readFromFile(Context context) {
-
-		String ret = "";
-
-		try {
-			InputStream inputStream = context.openFileInput("config.txt");
-
-			if ( inputStream != null ) {
-				InputStreamReader inputStreamReader = new InputStreamReader(inputStream);
-				BufferedReader bufferedReader = new BufferedReader(inputStreamReader);
-				String receiveString = "";
-				StringBuilder stringBuilder = new StringBuilder();
-
-				while ( (receiveString = bufferedReader.readLine()) != null ) {
-					stringBuilder.append(receiveString);
-				}
-
-				inputStream.close();
-				ret = stringBuilder.toString();
-			}
-		}
-		catch (FileNotFoundException e) {
-			Log.e("login activity", "File not found: " + e.toString());
-		} catch (IOException e) {
-			Log.e("login activity", "Can not read file: " + e.toString());
-		}
-
-		return ret;
-	}*/
-
 	protected void writeToFile(final String id, final String folderName) {
 
 		String project_file_path = Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DOWNLOADS) + "/" ;
@@ -1603,16 +1534,11 @@ public class DocumentActivity extends Activity
 	}
 
 	protected void readAnnotationData(String projectFileLocation){
-		//XmlParser.parseSessionData();
-
 		String ret = "error";
-
-		//ArrayList actionPages;// = new ArrayList<>();
 		 ArrayList<ArrayList<ArrayList<String>>> actionPages = new ArrayList<>();
 
 
 		try {
-			//InputStream inputStream = context.openFileInput(file);
 			FileInputStream addressInputStream = new FileInputStream(projectFileLocation);
 			ArrayList<String> addresses = XmlParser.parseSessionAddresses(addressInputStream);
 
@@ -1630,8 +1556,6 @@ public class DocumentActivity extends Activity
 						updateConnectionList();
 						createRemoteGraphics(addresses.get(i));
 					}
-					//createRemoteGraphics(getInetAddressByName(addresses.get(i)));
-
 
 					Log.i("CID", "Number of pages " + actionPages.get(i).size());
 
@@ -1640,14 +1564,10 @@ public class DocumentActivity extends Activity
 
 						if (i == 0) {
 							//local graphics
-
 							//get each action for chosen page
-
 							for (int l = 0; l < actionPages.get(i).get(j).size(); l++) { //iterate through each action of selected page (item 0 is always Local paintview)
 								String[] parsedActionMessage = parseAction(actionPages.get(i).get(j).get(l));
-								/*for(int y = 0; y < parsedStuff.length; y++){
-									Log.i("CID", parsedStuff[y]);
-								}*/
+
 								Log.i("CID", "page drawn is " + j);
 								String action = parsedActionMessage[0];
 								int pageNumber = Integer.parseInt(parsedActionMessage[1]);
@@ -1657,13 +1577,7 @@ public class DocumentActivity extends Activity
 								int color = Integer.parseInt(parsedActionMessage[5]);
 								boolean isTrail = Boolean.parseBoolean(parsedActionMessage[6]);
 
-								//x = (x * pageView.bitmapW) - pageView.scrollX;
-								//y = (y * pageView.bitmapH) - pageView.scrollY;
-
 								drawOnScreenLocal(action, j, x, y, strokeWidth, color, isTrail);
-
-								//Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
-								//drawOnScreenRemote(getInetAddressByName(addresses.get(i)), Action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail)
 
 							}
 						} else { //remote graphics
@@ -1671,9 +1585,7 @@ public class DocumentActivity extends Activity
 							//get each action for chosen page
 							for (int l = 0; l < actionPages.get(i).get(j).size(); l++) { //iterate through each action of selected page (all other items in list are always remote paintviews)
 								String[] parsedActionMessage = parseAction(actionPages.get(i).get(j).get(l));
-								/*for(int y = 0; y < parsedStuff.length; y++){
-									Log.i("CID", parsedStuff[y]);
-								}*/
+
 								String action = parsedActionMessage[0];
 								int pageNumber = Integer.parseInt(parsedActionMessage[1]);
 								float x = Float.parseFloat(parsedActionMessage[2]);
@@ -1682,18 +1594,13 @@ public class DocumentActivity extends Activity
 								int color = Integer.parseInt(parsedActionMessage[5]);
 								boolean isTrail = Boolean.parseBoolean(parsedActionMessage[6]);
 
-								//x = (x * pageView.bitmapW) - pageView.scrollX;
-								//y = (y * pageView.bitmapH) - pageView.scrollY;
-
 								drawOnScreenRemote(addresses.get(i),action, j, x, y, strokeWidth, color, isTrail);
 								Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
-								//drawOnScreenRemote(InetAddress ip, String action, float x, float y, int recvStrokeWidth, int recvColor, boolean isLineTrail)
+
 
 							}
 						}
-						//ret = data.get(1).toString();
-						//paintViews.get(0).actionPages.add(actionPages.get(0).get(0));
-						//Log.i("CID", actionPages.get(0).get(0).get(i));
+
 					}
 				}
 
@@ -1706,11 +1613,6 @@ public class DocumentActivity extends Activity
 			e.printStackTrace();
 		}
 
-		/*String[] parsedStuff = parseAction("ACTION_MOVE,0.43780518,0.62586266");
-		for(int i = 0; i < parsedStuff.length; i++){
-		 	Log.i("CID", parsedStuff[i]);
-		}*/
-		//return ret;
 	}
 	public String[] parseAction(String actionMessage){
 		String[] splitMessage;
@@ -1722,56 +1624,6 @@ public class DocumentActivity extends Activity
 		}
 
 		return splitMessage;
-	}
-
-	//tool to sync annotations to somebody that just connected
-	public void syncAnnotationsToIp(String ip, ArrayList<PaintView> paintViews){
-
-
-
-		for (int i = 0; i < paintViews.size(); i++){
-			//create remote paintview with IP HERE
-			//THIS WILL NEED A NEW FUNCTION
-			Log.i("CID", "FOR IP " + paintViews.get(i).ipAddress);
-
-			//get pages
-			/*startTime = System.currentTimeMillis();
-			if(System.currentTimeMillis() - startTime > 10) {
-
-			}*/
-
-			for(int j = 0; j < paintViews.get(i).actionPages.size(); j++) {
-				//draw stuff paintViews.get(i).actionPages.get(j)
-
-				//get page
-				for(int l = 0; l < paintViews.get(i).actionPages.get(j).size(); l++){
-
-
-					Log.i("CID", "SyncAction " + paintViews.get(i).actionPages.get(j).get(l));
-					//String[] parsedActionMessage = parseAction(paintViews.get(i).actionPages.get(j).get(l));
-								/*for(int y = 0; y < parsedStuff.length; y++){
-									Log.i("CID", parsedStuff[y]);
-								}*/
-					/*String action = parsedActionMessage[0];
-					int pageNumber = Integer.parseInt(parsedActionMessage[1]);
-					float x = Float.parseFloat(parsedActionMessage[2]);
-					float y = Float.parseFloat(parsedActionMessage[3]);
-					int strokeWidth = Integer.parseInt(parsedActionMessage[4]);
-					int color = Integer.parseInt(parsedActionMessage[5]);
-					boolean isTrail = Boolean.parseBoolean(parsedActionMessage[6]);*/
-					syncDrawOnScreen(paintViews.get(i).actionPages.get(j).get(l));
-
-				}
-			}
-		}
-	}
-
-	private void syncDrawOnScreen(String action){
-		UDP_Client udpClient = new UDP_Client();
-		udpClient.addr = ipTargetAddress;
-		udpClient.port = port;
-		udpClient.Message = "drawOnScreen," + action;
-		udpClient.Send();
 	}
 
 }

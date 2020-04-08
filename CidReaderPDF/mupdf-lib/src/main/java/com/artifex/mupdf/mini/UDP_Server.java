@@ -44,17 +44,17 @@ public class UDP_Server
                         ds.receive(dp);
                         action = new String(lMsg, 0, dp.getLength());
                         //Log.i("tag", "Server Received " + dp.getAddress().toString() + " " + new String(lMsg, StandardCharsets.UTF_8));
-                        if(!action.equals(_previousAction)) {
+                        //if(!action.equals(_previousAction)) {
                             Log.i("tag", "Server Received " + dp.getAddress().toString() + "," + action);
                             Intent i = new Intent();
                             i.setAction("Main.MESSAGE_RECEIVED");
                             i.putExtra("Main.MESSAGE_STRING", dp.getAddress().toString() + "," + action);
                             context.getApplicationContext().sendBroadcast(i);
-                        }
-                        else{
+                        //}
+                        //else{
                             //discard doubles
                             //Log.i("tag", "MESSAGE WAS THE SAME " + new String(lMsg, 0, dp.getLength()));
-                        }
+                        //}
                         _previousAction = action;
 
                     }
