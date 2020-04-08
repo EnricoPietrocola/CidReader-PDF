@@ -329,11 +329,11 @@ public class PaintView extends View {
         invalidate();
     }
 
-    public void deleteLastPath(){
+    public void deleteLastPath(int pageNumber){
 
-        if(page.get(pageNum).size() > 0) {
+        if(page.get(pageNumber).size() > 0) {
             //Log.i("CID", "Undo, path's size " + paths.size());
-            page.get(pageNum).remove(page.get(pageNum).get(page.get(pageNum).size() - 1));
+            page.get(pageNumber).remove(page.get(pageNumber).get(page.get(pageNumber).size() - 1));
             //Log.i("CID", "Undo, path's size " + paths.size());
         }
         else{

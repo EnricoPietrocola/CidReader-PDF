@@ -346,7 +346,7 @@ public class DocumentActivity extends Activity
 		undoButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				PaintView pv = paintViews.get(0);
-				pv.deleteLastPath();
+				pv.deleteLastPath(currentPage);
 				remoteUndoLastEdit(currentPage);
 			}
 		});
@@ -1150,7 +1150,7 @@ public class DocumentActivity extends Activity
 						break;
 					case "undo":
 						PaintView pv = findPaintViewByIpAddress(ip.toString());
-						pv.deleteLastPath();
+						pv.deleteLastPath(Integer.parseInt(parsedMessage[2]));
 						//pv.deleteLastPathOnPage(Integer.parseInt(parsedMessage[2]));
 						break;
 					default:
