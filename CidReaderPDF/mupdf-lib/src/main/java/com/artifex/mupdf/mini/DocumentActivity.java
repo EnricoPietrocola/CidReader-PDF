@@ -466,6 +466,12 @@ public class DocumentActivity extends Activity
 		scrollButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				pageView.isScrollActive = !pageView.isScrollActive;
+				if(pageView.isScrollActive){
+					scrollButton.setBackgroundColor(Color.RED);
+				}
+				else{
+					scrollButton.setBackgroundColor(Color.TRANSPARENT);
+				}
 			}
 		});
 
@@ -593,9 +599,12 @@ public class DocumentActivity extends Activity
 
 		if(toolsVisible) {
 			toolsLayout.setVisibility(view.VISIBLE);
+			toolsButton.setBackgroundColor(Color.RED);
 		}
 		else{
 			toolsLayout.setVisibility(view.INVISIBLE);
+			toolsButton.setBackgroundColor(Color.TRANSPARENT);
+
 		}
 		toolsLayout.setEnabled(toolsVisible);
 	}
@@ -1205,12 +1214,12 @@ public class DocumentActivity extends Activity
 		float y = event.getRawY();
 
 		View v = getCurrentFocus();
+		if(!pageView.isScrollActive){
 			if (y >= (canvasH - pageView.bitmapH) / 2f && y <= ((canvasH - pageView.bitmapH) / 2f) + pageView.bitmapH) {
 
-				if((y < actionBar.getHeight() || y > canvasH - actionBar.getHeight()) && actionBar.getVisibility() == View.VISIBLE) {
+				if ((y < actionBar.getHeight() || y > canvasH - actionBar.getHeight()) && actionBar.getVisibility() == View.VISIBLE) {
 					//clicking on menu bars, ignoring touch for drawing
-				}
-				else{
+				} else {
 					//clicking on bitmap, drawing
 					float percX;
 					float percY;
@@ -1218,18 +1227,16 @@ public class DocumentActivity extends Activity
 					float horizontalOffset = (canvasW - pageView.bitmapW) / 2f;
 					float verticalOffset = (canvasH - pageView.bitmapH) / 2f;
 
-					if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale != 1f){
+					if ((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale != 1f) {
 						horizontalOffset = (pageView.canvasW - pageView.bitmapW);
 						x = x - horizontalOffset * pageView.viewScale;
-					}
-					else if((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale == 1f){
+					} else if ((pageView.canvasW - pageView.bitmapW) >= 0f && pageView.viewScale == 1f) {
 						x = x - horizontalOffset;
 					}
-					if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale != 1f){
+					if ((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale != 1f) {
 						verticalOffset = (pageView.canvasH - pageView.bitmapH);
 						y = y - verticalOffset * pageView.viewScale;
-					}
-					else if((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale == 1f){
+					} else if ((pageView.canvasH - pageView.bitmapH) >= 0f && pageView.viewScale == 1f) {
 						y = y - verticalOffset;
 					}
 
@@ -1276,8 +1283,8 @@ public class DocumentActivity extends Activity
 						}
 					}
 				}
-
 			}
+		}
 		boolean ret = super.dispatchTouchEvent(event);
 		return ret;
 	}
@@ -1478,11 +1485,14 @@ public class DocumentActivity extends Activity
 		if (!annotationsVisible){
 			for (int i = 0; i < paintViews.size(); i++){
 				paintViews.get(i).setVisibility(View.VISIBLE);
+				hideAllButton.setBackgroundColor(Color.TRANSPARENT);
 			}
 		}
 		else{
 			for (int i = 0; i < paintViews.size(); i++) {
 				paintViews.get(i).setVisibility(View.GONE);
+				hideAllButton.setBackgroundColor(Color.RED);
+
 			}
 		}
 		annotationsVisible = !annotationsVisible;
