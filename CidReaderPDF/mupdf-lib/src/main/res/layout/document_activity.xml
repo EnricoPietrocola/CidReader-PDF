@@ -131,48 +131,58 @@
 			android:layout_height="wrap_content"
 			android:layout_gravity="right|center_vertical"
 			android:layout_weight="0"
-			android:text="Laser"
+			android:drawableLeft="@drawable/ic_action_laser"
 			android:textColor="#DDFFFFFF" />
 
 		<Button
 			android:id="@+id/ToolsButton"
-			android:layout_width="69dp"
+			android:layout_width="47dp"
 			android:layout_height="wrap_content"
 			android:layout_gravity="right"
 			android:layout_weight="0"
-			android:text="Tools" />
+			android:background="#00FFFFFF"
+			android:drawableStart="@drawable/ic_action_tools"
+			android:drawableTint="#FFFFFF" />
 
 		<Button
 			android:id="@+id/HideAllButton"
-			android:layout_width="55dp"
+			android:layout_width="47dp"
 			android:layout_height="wrap_content"
 			android:layout_gravity="right"
 			android:layout_weight="0"
-			android:text="Hide" />
+			android:background="#00FFFFFF"
+			android:drawableStart="@drawable/ic_action_hide"
+			android:drawableTint="#FFFFFF" />
 
 		<Button
 			android:id="@+id/undoButton"
-			android:layout_width="62dp"
+			android:layout_width="47dp"
 			android:layout_height="wrap_content"
 			android:layout_gravity="right"
 			android:layout_weight="0"
-			android:text="Undo" />
-
-		<Button
-			android:id="@+id/MenuButton"
-			android:layout_width="66dp"
-			android:layout_height="wrap_content"
-			android:layout_gravity="right"
-			android:layout_weight="0"
-			android:text="Menu" />
+			android:background="#00FFFFFF"
+			android:drawableStart="@drawable/ic_action_undo"
+			android:drawableTint="#FFFFFF" />
 
 		<Button
 			android:id="@+id/scrollButton"
-			android:layout_width="66dp"
+			android:layout_width="47dp"
 			android:layout_height="wrap_content"
 			android:layout_gravity="right"
 			android:layout_weight="0.1"
-			android:text="scroll" />
+			android:background="#00FFFFFF"
+			android:drawableStart="@drawable/ic_action_scroll"
+			android:drawableTint="#FFFFFF" />
+
+		<Button
+			android:id="@+id/MenuButton"
+			android:layout_width="47dp"
+			android:layout_height="wrap_content"
+			android:layout_gravity="right"
+			android:layout_weight="0"
+			android:background="#00FFFFFF"
+			android:drawableStart="@drawable/ic_action_menu"
+			android:drawableTint="#FFFFFF" />
 
 	</LinearLayout>
 
