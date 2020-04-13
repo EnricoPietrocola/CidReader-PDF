@@ -8,23 +8,36 @@ import android.os.Build;
 import android.util.Log;
 
 import java.net.InetAddress;
+import java.net.UnknownHostException;
 
 public class UDP_Client {
-    private AsyncTask<Void, Void, Void> async_cient;
+    private AsyncTask<Void, Void, Void> async_client;
     public  String Message;
+    public  String address;
     public  InetAddress addr;
     public  int port = 12777;
 
     @SuppressLint("NewApi")
     public void Send() {
 
-        async_cient = new AsyncTask<Void, Void, Void>() {
+        async_client = new AsyncTask<Void, Void, Void>() {
             @Override
             protected Void doInBackground(Void... params) {
                 DatagramSocket ds = null;
+                if(address != null) {
+                    try {
+                        addr = InetAddress.getByName(address.split("/")[1]);
+                    } catch (UnknownHostException e) {
+                        e.printStackTrace();
+                    }
+                }
+
+                Log.i("CID", "ADDRESS RECEIVED " + addr.toString());
 
                 try {
                     //Log.i("tag", "preparing udp");
+
+                    Log.i("CID", "Address converted to " + addr.toString());
                     ds = new DatagramSocket();
                     DatagramPacket dp;
                     dp = new DatagramPacket(Message.getBytes(), Message.length(), addr, port); //original port was 12777
@@ -47,8 +60,8 @@ public class UDP_Client {
         };
 
         if (Build.VERSION.SDK_INT >= 23)
-            async_cient.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
-        else async_cient.execute();
+            async_client.executeOnExecutor(AsyncTask.THREAD_POOL_EXECUTOR);
+        else async_client.execute();
     }
 
 

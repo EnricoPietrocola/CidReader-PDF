@@ -413,7 +413,7 @@ public class DocumentActivity extends Activity
 		//need to be visualized and put on top of everything
 		connections = new ArrayList<>();
 		for (int i = 0; i < connectedAddresses.size(); i++) {
-			String connection = connectedAddresses.get(i).toString();
+			String connection = connectedAddresses.get(i);
 			Log.i("CID", "Connected ip address: " + connection);
 			connections.add(connection);
 		}
@@ -539,6 +539,8 @@ public class DocumentActivity extends Activity
 				layoutPopupMenu.show();
 			}
 		});
+
+		connectedAddresses.add(ipTargetAddress.toString());
 
 	}
 
@@ -1027,10 +1029,13 @@ public class DocumentActivity extends Activity
 			goBackwardLocal();
 
 			UDP_Client udpClient = new UDP_Client();
-			udpClient.addr = ipTargetAddress;
+			/*udpClient.addr = ipTargetAddress;
 			udpClient.port = port;
 			udpClient.Message = "goToPage," + (currentPage);
-			udpClient.Send();
+			udpClient.Send();*/
+
+			sendToAll(/*udpClient,*/ "goToPage," + (currentPage));
+
 		}
 	}
 
@@ -1039,21 +1044,30 @@ public class DocumentActivity extends Activity
 			goForwardLocal();
 
 			UDP_Client udpClient = new UDP_Client();
-			udpClient.addr = ipTargetAddress;
+			/*udpClient.addr = ipTargetAddress;
 			udpClient.port = port;
 			udpClient.Message = "goToPage," + (currentPage);
 			udpClient.Send();
+			 */
+
+			sendToAll(/*udpClient,*/ "goToPage," + (currentPage));
+
 		}
 	}
 
 	public void gotoPage(int p) {
 		gotoPageLocal(p);
 
+
 		UDP_Client udpClient = new UDP_Client();
+		/*
 		udpClient.addr = ipTargetAddress;
 		udpClient.port = port;
 		udpClient.Message = "goToPage," + p;
 		udpClient.Send();
+		 */
+
+		sendToAll(/*udpClient,*/ "goToPage," + p);
 	}
 
 	public void gotoURI(String uri) {
@@ -1236,6 +1250,7 @@ public class DocumentActivity extends Activity
 
 										drawOnScreenLocal("ACTION_DOWN", currentPage, percX, percY, strokeWidth, color, isTrail);
 										remoteDrawOnScren("ACTION_DOWN", currentPage, percX, percY, strokeWidth, color, isTrail);
+
 									}
 
 									break;
@@ -1348,26 +1363,75 @@ public class DocumentActivity extends Activity
 
 	private void RemotePrintOnScreen(int x, int y){
 		UDP_Client udpClient = new UDP_Client();
-		udpClient.addr = ipTargetAddress;
-		udpClient.port = port;
-		udpClient.Message = "printOnScreen," + x + "," + y;
-		udpClient.Send();
+
+		/*for (int i = 1; i < connectedAddresses.size(); i++) {
+			try {
+
+				//udpClient.addr = ipTargetAddress;
+				udpClient.address = connectedAddresses.get(i);
+				udpClient.port = port;
+				udpClient.Message = "printOnScreen," + x + "," + y;
+				udpClient.Send();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}*/
+
+		sendToAll(/*udpClient,*/ "printOnScreen," + x + "," + y);
 	}
 
 	private void remoteDrawOnScren(String event, int page, float x, float y, int strokeWidth, int color, boolean isLineTrail){
 		UDP_Client udpClient = new UDP_Client();
-		udpClient.addr = ipTargetAddress;
-		udpClient.port = port;
-		udpClient.Message = "drawOnScreen," + event + "," + page + "," + x + "," + y + "," + strokeWidth + "," + color + "," + isLineTrail;
-		udpClient.Send();
+
+		/*or (int i = 1; i < connectedAddresses.size(); i++) {
+			try {
+				//udpClient.addr = InetAddress.getByName(connectedAddresses.get(i));  //ipTargetAddress;
+				udpClient.address = connectedAddresses.get(i);
+				udpClient.port = port;
+				udpClient.Message = "drawOnScreen," + event + "," + page + "," + x + "," + y + "," + strokeWidth + "," + color + "," + isLineTrail;
+				udpClient.Send();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}*/
+
+		sendToAll(/*udpClient,*/ "drawOnScreen," + event + "," + page + "," + x + "," + y + "," + strokeWidth + "," + color + "," + isLineTrail);
+
 	}
 
 	private void remoteUndoLastEdit(int pageNumber){
 		UDP_Client udpClient = new UDP_Client();
-		udpClient.addr = ipTargetAddress;
-		udpClient.port = port;
-		udpClient.Message = "undo," + pageNumber;
-		udpClient.Send();
+
+		/*for (int i = 1; i < connectedAddresses.size(); i++) {
+			try {
+				//udpClient.addr = InetAddress.getByName(connectedAddresses.get(i));  //ipTargetAddress;
+				udpClient.address = connectedAddresses.get(i);
+				udpClient.port = port;
+				udpClient.Message = "undo," + pageNumber;
+				udpClient.Send();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}*/
+
+		sendToAll(/*udpClient,*/ "undo," + pageNumber);
+	}
+
+	private void sendToAll(/*UDP_Client udpClient,*/ String message){
+
+		for (int i = 1; i < connectedAddresses.size(); i++) {
+			try {
+				UDP_Client udpClient = new UDP_Client();
+				//udpClient.addr = InetAddress.getByName(connectedAddresses.get(i));  //ipTargetAddress;
+				udpClient.address = connectedAddresses.get(i);
+				Log.i("CID", "Trying to send message to " + connectedAddresses.get(i));
+				udpClient.port = port;
+				udpClient.Message = message;
+				udpClient.Send();
+			} catch (Exception e) {
+				e.printStackTrace();
+			}
+		}
 	}
 
 	@Override
