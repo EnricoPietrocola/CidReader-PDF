@@ -79,6 +79,11 @@ This project was possible thanks to the "Orio Carlini" Scholarships from ![Conso
 ![ConsMILogo](https://lh3.googleusercontent.com/proxy/wqTegKbrNkFoogxnPMTxKAuRXgmdDFhvqeHDm40A01Cn_aUb3ChCH48eseCUs6oaDwTV8p55kC7NtS9vNOnqhgOIHpXZolE-uiN6iKy6R3ScJ9KuBVO6b-aMEdHigN3MF4qkR4LjyXsJ8gXRH3yih-8l)
 
 License
-AGPL License
 
+Following MuPDF license, this project must be under the AGPL License. 
 
+"If your software is open source, you may use MuPDF under the terms of the GNU Affero General Public License.
+This means that all of the source code for your complete app must be released under a compatible open source license!
+It also means that you may not use any proprietary closed source libraries or components in your app. This includes (but is not limited to) Google Play Services, Google Mobile Services, AdMob by Google, Crashlytics, Answers, etc.
+Just because a library ships with Android or is made by Google does not make it AGPL compatible!
+If you cannot or do not want to comply with these restrictions, you must acquire a commercial license instead."
