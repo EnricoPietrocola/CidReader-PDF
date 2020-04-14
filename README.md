@@ -10,9 +10,13 @@ Works with UDP sockets and on any modern android tablet.
 
 How to use:
 
-- Set the IP address of the device you would like to connect with
-- Clicking on a document you would like to open will start communication and open the first page (at the moment the app is only  listing documents in the downloads folder) 
+- Choose a document you want to open by the app main page (currently showing only the Downloads Folder) or with the "Open With" options in your Android File Manager
 - Drag your finger on a page to draw, if the other device has the app open, annotation data and current page will be synchronized
+
+How to connect
+- When viewing a document, open the menu by clicking the top right menu icon in the action menu
+- Type the address you would like to connect to and click "ADD TO CONNECTIONS".
+- Close the menu, all your interactions are now synchronized
 
 ![ExampleImage](https://media.giphy.com/media/UvWuE9d1LzedVJLtGz/giphy.gif)
 
