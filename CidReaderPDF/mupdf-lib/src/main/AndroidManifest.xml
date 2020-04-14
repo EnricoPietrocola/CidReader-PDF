@@ -12,7 +12,7 @@
             android:name=".DocumentActivity"
             android:screenOrientation="portrait"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="MuPDF mini">
+            android:label="CidReader">
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" /> <!-- this was VIEW -->
 
