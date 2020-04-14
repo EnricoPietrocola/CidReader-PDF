@@ -74,8 +74,8 @@ Contributing, main pieces of code:
 
 This project was possible thanks to the "Orio Carlini" Scholarships from Consortium GARR and hosted by Conservatorio Giuseppe Verdi di Milano 
 
-![GarrLogo](https://owncloud.com/wp-content/uploads/2014/04/Garr.png){:height="50%" width="50%"}
-![ConsMILogo](https://lh3.googleusercontent.com/proxy/Rr_g9Wg2zgmGp2Ea6xKjedfYq2tWWaR59GEzW7ub7v2RSNSjKLBkyu-lgGsTZeA8I5BVSRx2gSooHgmHdFQCO5ykuCszNz-7ho035pmJVQBv89x4CZlaf-isE4keBMibSGGw954lhzRj6MCccYHOfbmrztBnGyRQzJBGEUejwvzkcToO_d_e){:height="50%" width="50%"}
+![GarrLogo](https://owncloud.com/wp-content/uploads/2014/04/Garr-400x175.png)
+![ConsMILogo](https://lh3.googleusercontent.com/proxy/wqTegKbrNkFoogxnPMTxKAuRXgmdDFhvqeHDm40A01Cn_aUb3ChCH48eseCUs6oaDwTV8p55kC7NtS9vNOnqhgOIHpXZolE-uiN6iKy6R3ScJ9KuBVO6b-aMEdHigN3MF4qkR4LjyXsJ8gXRH3yih-8l)
 
 License
 AGPL License
