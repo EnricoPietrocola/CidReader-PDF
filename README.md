@@ -43,13 +43,13 @@ Right now Cid features:
 * A menu of connected users
 * Fast rendering, works on old devices
 * Save/Load annotation files
+* Easy to use multi-node connections
 * Update new users by sending them all annotations at realtime
 * Platform: Android
 
 Being planned:
 * A Web Version using WebRTC + Pdf.js
-* Easy to use multi-node connections
-* Customizable permissions on users
+* Customizable permissions systems for mutliple groups of users
 
 What is missing but would be great:
 * A simple way for NAT traversal
