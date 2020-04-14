@@ -4,11 +4,14 @@ import android.graphics.Paint;
 import android.os.AsyncTask;
 import android.util.Log;
 
+import java.net.InetAddress;
+import java.net.UnknownHostException;
 import java.util.ArrayList;
 
 public class SyncUDP extends AsyncTask<Object, String, String> {
 
     private String resp;
+    String ip;
     //ProgressDialog progressDialog;
 
 
@@ -17,12 +20,12 @@ public class SyncUDP extends AsyncTask<Object, String, String> {
         publishProgress("Sleeping..."); // Calls onProgressUpdate()
         try {
             int time = (int)params[0];
-            String ip = (String)params[1];
+            ip = (String)params[1];
             ArrayList<PaintView> paintViews = (ArrayList<PaintView>) params[2];
 
             for (int i = 0; i < paintViews.size(); i++){
                 //create remote paintview with IP HERE
-                Log.i("CID", "FOR IP " + paintViews.get(i).ipAddress);
+                //Log.i("CID", "FOR IP " + paintViews.get(i).ipAddress);
 
                 //get pages
                 for(int j = 0; j < paintViews.get(i).actionPages.size(); j++) {
@@ -66,7 +69,7 @@ public class SyncUDP extends AsyncTask<Object, String, String> {
 
     private void syncDrawOnScreen(String action){
         UDP_Client udpClient = new UDP_Client();
-        udpClient.addr = DocumentActivity.ipTargetAddress;
+        udpClient.address = ip;
         udpClient.port = DocumentActivity.port;
         udpClient.Message = "drawOnScreen," + action;
         udpClient.Send();

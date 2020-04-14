@@ -491,11 +491,11 @@ public class DocumentActivity extends Activity
 					public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 						//do things with connected ips
 						String itemClicked = String.valueOf(parent.getItemAtPosition(position));
-
-						SyncUDP runner = new SyncUDP();
-						int sleepTime = 1;
-						runner.execute(sleepTime, itemClicked, paintViews);
-
+						if(itemClicked != "/127.0.0.1") { //avoid sending data to self, this would break local annotation making
+							SyncUDP runner = new SyncUDP();
+							int sleepTime = 1;
+							runner.execute(sleepTime, itemClicked, paintViews);
+						}
 					}
 				}
 		);

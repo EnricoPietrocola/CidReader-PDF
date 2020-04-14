@@ -32,7 +32,7 @@ public class UDP_Client {
                     }
                 }
 
-                Log.i("CID", "ADDRESS RECEIVED " + addr.toString());
+                //Log.i("CID", "ADDRESS RECEIVED " + addr.toString());
 
                 try {
                     //Log.i("tag", "preparing udp");
