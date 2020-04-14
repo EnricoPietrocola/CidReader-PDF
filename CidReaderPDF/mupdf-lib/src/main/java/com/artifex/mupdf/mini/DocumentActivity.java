@@ -1255,6 +1255,7 @@ public class DocumentActivity extends Activity
 					case "undo":
 						PaintView pv = findPaintViewByIpAddress(ip.toString());
 						pv.deleteLastPath(Integer.parseInt(parsedMessage[2]));
+
 						//pv.deleteLastPathOnPage(Integer.parseInt(parsedMessage[2]));
 						break;
 					default:
@@ -1757,7 +1758,7 @@ public class DocumentActivity extends Activity
 		}
 
 	}
-	public String[] parseAction(String actionMessage){
+	public static String[] parseAction(String actionMessage){
 		String[] splitMessage;
 		splitMessage = actionMessage.split(",");
 		String _temp = "";

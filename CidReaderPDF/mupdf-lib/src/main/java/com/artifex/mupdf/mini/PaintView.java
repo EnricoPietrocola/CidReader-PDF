@@ -21,6 +21,7 @@ import android.view.ScaleGestureDetector;
 import android.view.View;
 import android.widget.Scroller;
 
+import org.w3c.dom.Document;
 import org.xmlpull.v1.XmlSerializer;
 
 import java.io.BufferedReader;
@@ -76,7 +77,7 @@ public class PaintView extends View {
     protected boolean touchStarted;
 
     //added for multipage support
-    public ArrayList<ArrayList<FingerPath>> page = new ArrayList<>();
+    public ArrayList<ArrayList<FingerPath>> pages = new ArrayList<>();
 
     //actionpages is a list of lists of strings, it stores actions for each page
     //structure: User/Page/Actions
@@ -124,7 +125,7 @@ public class PaintView extends View {
         for (int i = 0; i < pageCount; i++){
             Log.i("CID", "Initializing undo buffer");
             ArrayList<FingerPath> _singlePage = new ArrayList<>();
-            page.add(_singlePage);
+            pages.add(_singlePage);
             //bitmaps.add(Bitmap.createScaledBitmap(mBitmap, width, height, false));
         }
         initActionPages(pageCount);
@@ -162,7 +163,7 @@ public class PaintView extends View {
 
     public void clear() {
         mCanvas.drawColor(Color.TRANSPARENT, PorterDuff.Mode.CLEAR);
-        page.get(pageNum).clear();
+        pages.get(pageNum).clear();
         normal();
         invalidate();
     }
@@ -181,7 +182,7 @@ public class PaintView extends View {
         startTime = System.currentTimeMillis();
 
         //Log.i("CID", "PageNumberPaintView " + pageNum + " " + "pages length " + page.size());
-        ArrayList<FingerPath> _page = page.get(pageNum);
+        ArrayList<FingerPath> _page = pages.get(pageNum);
 
         Iterator<FingerPath> iterator = _page.iterator();
         while(iterator.hasNext()){
@@ -236,7 +237,7 @@ public class PaintView extends View {
 
         mPath = new Path();
         FingerPath fp = new FingerPath(currentColor, emboss, blur, strokeWidth,  mPath);
-        page.get(pageNumber).add(fp);
+        pages.get(pageNumber).add(fp);
         mPath.reset();
         mPath.moveTo(x, y);
         mX = x;
@@ -276,7 +277,7 @@ public class PaintView extends View {
         try {
             mPath.lineTo(mX, mY);
             //get the path being drawn
-            FingerPath fp = page.get(pageNum).get(page.get(pageNum).size() - 1);
+            FingerPath fp = pages.get(pageNum).get(pages.get(pageNum).size() - 1);
             fp.isFading = isFading;
         }
         catch (Exception e) {
@@ -286,14 +287,14 @@ public class PaintView extends View {
     }
 
     public void saveCurrentPage(int currentPage){
-        page.set(currentPage, new ArrayList<>(page.get(pageNum))); //_paths
+        pages.set(currentPage, new ArrayList<>(pages.get(pageNum))); //_paths
     }
 
     //for each pdf page we create a path array item to record touch interaction (annotation drawings)
     public void changePage(int pageNumber){
         pageNum = pageNumber;
 
-        if(page.get(pageNumber) != null){
+        if(pages.get(pageNumber) != null){
             //clear();  //This clears pages for turning page effect
             //paths = new ArrayList<FingerPath>(page.get(pageNumber));
             invalidate();
@@ -331,10 +332,19 @@ public class PaintView extends View {
 
     public void deleteLastPath(int pageNumber){
 
-        if(page.get(pageNumber).size() > 0) {
+        if(pages.get(pageNumber).size() > 0) {
             //Log.i("CID", "Undo, path's size " + paths.size());
-            page.get(pageNumber).remove(page.get(pageNumber).get(page.get(pageNumber).size() - 1));
-            //Log.i("CID", "Undo, path's size " + paths.size());
+            pages.get(pageNumber).remove(pages.get(pageNumber).get(pages.get(pageNumber).size() - 1));
+
+            String[] parsedActionMessage = DocumentActivity.parseAction(actionPages.get(pageNumber).get(actionPages.get(pageNumber).size() - 1));
+            //this piece of code deletes all interactions describing a single annotation line/path
+            while(!parsedActionMessage[0].equals("ACTION_DOWN")){
+                actionPages.get(pageNumber).remove(actionPages.get(pageNumber).get(actionPages.get(pageNumber).size() - 1));
+                //Log.i("CID", "Undo, path's size " + paths.size());
+                parsedActionMessage = DocumentActivity.parseAction(actionPages.get(pageNumber).get(actionPages.get(pageNumber).size() - 1));
+
+            }
+            actionPages.get(pageNumber).remove(actionPages.get(pageNumber).get(actionPages.get(pageNumber).size() - 1));
         }
         else{
             Log.i("CID", "Can't undo ");
@@ -346,8 +356,8 @@ public class PaintView extends View {
 
     public void deleteLastPathOnPage(int pageNumber){
         //Log.i("CID", "Received undo on page " + pageNumber);
-        if(page.get(pageNumber).size() > 0) {
-            page.get(pageNumber).remove(page.get(pageNumber).size() - 1);
+        if(pages.get(pageNumber).size() > 0) {
+            pages.get(pageNumber).remove(pages.get(pageNumber).size() - 1);
            // Log.i("CID", "TEST");
         }
         else{

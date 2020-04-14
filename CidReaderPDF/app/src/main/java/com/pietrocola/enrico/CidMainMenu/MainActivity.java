@@ -248,9 +248,6 @@ public class MainActivity extends AppCompatActivity {
                             DocumentActivity.projectFileLocation = null;
                             startMUPDFActivityFromDownloads(itemClicked);
                         }
-
-
-
                     }
                 }
         );
