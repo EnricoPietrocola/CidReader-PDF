@@ -245,6 +245,7 @@ public class MainActivity extends AppCompatActivity {
                         }
                         else {
                             //connectAndOpenPDF(ipText);
+                            DocumentActivity.projectFileLocation = null;
                             startMUPDFActivityFromDownloads(itemClicked);
                         }
 

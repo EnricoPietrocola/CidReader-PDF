@@ -1691,8 +1691,6 @@ public class DocumentActivity extends Activity
 	protected void readAnnotationData(String projectFileLocation){
 		String ret = "error";
 		 ArrayList<ArrayList<ArrayList<String>>> actionPages = new ArrayList<>();
-
-
 		try {
 			FileInputStream addressInputStream = new FileInputStream(projectFileLocation);
 			ArrayList<String> addresses = XmlParser.parseSessionAddresses(addressInputStream);
@@ -1700,19 +1698,14 @@ public class DocumentActivity extends Activity
 			FileInputStream inputStream = new FileInputStream(projectFileLocation);
 			actionPages = XmlParser.parseSessionData(inputStream); //store session data
 
-			Log.i("CID", "USERS ARE " + addresses.size());
 				for (int i = 0; i < actionPages.size(); i++) {
 
 					//instantiate with previous saved data a paintview for each previous user
-					Log.i("CID", "CREATING REMOTE GRAPHICS FOR " + addresses.get(i));
-
 					if (!connectedAddresses.contains(addresses.get(i))) {
 						connectedAddresses.add(addresses.get(i));
 						updateConnectionList();
 						createRemoteGraphics(addresses.get(i));
 					}
-
-					Log.i("CID", "Number of pages " + actionPages.get(i).size());
 
 					//get each page for chosen user
 					for (int j = 0; j < actionPages.get(i).size(); j++) { //iterate through each page of selected user in the session
@@ -1723,7 +1716,6 @@ public class DocumentActivity extends Activity
 							for (int l = 0; l < actionPages.get(i).get(j).size(); l++) { //iterate through each action of selected page (item 0 is always Local paintview)
 								String[] parsedActionMessage = parseAction(actionPages.get(i).get(j).get(l));
 
-								Log.i("CID", "page drawn is " + j);
 								String action = parsedActionMessage[0];
 								int pageNumber = Integer.parseInt(parsedActionMessage[1]);
 								float x = Float.parseFloat(parsedActionMessage[2]);
@@ -1736,7 +1728,6 @@ public class DocumentActivity extends Activity
 
 							}
 						} else { //remote graphics
-							Log.i("CID", "HAPPENING");
 							//get each action for chosen page
 							for (int l = 0; l < actionPages.get(i).get(j).size(); l++) { //iterate through each action of selected page (all other items in list are always remote paintviews)
 								String[] parsedActionMessage = parseAction(actionPages.get(i).get(j).get(l));
@@ -1750,9 +1741,6 @@ public class DocumentActivity extends Activity
 								boolean isTrail = Boolean.parseBoolean(parsedActionMessage[6]);
 
 								drawOnScreenRemote(addresses.get(i),action, j, x, y, strokeWidth, color, isTrail);
-								Log.i("CID", "ACTION " + actionPages.get(i).get(j).get(l));
-
-
 							}
 						}
 
