@@ -73,7 +73,9 @@ Contributing, main pieces of code:
 ![PaintView](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PaintView.java) is the annotation class, it stores strokes for each page. Each user owns an instance of PaintView in  DocumentActivity (each user has a layer to draw on).
 
 This project was possible thanks to the "Orio Carlini" Scholarships from Consortium GARR and hosted by Conservatorio Giuseppe Verdi di Milano 
+
 ![GarrLogo](https://owncloud.com/wp-content/uploads/2014/04/Garr.png)
+![ConsMILogo](https://lh3.googleusercontent.com/proxy/Rr_g9Wg2zgmGp2Ea6xKjedfYq2tWWaR59GEzW7ub7v2RSNSjKLBkyu-lgGsTZeA8I5BVSRx2gSooHgmHdFQCO5ykuCszNz-7ho035pmJVQBv89x4CZlaf-isE4keBMibSGGw954lhzRj6MCccYHOfbmrztBnGyRQzJBGEUejwvzkcToO_d_e)
 
 License
 AGPL License
