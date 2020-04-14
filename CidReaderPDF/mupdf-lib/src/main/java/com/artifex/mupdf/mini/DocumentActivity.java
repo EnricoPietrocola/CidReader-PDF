@@ -168,6 +168,8 @@ public class DocumentActivity extends Activity
 
 
 	protected String appVersion = "0.1";
+	private TextView ipText;
+	private EditText portText;
 
 
 	@SuppressLint("WrongViewCast")
@@ -402,13 +404,68 @@ public class DocumentActivity extends Activity
 			}
 		});
 
+		ipText = new EditText(mainContext);
+		portText = new EditText(mainContext);
 
+		//ip input text field
+		LinearLayout.LayoutParams labelTextLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		final TextView ipAddressTitle = new TextView(mainContext);
+		ipAddressTitle.setText("IP Address");
+		ipAddressTitle.setLayoutParams(part);
+		menuLayout.addView(ipAddressTitle);
+
+		LinearLayout.LayoutParams ipTextLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		ipText.setLayoutParams(part);
+		ipText.setText("192.168.1.1");
+		menuLayout.addView(ipText);
+
+		//port input text field
+		final TextView portTitle = new TextView(mainContext);
+		portTitle.setText("Port");
+		portTitle.setLayoutParams(labelTextLayoutParams);
+		menuLayout.addView(portTitle);
+
+		LinearLayout.LayoutParams portTextLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+		portText.setLayoutParams(part);
+		portText.setText("12777");
+		menuLayout.addView(portText);
+
+		final Button connectButton = new Button(mainContext);
+		connectButton.setLayoutParams(part);
+		connectButton.setText("Add to connections");
+		menuLayout.addView(connectButton);
+		//menuLayout.setVisibility(view.INVISIBLE);
+		//menuLayout.setEnabled(false);
+
+		//connect button exec
+		connectButton.setOnClickListener(new View.OnClickListener() {
+			public void onClick(View v) {
+				if (checkSelfPermission(Manifest.permission.INTERNET)
+						!= PackageManager.PERMISSION_GRANTED) {
+
+					// Should we show an explanation?
+					if (shouldShowRequestPermissionRationale(
+							Manifest.permission.INTERNET)) {
+					}
+
+					requestPermissions(new String[]{Manifest.permission.INTERNET},
+							3);
+
+					// MY_PERMISSIONS_REQUEST_READ_CONTACTS is an
+					// app-defined int constant
+					return;
+				}
+				addAddress("/" + ipText.getText().toString());
+				port = Integer.parseInt(portText.getText().toString());
+				updateConnectionList();
+			}
+		});
 
 		//List of connections to be filled
-		final TextView connectionsTitle = new TextView(mainContext);
-		connectionsTitle.setText("Connections");
-		connectionsTitle.setLayoutParams(part);
-		menuLayout.addView(connectionsTitle);
+		final TextView connectionsListTitle = new TextView(mainContext);
+		connectionsListTitle.setText("Connections");
+		connectionsListTitle.setLayoutParams(part);
+		menuLayout.addView(connectionsListTitle);
 
 		//need to be visualized and put on top of everything
 		connections = new ArrayList<>();
@@ -546,7 +603,7 @@ public class DocumentActivity extends Activity
 			}
 		});
 
-		connectedAddresses.add(ipTargetAddress.toString());
+		//connectedAddresses.add(ipTargetAddress.toString());
 
 	}
 
@@ -595,7 +652,7 @@ public class DocumentActivity extends Activity
 	}
 
 	public void toggleAnnotationInteraction(){
-		toolsVisible = !toolsVisible;
+		toolsVisible = !toolsVisible; 
 
 		if(toolsVisible) {
 			toolsLayout.setVisibility(view.VISIBLE);
@@ -1107,6 +1164,12 @@ public class DocumentActivity extends Activity
 			e.printStackTrace();
 		}
 
+		addAddress(ip.toString());
+
+		return splitMessage;
+	}
+
+	private void addAddress(String ip){
 		if (!connectedAddresses.contains(ip.toString())) {
 			connectedAddresses.add(ip.toString());
 			updateConnectionList();
@@ -1114,8 +1177,6 @@ public class DocumentActivity extends Activity
 			Log.e("CID", "CREATING REMOTE PV FOR " + ip.toString());
 			createRemoteGraphics(ip.toString());
 		}
-
-		return splitMessage;
 	}
 
 	private String currentMessage;

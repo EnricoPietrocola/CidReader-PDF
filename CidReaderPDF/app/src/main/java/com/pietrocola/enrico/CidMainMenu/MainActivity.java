@@ -69,8 +69,10 @@ public class MainActivity extends AppCompatActivity {
         item.setOrientation(LinearLayout.VERTICAL);
         setContentView(item);
 
-        //ip input text field
+
         LinearLayout.LayoutParams labelTextLayoutParams = new LinearLayout.LayoutParams(RelativeLayout.LayoutParams.MATCH_PARENT, RelativeLayout.LayoutParams.WRAP_CONTENT);
+
+        /*//ip input text field
         final TextView ipAddressTitle = new TextView(mainContext);
         ipAddressTitle.setText("IP Address");
         ipAddressTitle.setLayoutParams(labelTextLayoutParams);
@@ -91,6 +93,7 @@ public class MainActivity extends AppCompatActivity {
         portText.setLayoutParams(portTextLayoutParams);
         portText.setText("12777");
         item.addView(portText);
+         */
 
         if (checkSelfPermission(Manifest.permission.READ_EXTERNAL_STORAGE)
                 != PackageManager.PERMISSION_GRANTED) {
@@ -236,12 +239,12 @@ public class MainActivity extends AppCompatActivity {
 
                             //Log.i("CID", "file content " + _content);
 
-                            connectAndOpenPDF(ipText);
+                            //connectAndOpenPDF(ipText);
                             DocumentActivity.projectFileLocation = uri;
                             startMUPDFActivityFromStringLocation(_content);
                         }
                         else {
-                            connectAndOpenPDF(ipText);
+                            //connectAndOpenPDF(ipText);
                             startMUPDFActivityFromDownloads(itemClicked);
                         }
 
