@@ -1,6 +1,6 @@
 # CidReader-PDF - Collaborative Realtime PDF Reader
 
-Cid is an open source Android PDF reader (I am making web version too) able to share realtime interaction online.
+Cid is an open source Android PDF reader (I am making a web version too) able to share realtime interaction online.
 It is created to help Networked Music students and performers to interact on music sheet on a distance or locally.
 Works with UDP sockets and on any modern android tablet.
 
@@ -72,5 +72,18 @@ Contributing, main pieces of code:
 
 ![PaintView](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PaintView.java) is the annotation class, it stores strokes for each page. Each user owns an instance of PaintView in  DocumentActivity (each user has a layer to draw on).
 
+This project was possible thanks to the "Orio Carlini" Scholarships from ![Consortium GARR](https://www.garr.it/en/) and hosted by ![Conservatorio Giuseppe Verdi di Milano](http://www.consmilano.it/en/)
+
+![GarrLogo](https://owncloud.com/wp-content/uploads/2014/04/Garr-400x175.png)
+
+![ConsMILogo](https://lh3.googleusercontent.com/proxy/wqTegKbrNkFoogxnPMTxKAuRXgmdDFhvqeHDm40A01Cn_aUb3ChCH48eseCUs6oaDwTV8p55kC7NtS9vNOnqhgOIHpXZolE-uiN6iKy6R3ScJ9KuBVO6b-aMEdHigN3MF4qkR4LjyXsJ8gXRH3yih-8l)
+
 License
-AGPL License
+
+Following MuPDF license, this project must be under the AGPL License. 
+
+"If your software is open source, you may use MuPDF under the terms of the GNU Affero General Public License.
+This means that all of the source code for your complete app must be released under a compatible open source license!
+It also means that you may not use any proprietary closed source libraries or components in your app. This includes (but is not limited to) Google Play Services, Google Mobile Services, AdMob by Google, Crashlytics, Answers, etc.
+Just because a library ships with Android or is made by Google does not make it AGPL compatible!
+If you cannot or do not want to comply with these restrictions, you must acquire a commercial license instead."
