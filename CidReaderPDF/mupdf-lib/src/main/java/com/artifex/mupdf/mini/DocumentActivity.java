@@ -171,6 +171,7 @@ public class DocumentActivity extends Activity
 	private TextView ipText;
 	private EditText portText;
 
+	private LinearLayout menuLayout;
 
 	@SuppressLint("WrongViewCast")
 	public void onCreate(Bundle savedInstanceState) {
@@ -353,7 +354,7 @@ public class DocumentActivity extends Activity
 			}
 		});
 
-		final LinearLayout menuLayout = new LinearLayout(this);
+		menuLayout = new LinearLayout(this);
 		LinearLayout.LayoutParams menuLayoutParams = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT);
 		LinearLayout.LayoutParams par = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,30);
 		LinearLayout.LayoutParams part = new LinearLayout.LayoutParams(LinearLayout.LayoutParams.MATCH_PARENT,LinearLayout.LayoutParams.WRAP_CONTENT,70);
@@ -771,12 +772,31 @@ public class DocumentActivity extends Activity
 	}
 
 	public void onBackPressed() {
-		if (history.empty()) {
-			super.onBackPressed();
-		} else {
-			currentPage = history.pop();
-			loadPage();
-		}
+		//if (history.empty()) {
+			//super.onBackPressed();
+		//} else {
+			//currentPage = history.pop();
+			//loadPage();
+
+			if (menuVisible){
+				menuLayout.setVisibility(view.INVISIBLE);
+				pageView.setVisibility(View.VISIBLE);
+				switchAnnotations();
+				updateConnectionList();
+				menuVisible = false;
+			}
+			else if(toolsVisible) {
+				//toolsLayout.setVisibility(view.INVISIBLE);
+				toggleAnnotationInteraction();
+				//switchAnnotations();
+			}
+			//else if(){
+				//if undo is possible, undo
+			//}
+			else{
+				super.onBackPressed();
+			}
+		//}
 	}
 
 	public void onActivityResult(int request, int result, Intent data) {
