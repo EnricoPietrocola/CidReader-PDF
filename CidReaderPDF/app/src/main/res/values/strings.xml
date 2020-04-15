@@ -96,4 +96,5 @@
     <string name="about1">about</string>
     <string name="about2">About</string>
     <string name="Settings">Settings</string>
+    <string name="license_and_credits">License and credits</string>
 </resources>

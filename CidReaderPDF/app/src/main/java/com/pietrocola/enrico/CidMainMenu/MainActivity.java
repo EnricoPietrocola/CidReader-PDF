@@ -140,13 +140,21 @@ public class MainActivity extends AppCompatActivity {
         // as you specify a parent activity in AndroidManifest.xml.
         switch (item.getItemId()) {
             // Some action here
+
             case R.id.action_about:
                 //about stuff
                 Log.i("CID", "About");
-                Intent browserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/EnricoPietrocola/CidReader-PDF"));
-                startActivity(browserIntent);
+                Intent aboutBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/EnricoPietrocola/CidReader-PDF"));
+                startActivity(aboutBrowserIntent);
                 break;
-
+            case R.id.action_license:
+                Intent licenseBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/License%20and%20Credits"));
+                startActivity(licenseBrowserIntent);
+                break;
+            case R.id.action_instructions:
+                Intent instructionsBrowserIntent = new Intent(Intent.ACTION_VIEW, Uri.parse("http://enricopietrocola.altervista.org/wp-content/Instructions.pdf"));
+                startActivity(instructionsBrowserIntent);
+                break;
             /*case R.id.action_settings:
                 //about stuff
                 Log.i("CID", "Settings");
