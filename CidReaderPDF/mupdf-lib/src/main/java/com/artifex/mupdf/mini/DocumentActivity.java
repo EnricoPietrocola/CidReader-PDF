@@ -116,7 +116,7 @@ public class DocumentActivity extends Activity
 	protected View searchCloseButton;
 	protected View searchBackwardButton;
 	protected View searchForwardButton;
-	protected View zoomButton;
+	//protected View zoomButton;
 	protected View layoutButton;
 	protected PopupMenu layoutPopupMenu;
 	protected View outlineButton;
@@ -329,14 +329,14 @@ public class DocumentActivity extends Activity
 			}
 		});
 
-		zoomButton = findViewById(R.id.zoom_button);
+		/*zoomButton = findViewById(R.id.zoom_button);
 		zoomButton.setOnClickListener(new View.OnClickListener() {
 			public void onClick(View v) {
 				fitPage = !fitPage;
 				loadPage();
 
 			}
-		});
+		});*/
 
 		hideAllButton = findViewById(R.id.HideAllButton);
 		hideAllButton.setOnClickListener(new View.OnClickListener() {
@@ -916,7 +916,7 @@ public class DocumentActivity extends Activity
 					layoutButton.setVisibility(View.VISIBLE);
 				}
 				else{
-					zoomButton.setVisibility(View.VISIBLE);
+					//zoomButton.setVisibility(View.VISIBLE);
 				}
 				loadPage();
 				loadOutline();
