@@ -78,6 +78,10 @@ This project was possible thanks to the "Orio Carlini" Scholarships from ![Conso
 
 ![ConsMILogo](https://lh3.googleusercontent.com/proxy/wqTegKbrNkFoogxnPMTxKAuRXgmdDFhvqeHDm40A01Cn_aUb3ChCH48eseCUs6oaDwTV8p55kC7NtS9vNOnqhgOIHpXZolE-uiN6iKy6R3ScJ9KuBVO6b-aMEdHigN3MF4qkR4LjyXsJ8gXRH3yih-8l)
 
+![Instruction1](https://github.com/EnricoPietrocola/Cid/blob/master/instructions1.png)
+![Instruction2](https://github.com/EnricoPietrocola/Cid/blob/master/instructions2.png)
+![Instruction3](https://github.com/EnricoPietrocola/Cid/blob/master/instructions3.png)
+
 License
 
 Following MuPDF license, this project must be under the AGPL License. 
