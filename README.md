@@ -4,9 +4,9 @@ Cid is an open source Android PDF reader (I am making a web version too) able to
 It is created to help Networked Music students and performers to interact on music sheet on a distance or locally.
 Works with UDP sockets and on any modern android tablet.
 
-![Paper/Description page](http://enricopietrocola.com/cidreader/)
+[Paper/Description page](http://enricopietrocola.com/cidreader/)
 
-![Community Page](https://www.reddit.com/r/CidReaderPDF/)
+[Community Page](https://www.reddit.com/r/CidReaderPDF/)
 
 How to use:
 
@@ -20,22 +20,20 @@ How to connect
 
 ![ExampleImage](https://media.giphy.com/media/UvWuE9d1LzedVJLtGz/giphy.gif)
 
-![Video example](https://www.youtube.com/watch?v=5DPnnhvZc1Q)
+[Video example](https://www.youtube.com/watch?v=5DPnnhvZc1Q/)
 
-![Video example for a CidReader-PDF session](https://www.youtube.com/watch?v=5DPnnhvZc1Q)
+[Video example for a CidReader-PDF session](https://www.youtube.com/watch?v=5DPnnhvZc1Q/)
 
-![Trello board with tasks and useful info](https://trello.com/b/FIkBy6M9/ciddev)
+[Trello board with tasks and useful info](https://trello.com/b/FIkBy6M9/ciddev/)
 
-* CidReaderPDF is based on the ![MuPDF](https://mupdf.com/) renderer by Artifex:
-In particular the version development started from, is the ![Mupdf Android Mini Viewer](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini)
+* CidReaderPDF is based on the [MuPDF](https://mupdf.com/) renderer by Artifex:
+In particular the version development started from, is the [Mupdf Android Mini Viewer](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini)
 
 * In particular the Android SDK that can be found ![here](https://mupdf.com/downloads/)
 
-* Currently used ![colorpicker](https://github.com/skydoves/ColorPickerView) for annotations:
+* Currently used [colorpicker](https://github.com/skydoves/ColorPickerView) for annotations:
 
-* Annotation layer is based on Ssaurel's FingerPath object to store touch data and draw strokes
-https://gist.github.com/ssaurel/747c5c591f783450a30925543ba93c10
-https://medium.com/@ssaurel/learn-to-create-a-paint-application-for-android-5b16968063f8
+* Annotation layer is based on [Ssaurel's FingerPath object](https://gist.github.com/ssaurel/747c5c591f783450a30925543ba93c10) to store touch data and draw strokes
 
 Right now Cid features:
 * Connectivity with other users through UDP sockets
@@ -60,23 +58,28 @@ What is missing but would be great:
 * File transfer (at the moment you HAVE to have the PDF file in your download folder to be able to see it) (it's easy to implement but laws are pretty strict on this and before implementing this I would like to be sure we are not breaking any copyright by simply allowing FTP)
 
 
-While the NAT traversal solution is discussed, a simple way to connect through NATs that has been tested it by using ZeroTier https://www.zerotier.com/ (open source Hamachi-like app with an android app). It adds some latency but it's acceptable for common uses.
+While the NAT traversal solution is discussed, a simple way to connect through NATs that has been tested it by using [ZeroTier](https://www.zerotier.com/) (open source Hamachi-like app with an android app port). It adds some latency but it's acceptable for common uses.
 
 Contributing, main pieces of code:
 
-![MainActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/app/src/main/java/com/pietrocola/enrico/CidMainMenu/MainActivity.java) is the main menu, this is where you setup connection and scroll documents.
+[MainActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/app/src/main/java/com/pietrocola/enrico/CidMainMenu/MainActivity.java) is the main menu, this is where you setup connection and scroll documents.
 
-![DocumentActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) is the main document part of code. Here you manage document, annotaion, touch, global variables, instances of paintviews with connections (![original mupdf-mini version](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) .
+[DocumentActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) is the main document part of code. Here you manage document, annotaion, touch, global variables, instances of paintviews with connections (![original mupdf-mini version](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) .
 
-![PageView.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PageView.java) is where PDF pages are managed (slightly edited version of the original from ![MuPDF mini](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/PageView.java)).
+[PageView.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PageView.java) is where PDF pages are managed (slightly edited version of the original from [MuPDF mini](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/PageView.java)).
 
-![PaintView](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PaintView.java) is the annotation class, it stores strokes for each page. Each user owns an instance of PaintView in  DocumentActivity (each user has a layer to draw on).
+[PaintView](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PaintView.java) is the annotation class, it stores strokes for each page. Each user owns an instance of PaintView in  DocumentActivity (each user has a layer to draw on).
 
-This project was possible thanks to the "Orio Carlini" Scholarships from ![Consortium GARR](https://www.garr.it/en/) and hosted by ![Conservatorio Giuseppe Verdi di Milano](http://www.consmilano.it/en/)
+![Instruction1](https://github.com/EnricoPietrocola/Cid/blob/master/instructions1.png)
+![Instruction2](https://github.com/EnricoPietrocola/Cid/blob/master/instructions2.png)
+![Instruction3](https://github.com/EnricoPietrocola/Cid/blob/master/instructions3.png)
+
+
+This project was possible thanks to the "Orio Carlini" Scholarships from [Consortium GARR](https://www.garr.it/en/) and hosted by [Conservatorio Giuseppe Verdi di Milano](http://www.consmilano.it/en/)
 
 ![GarrLogo](https://owncloud.com/wp-content/uploads/2014/04/Garr-400x175.png)
 
-![ConsMILogo](https://lh3.googleusercontent.com/proxy/wqTegKbrNkFoogxnPMTxKAuRXgmdDFhvqeHDm40A01Cn_aUb3ChCH48eseCUs6oaDwTV8p55kC7NtS9vNOnqhgOIHpXZolE-uiN6iKy6R3ScJ9KuBVO6b-aMEdHigN3MF4qkR4LjyXsJ8gXRH3yih-8l)
+![ConsMILogo](https://scontent.fmxp6-1.fna.fbcdn.net/v/t1.0-9/10294462_1379581619006671_3349738126355062339_n.jpg?_nc_cat=109&_nc_sid=174925&_nc_oc=AQkNmZxU1asY11RW08o3mhJXOSlxy4Ro-CHHGw45YsBLul2ECxTemXH2qeGbjflPnzOuTrdGoLiDWZfFE0FSQM3y&_nc_ht=scontent.fmxp6-1.fna&oh=7ba9651354211366128398669d9d4c68&oe=5EBB96BF)
 
 License
 
