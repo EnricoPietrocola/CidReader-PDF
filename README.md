@@ -20,11 +20,11 @@ How to connect
 
 ![ExampleImage](https://media.giphy.com/media/UvWuE9d1LzedVJLtGz/giphy.gif)
 
-![Video example](https://www.youtube.com/watch?v=5DPnnhvZc1Q)
+![Video example](https://www.youtube.com/watch?v=5DPnnhvZc1Q/)
 
-![Video example for a CidReader-PDF session](https://www.youtube.com/watch?v=5DPnnhvZc1Q)
+![Video example for a CidReader-PDF session](https://www.youtube.com/watch?v=5DPnnhvZc1Q/)
 
-![Trello board with tasks and useful info](https://trello.com/b/FIkBy6M9/ciddev)
+![Trello board with tasks and useful info](https://trello.com/b/FIkBy6M9/ciddev/)
 
 * CidReaderPDF is based on the ![MuPDF](https://mupdf.com/) renderer by Artifex:
 In particular the version development started from, is the ![Mupdf Android Mini Viewer](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini)
