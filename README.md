@@ -26,16 +26,14 @@ How to connect
 
 [Trello board with tasks and useful info](https://trello.com/b/FIkBy6M9/ciddev/)
 
-* CidReaderPDF is based on the ![MuPDF](https://mupdf.com/) renderer by Artifex:
-In particular the version development started from, is the ![Mupdf Android Mini Viewer](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini)
+* CidReaderPDF is based on the [MuPDF](https://mupdf.com/) renderer by Artifex:
+In particular the version development started from, is the [Mupdf Android Mini Viewer](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini)
 
 * In particular the Android SDK that can be found ![here](https://mupdf.com/downloads/)
 
 * Currently used [colorpicker](https://github.com/skydoves/ColorPickerView) for annotations:
 
-* Annotation layer is based on Ssaurel's FingerPath object to store touch data and draw strokes
-https://gist.github.com/ssaurel/747c5c591f783450a30925543ba93c10
-https://medium.com/@ssaurel/learn-to-create-a-paint-application-for-android-5b16968063f8
+* Annotation layer is based on [Ssaurel's FingerPath object](https://gist.github.com/ssaurel/747c5c591f783450a30925543ba93c10) to store touch data and draw strokes
 
 Right now Cid features:
 * Connectivity with other users through UDP sockets
@@ -60,24 +58,24 @@ What is missing but would be great:
 * File transfer (at the moment you HAVE to have the PDF file in your download folder to be able to see it) (it's easy to implement but laws are pretty strict on this and before implementing this I would like to be sure we are not breaking any copyright by simply allowing FTP)
 
 
-While the NAT traversal solution is discussed, a simple way to connect through NATs that has been tested it by using ZeroTier https://www.zerotier.com/ (open source Hamachi-like app with an android app). It adds some latency but it's acceptable for common uses.
+While the NAT traversal solution is discussed, a simple way to connect through NATs that has been tested it by using [ZeroTier](https://www.zerotier.com/) (open source Hamachi-like app with an android app port). It adds some latency but it's acceptable for common uses.
 
 Contributing, main pieces of code:
 
-![MainActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/app/src/main/java/com/pietrocola/enrico/CidMainMenu/MainActivity.java) is the main menu, this is where you setup connection and scroll documents.
+[MainActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/app/src/main/java/com/pietrocola/enrico/CidMainMenu/MainActivity.java) is the main menu, this is where you setup connection and scroll documents.
 
-![DocumentActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) is the main document part of code. Here you manage document, annotaion, touch, global variables, instances of paintviews with connections (![original mupdf-mini version](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) .
+[DocumentActivity.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) is the main document part of code. Here you manage document, annotaion, touch, global variables, instances of paintviews with connections (![original mupdf-mini version](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/DocumentActivity.java) .
 
-![PageView.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PageView.java) is where PDF pages are managed (slightly edited version of the original from ![MuPDF mini](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/PageView.java)).
+[PageView.java](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PageView.java) is where PDF pages are managed (slightly edited version of the original from [MuPDF mini](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini/blob/master/lib/src/main/java/com/artifex/mupdf/mini/PageView.java)).
 
-![PaintView](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PaintView.java) is the annotation class, it stores strokes for each page. Each user owns an instance of PaintView in  DocumentActivity (each user has a layer to draw on).
+[PaintView](https://github.com/EnricoPietrocola/CidReader-PDF/blob/master/CidReaderPDF/mupdf-lib/src/main/java/com/artifex/mupdf/mini/PaintView.java) is the annotation class, it stores strokes for each page. Each user owns an instance of PaintView in  DocumentActivity (each user has a layer to draw on).
 
 ![Instruction1](https://github.com/EnricoPietrocola/Cid/blob/master/instructions1.png)
 ![Instruction2](https://github.com/EnricoPietrocola/Cid/blob/master/instructions2.png)
 ![Instruction3](https://github.com/EnricoPietrocola/Cid/blob/master/instructions3.png)
 
 
-This project was possible thanks to the "Orio Carlini" Scholarships from ![Consortium GARR](https://www.garr.it/en/) and hosted by ![Conservatorio Giuseppe Verdi di Milano](http://www.consmilano.it/en/)
+This project was possible thanks to the "Orio Carlini" Scholarships from [Consortium GARR](https://www.garr.it/en/) and hosted by [Conservatorio Giuseppe Verdi di Milano](http://www.consmilano.it/en/)
 
 ![GarrLogo](https://owncloud.com/wp-content/uploads/2014/04/Garr-400x175.png)
 
