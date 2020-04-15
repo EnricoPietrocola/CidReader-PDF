@@ -4,9 +4,9 @@ Cid is an open source Android PDF reader (I am making a web version too) able to
 It is created to help Networked Music students and performers to interact on music sheet on a distance or locally.
 Works with UDP sockets and on any modern android tablet.
 
-![Paper/Description page](http://enricopietrocola.com/cidreader/)
+[Paper/Description page](http://enricopietrocola.com/cidreader/)
 
-![Community Page](https://www.reddit.com/r/CidReaderPDF/)
+[Community Page](https://www.reddit.com/r/CidReaderPDF/)
 
 How to use:
 
@@ -20,18 +20,18 @@ How to connect
 
 ![ExampleImage](https://media.giphy.com/media/UvWuE9d1LzedVJLtGz/giphy.gif)
 
-![Video example](https://www.youtube.com/watch?v=5DPnnhvZc1Q/)
+[Video example](https://www.youtube.com/watch?v=5DPnnhvZc1Q/)
 
-![Video example for a CidReader-PDF session](https://www.youtube.com/watch?v=5DPnnhvZc1Q/)
+[Video example for a CidReader-PDF session](https://www.youtube.com/watch?v=5DPnnhvZc1Q/)
 
-![Trello board with tasks and useful info](https://trello.com/b/FIkBy6M9/ciddev/)
+[Trello board with tasks and useful info](https://trello.com/b/FIkBy6M9/ciddev/)
 
 * CidReaderPDF is based on the ![MuPDF](https://mupdf.com/) renderer by Artifex:
 In particular the version development started from, is the ![Mupdf Android Mini Viewer](https://github.com/ArtifexSoftware/mupdf-android-viewer-mini)
 
 * In particular the Android SDK that can be found ![here](https://mupdf.com/downloads/)
 
-* Currently used ![colorpicker](https://github.com/skydoves/ColorPickerView) for annotations:
+* Currently used [colorpicker](https://github.com/skydoves/ColorPickerView) for annotations:
 
 * Annotation layer is based on Ssaurel's FingerPath object to store touch data and draw strokes
 https://gist.github.com/ssaurel/747c5c591f783450a30925543ba93c10
