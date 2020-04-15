@@ -17,6 +17,11 @@
         android:orderInCategory="100"
         android:title="Instructions"
         app:showAsAction="never" />
+    <item
+        android:id="@+id/version_number"
+        android:orderInCategory="100"
+        android:title="Version Beta0.1.1"
+        app:showAsAction="never" />
     <!--<item
         android:id="@+id/action_settings"
         android:orderInCategory="100"

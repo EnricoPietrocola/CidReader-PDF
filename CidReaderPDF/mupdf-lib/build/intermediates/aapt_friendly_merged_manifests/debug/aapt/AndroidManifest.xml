@@ -14,7 +14,7 @@
         <activity
             android:name="com.artifex.mupdf.mini.DocumentActivity"
             android:configChanges="orientation|screenSize|keyboardHidden"
-            android:label="MuPDF mini"
+            android:label="CidReader"
             android:screenOrientation="portrait" >
             <intent-filter>
                 <action android:name="android.intent.action.VIEW" /> <!-- this was VIEW -->
