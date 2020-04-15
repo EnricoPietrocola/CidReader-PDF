@@ -81,7 +81,7 @@ This project was possible thanks to the "Orio Carlini" Scholarships from ![Conso
 
 ![GarrLogo](https://owncloud.com/wp-content/uploads/2014/04/Garr-400x175.png)
 
-![ConsMILogo](https://lh3.googleusercontent.com/proxy/wqTegKbrNkFoogxnPMTxKAuRXgmdDFhvqeHDm40A01Cn_aUb3ChCH48eseCUs6oaDwTV8p55kC7NtS9vNOnqhgOIHpXZolE-uiN6iKy6R3ScJ9KuBVO6b-aMEdHigN3MF4qkR4LjyXsJ8gXRH3yih-8l)
+![ConsMILogo](https://scontent.fmxp6-1.fna.fbcdn.net/v/t1.0-9/26114176_1822710708027091_8154726932849490494_n.jpg?_nc_cat=107&_nc_sid=09cbfe&_nc_oc=AQkg4uHfE0MgfrT48EGuvDYZgOOD6K875jZiTtsiltuPMzSlzySCljPugTXTzgkyivsr0wjJQBme03fx5QDbA0HQ&_nc_ht=scontent.fmxp6-1.fna&oh=1651e68857f5b4788052f7cfb60ac51d&oe=5EBBEEA0)
 
 License
 
