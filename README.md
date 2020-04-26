@@ -18,9 +18,11 @@ How to connect
 - Type the address you would like to connect to and click "ADD TO CONNECTIONS".
 - Close the menu, all your interactions are now synchronized
 
+![ExampleImage](https://media.giphy.com/media/UvWuE9d1LzedVJLtGz/giphy.gif)
+
 [![IntroductionToCidReader](https://raw.githubusercontent.com/EnricoPietrocola/Cid/master/Introduction%20to%20CidReader1.JPG)](https://www.youtube.com/watch?v=ofszkfZpO4k)
 
-![ExampleImage](https://media.giphy.com/media/UvWuE9d1LzedVJLtGz/giphy.gif)
+[![EasilyConnectWithZeroTier](https://raw.githubusercontent.com/EnricoPietrocola/Cid/master/easily%20connect%20thumnail1.JPG)](https://www.youtube.com/watch?v=2SYC5RHXCCY)
 
 [Video example](https://www.youtube.com/watch?v=5DPnnhvZc1Q/)
 
