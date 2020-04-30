@@ -10,6 +10,8 @@ Works with UDP sockets and on any modern android tablet.
 
 [Community Page](https://www.reddit.com/r/CidReaderPDF/)
 
+[Facebook Page](https://www.facebook.com/CidInteraction)
+
 How to use:
 
 - Choose a document you want to open by the app main page (currently showing only the Downloads Folder) or with the "Open With" options in your Android File Manager
