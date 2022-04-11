@@ -1,5 +1,9 @@
 # CidReader-PDF - Collaborative Realtime PDF Reader
 
+Join our Discord! https://discord.gg/AAe6rx6kbK 
+[![Discord](https://theme.zdassets.com/theme_assets/678183/cc59daa07820943e943c2fc283b9079d7003ff76.svg)](https://discord.gg/AAe6rx6kbK )
+
+
 Cid is an open source Android PDF reader (I am making a web version too) able to share realtime interaction online.
 It is created to help Networked Music students and performers to interact on music sheet on a distance or locally.
 Works with UDP sockets and on any modern android tablet.
